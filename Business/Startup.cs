@@ -10,7 +10,9 @@ using Core.Extensions;
 using Core.Utilities.ElasticSearch;
 using Core.Utilities.IoC;
 using Core.Utilities.MessageBrokers.RabbitMq;
+using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework.Contexts;
+using DataAccess.Concrete.MongoDb;
 using DataAccess.Concrete.MongoDb.Collections;
 using DataAccess.Concrete.MongoDb.Context;
 using FluentValidation;
@@ -85,6 +87,8 @@ namespace Business
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
             ConfigureServices(services);  
+            services.AddTransient<IRemoteOfferModelRepository>(x=> new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferModels));
+            services.AddTransient<IInterstielAdModelRepository>(x=> new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdModels));
             services.AddTransient<IKafkaMessageBroker, KafkaMessageBroker>();
 
             services.AddDbContext<ProjectDbContext, DArchInMemory>(ServiceLifetime.Transient);
@@ -98,6 +102,8 @@ namespace Business
         public void ConfigureStagingServices(IServiceCollection services)
         {
             ConfigureServices(services);           
+            services.AddTransient<IRemoteOfferModelRepository>(x=> new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferModels));
+            services.AddTransient<IInterstielAdModelRepository>(x=> new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdModels));
             services.AddTransient<IKafkaMessageBroker, KafkaMessageBroker>();
 
             services.AddDbContext<ProjectDbContext>();
@@ -112,6 +118,8 @@ namespace Business
         public void ConfigureProductionServices(IServiceCollection services)
         {
             ConfigureServices(services);
+            services.AddTransient<IRemoteOfferModelRepository>(x=> new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferModels));
+            services.AddTransient<IInterstielAdModelRepository>(x=> new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdModels));
             services.AddTransient<IKafkaMessageBroker, KafkaMessageBroker>();
 
             services.AddDbContext<ProjectDbContext>();

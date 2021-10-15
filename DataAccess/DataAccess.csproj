@@ -29,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Abstract\" />
     <Folder Include="Concrete\Configurations\" />
     <Folder Include="Migrations\Ms\" />
   </ItemGroup>

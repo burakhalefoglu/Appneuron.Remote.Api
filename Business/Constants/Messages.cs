@@ -18,6 +18,8 @@
         public static string SuccessfulLogin => "SuccessfulLogin";
         public static string SendMobileCode => "SendMobileCode";
         public static string NameAlreadyExist => "NameAlreadyExist";
+        public static string NoContent => "NoContent";
+        public static string AlreadyExist => "AlreadyExist";
         public static string WrongCitizenId => "WrongCID";
         public static string CitizenNumber => "CID";
         public static string PasswordEmpty => "PasswordEmpty";
