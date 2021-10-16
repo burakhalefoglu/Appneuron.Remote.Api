@@ -18,8 +18,9 @@ namespace Business.Handlers.RemoteOfferModels.Commands
     /// </summary>
     public class DeleteRemoteOfferModelCommand : IRequest<IResult>
     {
-        public string ObjectId { get; set; }
-        private ObjectId Id => new ObjectId(this.ObjectId);
+        public string ProjectId { get; set; }
+        public string Name { get; set; }
+        public int Version { get; set; }
 
         public class DeleteRemoteOfferModelCommandHandler : IRequestHandler<DeleteRemoteOfferModelCommand, IResult>
         {
@@ -38,8 +39,9 @@ namespace Business.Handlers.RemoteOfferModels.Commands
             public async Task<IResult> Handle(DeleteRemoteOfferModelCommand request, CancellationToken cancellationToken)
             {
 
-
-                await _remoteOfferModelRepository.DeleteAsync(request.Id);
+                await _remoteOfferModelRepository.DeleteAsync(i => i.ProjectId == request.ProjectId &&
+                i.Name == request.Name &&
+                i.Version == request.Version);
 
                 return new SuccessResult(Messages.Deleted);
             }

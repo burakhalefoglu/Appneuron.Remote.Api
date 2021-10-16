@@ -6,15 +6,18 @@ namespace Entities.Concrete
 {
     public class RemoteOfferModel : DocumentDbEntity
     {
-        public ProductModel[] ProductModelDtos { get; set; }
+        public string ProjectId { get; set; }
+        public ProductModel[] ProductList { get; set; }
+        public string Name { get; set; }
+        public bool IsActive { get; set; }
         public float FirstPrice { get; set; }
         public float LastPrice { get; set; }
-        public int OfferId { get; set; }
+        public int Version { get; set; }
+        public int PlayerPercent { get; set; }
         public bool IsGift { get; set; }
-        public bool IsActive { get; set; }
-        public byte[] GiftTexture { get; set; }
+        public string GiftTexture { get; set; }
         public int ValidityPeriod { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime FinishTime { get; set; }
+        public long StartTime { get; set; }
+        public long FinishTime { get; set; }
     }
 }

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Entities.Concrete;
 using System.Collections.Generic;
 using MongoDB.Bson;
+using Core.Utilities.Results;
+
 namespace WebAPI.Controllers
 {
     /// <summary>
@@ -38,6 +40,29 @@ namespace WebAPI.Controllers
         }
 
         ///<summary>
+        ///List RemoteOfferModels
+        ///</summary>
+        ///<remarks>RemoteOfferModels</remarks>
+        ///<return>List RemoteOfferModels</return>
+        ///<response code="200"></response>
+        [Produces("application/json", "text/plain")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RemoteOfferModel>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<RemoteOfferModel>))]
+        [HttpGet("getByProjectId")]
+        public async Task<IActionResult> GetByProjectId(string projectId)
+        {
+            var result = await Mediator.Send(new GetRemoteOfferModelsByProjectIdQuery
+            {
+                ProjectId = projectId
+            });
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        ///<summary>
         ///It brings the details according to its id.
         ///</summary>
         ///<remarks>RemoteOfferModels</remarks>
@@ -63,17 +88,17 @@ namespace WebAPI.Controllers
         /// <param name="createRemoteOfferModel"></param>
         /// <returns></returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IResult))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateRemoteOfferModelCommand createRemoteOfferModel)
         {
             var result = await Mediator.Send(createRemoteOfferModel);
             if (result.Success)
             {
-                return Ok(result.Message);
+                return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
 
         /// <summary>
@@ -109,9 +134,9 @@ namespace WebAPI.Controllers
             var result = await Mediator.Send(deleteRemoteOfferModel);
             if (result.Success)
             {
-                return Ok(result.Message);
+                return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
     }
 }

@@ -9,14 +9,12 @@ namespace Business.Handlers.RemoteOfferModels.ValidationRules
     {
         public CreateRemoteOfferModelValidator()
         {
-            RuleFor(x => x.LastPrice).NotEmpty();
-            RuleFor(x => x.OfferId).NotEmpty();
-            RuleFor(x => x.IsGift).NotEmpty();
-            RuleFor(x => x.IsActive).NotEmpty();
-            RuleFor(x => x.GiftTexture).NotEmpty();
-            RuleFor(x => x.ValidityPeriod).NotEmpty();
-            RuleFor(x => x.StartTime).NotEmpty();
-            RuleFor(x => x.FinishTime).NotEmpty();
+            RuleFor(x => x.LastPrice).NotNull();
+            RuleFor(x => x.Version).NotNull();
+            RuleFor(x => x.IsActive).NotNull();
+            RuleFor(x => x.ValidityPeriod).NotNull();
+            RuleFor(x => x.StartTime).NotNull();
+            RuleFor(x => x.FinishTime).NotNull();
 
         }
     }
@@ -24,14 +22,12 @@ namespace Business.Handlers.RemoteOfferModels.ValidationRules
     {
         public UpdateRemoteOfferModelValidator()
         {
-            RuleFor(x => x.LastPrice).NotEmpty();
-            RuleFor(x => x.OfferId).NotEmpty();
-            RuleFor(x => x.IsGift).NotEmpty();
-            RuleFor(x => x.IsActive).NotEmpty();
-            RuleFor(x => x.GiftTexture).NotEmpty();
-            RuleFor(x => x.ValidityPeriod).NotEmpty();
-            RuleFor(x => x.StartTime).NotEmpty();
-            RuleFor(x => x.FinishTime).NotEmpty();
+            RuleFor(x => x.LastPrice).NotNull();
+            RuleFor(x => x.Version).NotNull();
+            RuleFor(x => x.IsActive).NotNull();
+            RuleFor(x => x.ValidityPeriod).NotNull();
+            RuleFor(x => x.StartTime).NotNull();
+            RuleFor(x => x.FinishTime).NotNull();
 
         }
     }

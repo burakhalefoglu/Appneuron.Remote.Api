@@ -25,13 +25,13 @@ namespace Business.Handlers.RemoteOfferModels.Commands
         private ObjectId Id => new ObjectId(this.ObjectId);
         public float FirstPrice { get; set; }
         public float LastPrice { get; set; }
-        public int OfferId { get; set; }
+        public int Version { get; set; }
         public bool IsGift { get; set; }
         public bool IsActive { get; set; }
-        public byte[] GiftTexture { get; set; }
+        public string GiftTexture { get; set; }
         public int ValidityPeriod { get; set; }
-        public System.DateTime StartTime { get; set; }
-        public System.DateTime FinishTime { get; set; }
+        public int StartTime { get; set; }
+        public int FinishTime { get; set; }
 
         public class UpdateRemoteOfferModelCommandHandler : IRequestHandler<UpdateRemoteOfferModelCommand, IResult>
         {
@@ -56,7 +56,7 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                 var remoteOfferModel = new RemoteOfferModel();
                 remoteOfferModel.FirstPrice = request.FirstPrice;
                 remoteOfferModel.LastPrice = request.LastPrice;
-                remoteOfferModel.OfferId = request.OfferId;
+                remoteOfferModel.Version = request.Version;
                 remoteOfferModel.IsGift = request.IsGift;
                 remoteOfferModel.IsActive = request.IsActive;
                 remoteOfferModel.GiftTexture = request.GiftTexture;

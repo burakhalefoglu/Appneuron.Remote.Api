@@ -11,26 +11,25 @@ using Entities.Concrete;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Linq;
 using Business.Handlers.RemoteOfferModels.ValidationRules;
 
 namespace Business.Handlers.RemoteOfferModels.Commands
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class CreateRemoteOfferModelCommand : IRequest<IResult>
     {
-
+        public string ProjectId { get; set; }
+        public ProductModel[] ProductList { get; set; }
+        public string Name { get; set; }
+        public bool IsActive { get; set; }
         public float FirstPrice { get; set; }
         public float LastPrice { get; set; }
-        public int OfferId { get; set; }
+        public int Version { get; set; }
+        public int PlayerPercent { get; set; }
         public bool IsGift { get; set; }
-        public bool IsActive { get; set; }
-        public byte[] GiftTexture { get; set; }
+        public string GiftTexture { get; set; }
         public int ValidityPeriod { get; set; }
-        public System.DateTime StartTime { get; set; }
-        public System.DateTime FinishTime { get; set; }
+        public long StartTime { get; set; }
+        public long FinishTime { get; set; }
 
 
         public class CreateRemoteOfferModelCommandHandler : IRequestHandler<CreateRemoteOfferModelCommand, IResult>
@@ -49,23 +48,30 @@ namespace Business.Handlers.RemoteOfferModels.Commands
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateRemoteOfferModelCommand request, CancellationToken cancellationToken)
             {
-                var isThereRemoteOfferModelRecord = _remoteOfferModelRepository.Any(u => u.FirstPrice == request.FirstPrice);
+                var isThereRemoteOfferModelRecord =
+                    _remoteOfferModelRepository
+                    .Any(u =>u.ProjectId == request.ProjectId &&
+                    u.Name == request.Name &&
+                    u.Version == request.Version);
 
-                if (isThereRemoteOfferModelRecord == true)
+                if (isThereRemoteOfferModelRecord)
                     return new ErrorResult(Messages.NameAlreadyExist);
 
                 var addedRemoteOfferModel = new RemoteOfferModel
                 {
                     FirstPrice = request.FirstPrice,
                     LastPrice = request.LastPrice,
-                    OfferId = request.OfferId,
+                    Version = request.Version,
                     IsGift = request.IsGift,
                     IsActive = request.IsActive,
                     GiftTexture = request.GiftTexture,
                     ValidityPeriod = request.ValidityPeriod,
                     StartTime = request.StartTime,
                     FinishTime = request.FinishTime,
-
+                    Name = request.Name,
+                    PlayerPercent = request.PlayerPercent,
+                    ProductList = request.ProductList,
+                    ProjectId = request.ProjectId
                 };
 
                 await _remoteOfferModelRepository.AddAsync(addedRemoteOfferModel);
