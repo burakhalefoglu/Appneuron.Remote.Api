@@ -1,4 +1,5 @@
 ﻿
+using System;
 using Business.Constants;
 using Business.BusinessAspects;
 using Core.Aspects.Autofac.Caching;
@@ -11,9 +12,9 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using Business.Handlers.InterstielAdHistoryModels.Commands;
 using Core.Aspects.Autofac.Validation;
 using Business.Handlers.InterstielAdModels.ValidationRules;
-using MongoDB.Bson;
 
 namespace Business.Handlers.InterstielAdModels.Commands
 {
@@ -53,6 +54,18 @@ namespace Business.Handlers.InterstielAdModels.Commands
                 }
                 resultData.playerPercent = request.playerPercent;
                 resultData.IsAdvSettingsActive = request.IsAdvSettingsActive;
+                if (request.IsAdvSettingsActive)
+                {
+                }
+                await _mediator.Send(new UpdateInterstielAdHistoryModelCommand
+                {
+                    AdvStrategies = resultData.AdvStrategies,
+                    IsAdvSettingsActive = resultData.IsAdvSettingsActive,
+                    Name = resultData.Name,
+                    Version = resultData.Version,
+                    playerPercent = resultData.playerPercent,
+                    StartTime = DateTime.Now
+                });
 
                 await _interstielAdModelRepository.UpdateAsync(resultData,
                     i=> i.ProjectId == request.ProjectId && i.Name == request.Name &&

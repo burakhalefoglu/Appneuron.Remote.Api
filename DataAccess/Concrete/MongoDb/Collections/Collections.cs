@@ -15,5 +15,7 @@ namespace DataAccess.Concrete.MongoDb.Collections
         public static string IntersitielAdModels => "ıntersitielAdModels";
         public static string InterstielAdModels => "ınterstielAdModels";
         public static string RemoteOfferModels => "remoteOfferModels";
+        public static string RemoteOfferHistoryModels => "remoteOfferHistoryModels";
+        public static string InterstielAdHistoryModels => "ınterstielAdHistoryModels";
     }
 }

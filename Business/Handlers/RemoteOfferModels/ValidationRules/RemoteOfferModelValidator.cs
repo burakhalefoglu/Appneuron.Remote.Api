@@ -22,12 +22,9 @@ namespace Business.Handlers.RemoteOfferModels.ValidationRules
     {
         public UpdateRemoteOfferModelValidator()
         {
-            RuleFor(x => x.LastPrice).NotNull();
+            RuleFor(x => x.ProjectId).NotNull();
             RuleFor(x => x.Version).NotNull();
             RuleFor(x => x.IsActive).NotNull();
-            RuleFor(x => x.ValidityPeriod).NotNull();
-            RuleFor(x => x.StartTime).NotNull();
-            RuleFor(x => x.FinishTime).NotNull();
 
         }
     }

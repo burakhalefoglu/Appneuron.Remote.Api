@@ -1,6 +1,6 @@
 ﻿
-using Business.Handlers.RemoteOfferModels.Commands;
-using Business.Handlers.RemoteOfferModels.Queries;
+using Business.Handlers.RemoteOfferHistoryModels.Commands;
+using Business.Handlers.RemoteOfferHistoryModels.Queries;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -8,30 +8,28 @@ using Microsoft.AspNetCore.Http;
 using Entities.Concrete;
 using System.Collections.Generic;
 using MongoDB.Bson;
-using Core.Utilities.Results;
-
 namespace WebAPI.Controllers
 {
     /// <summary>
-    /// RemoteOfferModels If controller methods will not be Authorize, [AllowAnonymous] is used.
+    /// RemoteOfferHistoryModels If controller methods will not be Authorize, [AllowAnonymous] is used.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class RemoteOfferModelsController : BaseApiController
+    public class RemoteOfferHistoryModelsController : BaseApiController
     {
         ///<summary>
-        ///List RemoteOfferModels
+        ///List RemoteOfferHistoryModels
         ///</summary>
-        ///<remarks>RemoteOfferModels</remarks>
-        ///<return>List RemoteOfferModels</return>
+        ///<remarks>RemoteOfferHistoryModels</remarks>
+        ///<return>List RemoteOfferHistoryModels</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RemoteOfferModel>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RemoteOfferHistoryModel>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getall")]
         public async Task<IActionResult> GetList()
         {
-            var result = await Mediator.Send(new GetRemoteOfferModelsQuery());
+            var result = await Mediator.Send(new GetRemoteOfferHistoryModelsQuery());
             if (result.Success)
             {
                 return Ok(result.Data);
@@ -46,12 +44,12 @@ namespace WebAPI.Controllers
         ///<return>List RemoteOfferModels</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RemoteOfferModel>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<RemoteOfferModel>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<RemoteOfferHistoryModel>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IEnumerable<RemoteOfferHistoryModel>))]
         [HttpGet("getByProjectId")]
         public async Task<IActionResult> GetByProjectId(string projectId)
         {
-            var result = await Mediator.Send(new GetRemoteOfferModelsByProjectIdQuery
+            var result = await Mediator.Send(new GetOfferHistoryModelsByProjectIdQuery
             {
                 ProjectId = projectId
             });
@@ -65,16 +63,16 @@ namespace WebAPI.Controllers
         ///<summary>
         ///It brings the details according to its id.
         ///</summary>
-        ///<remarks>RemoteOfferModels</remarks>
-        ///<return>RemoteOfferModels List</return>
+        ///<remarks>RemoteOfferHistoryModels</remarks>
+        ///<return>RemoteOfferHistoryModels List</return>
         ///<response code="200"></response>  
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RemoteOfferModel))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RemoteOfferHistoryModel))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById(string objectId)
         {
-            var result = await Mediator.Send(new GetRemoteOfferModelQuery { ObjectId = objectId });
+            var result = await Mediator.Send(new GetRemoteOfferHistoryModelQuery { ObjectId = objectId });
             if (result.Success)
             {
                 return Ok(result.Data);
@@ -83,60 +81,60 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        /// Add RemoteOfferModel.
+        /// Add RemoteOfferHistoryModel.
         /// </summary>
-        /// <param name="createRemoteOfferModel"></param>
+        /// <param name="createRemoteOfferHistoryModel"></param>
         /// <returns></returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IResult))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] CreateRemoteOfferModelCommand createRemoteOfferModel)
+        public async Task<IActionResult> Add([FromBody] CreateRemoteOfferHistoryModelCommand createRemoteOfferHistoryModel)
         {
-            var result = await Mediator.Send(createRemoteOfferModel);
+            var result = await Mediator.Send(createRemoteOfferHistoryModel);
             if (result.Success)
             {
-                return Ok(result);
+                return Ok(result.Message);
             }
-            return BadRequest(result);
+            return BadRequest(result.Message);
         }
 
         /// <summary>
-        /// Update RemoteOfferModel.
+        /// Update RemoteOfferHistoryModel.
         /// </summary>
-        /// <param name="updateRemoteOfferModel"></param>
+        /// <param name="updateRemoteOfferHistoryModel"></param>
         /// <returns></returns>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IResult))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateRemoteOfferModelCommand updateRemoteOfferModel)
+        public async Task<IActionResult> Update([FromBody] UpdateRemoteOfferHistoryModelCommand updateRemoteOfferHistoryModel)
         {
-            var result = await Mediator.Send(updateRemoteOfferModel);
+            var result = await Mediator.Send(updateRemoteOfferHistoryModel);
             if (result.Success)
             {
-                return Ok(result);
+                return Ok(result.Message);
             }
-            return BadRequest(result);
+            return BadRequest(result.Message);
         }
 
         /// <summary>
-        /// Delete RemoteOfferModel.
+        /// Delete RemoteOfferHistoryModel.
         /// </summary>
-        /// <param name="deleteRemoteOfferModel"></param>
+        /// <param name="deleteRemoteOfferHistoryModel"></param>
         /// <returns></returns>
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] DeleteRemoteOfferModelCommand deleteRemoteOfferModel)
+        public async Task<IActionResult> Delete([FromBody] DeleteRemoteOfferHistoryModelCommand deleteRemoteOfferHistoryModel)
         {
-            var result = await Mediator.Send(deleteRemoteOfferModel);
+            var result = await Mediator.Send(deleteRemoteOfferHistoryModel);
             if (result.Success)
             {
-                return Ok(result);
+                return Ok(result.Message);
             }
-            return BadRequest(result);
+            return BadRequest(result.Message);
         }
     }
 }
