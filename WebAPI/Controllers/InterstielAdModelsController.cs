@@ -19,25 +19,7 @@ namespace WebAPI.Controllers
     [ApiController]
     public class InterstielAdModelsController : BaseApiController
     {
-        ///<summary>
-        ///List InterstielAdModels
-        ///</summary>
-        ///<remarks>InterstielAdModels</remarks>
-        ///<return>List InterstielAdModels</return>
-        ///<response code="200"></response>
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<InterstielAdModel>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IDataResult<InterstielAdModel>))]
-        [HttpGet("getall")]
-        public async Task<IActionResult> GetList()
-        {
-            var result = await Mediator.Send(new GetInterstielAdModelsQuery());
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
+        
 
         ///<summary>
         ///List InterstielAdModels
@@ -46,8 +28,8 @@ namespace WebAPI.Controllers
         ///<return>List InterstielAdModels</return>
         ///<response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<InterstielAdModel>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IDataResult<InterstielAdModel>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<IEnumerable<InterstielAdModel>>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
         [HttpGet("getByProjectId")]
         public async Task<IActionResult> GetByProjectId(string projectId)
         {
@@ -61,26 +43,7 @@ namespace WebAPI.Controllers
             }
             return BadRequest(result);
         }
-
-        ///<summary>
-        ///It brings the details according to its id.
-        ///</summary>
-        ///<remarks>InterstielAdModels</remarks>
-        ///<return>InterstielAdModels List</return>
-        ///<response code="200"></response>  
-        [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(InterstielAdModel))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [HttpGet("getbyid")]
-        public async Task<IActionResult> GetById(string objectId)
-        {
-            var result = await Mediator.Send(new GetInterstielAdModelQuery { ObjectId = objectId });
-            if (result.Success)
-            {
-                return Ok(result.Data);
-            }
-            return BadRequest(result.Message);
-        }
+        
 
         /// <summary>
         /// Add InterstielAdModel.

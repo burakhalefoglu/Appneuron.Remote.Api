@@ -7,9 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using static Business.Handlers.RemoteOfferModels.Queries.GetRemoteOfferModelQuery;
+using static Business.Handlers.RemoteOfferModels.Queries.GetRemoteOfferModelsByProjectIdQuery;
 using Entities.Concrete;
-using static Business.Handlers.RemoteOfferModels.Queries.GetRemoteOfferModelsQuery;
 using static Business.Handlers.RemoteOfferModels.Commands.CreateRemoteOfferModelCommand;
 using Business.Handlers.RemoteOfferModels.Commands;
 using Business.Constants;
@@ -17,6 +16,8 @@ using static Business.Handlers.RemoteOfferModels.Commands.UpdateRemoteOfferModel
 using static Business.Handlers.RemoteOfferModels.Commands.DeleteRemoteOfferModelCommand;
 using MediatR;
 using System.Linq;
+using System.Threading;
+using Core.Utilities.Results;
 using FluentAssertions;
 using MongoDB.Bson;
 
@@ -34,62 +35,101 @@ namespace Tests.Business.HandlersTest
             _mediator = new Mock<IMediator>();
         }
 
+     
         [Test]
-        public async Task RemoteOfferModel_GetQuery_Success()
+        public async Task RemoteOfferModel_GetByProjectIdQueries_Success()
         {
             //Arrange
-            var query = new GetRemoteOfferModelQuery();
-
-            _remoteOfferModelRepository.Setup(x => x.GetByIdAsync(It.IsAny<ObjectId>())).ReturnsAsync(new RemoteOfferModel()
-//propertyler buraya yazılacak
-//{																		
-//RemoteOfferModelId = 1,
-//RemoteOfferModelName = "Test"
-//}
-);
-
-            var handler = new GetRemoteOfferModelQueryHandler(_remoteOfferModelRepository.Object, _mediator.Object);
-
-            //Act
-            var x = await handler.Handle(query, new System.Threading.CancellationToken());
-
-            //Asset
-            x.Success.Should().BeTrue();
-            //x.Data.RemoteOfferModelId.Should().Be(1);
-
-        }
-
-        [Test]
-        public async Task RemoteOfferModel_GetQueries_Success()
-        {
-            //Arrange
-            var query = new GetRemoteOfferModelsQuery();
+            var query = new GetRemoteOfferModelsByProjectIdQuery();
+            query.ProjectId = "121212";
 
             _remoteOfferModelRepository.Setup(x => x.GetListAsync(It.IsAny<Expression<Func<RemoteOfferModel, bool>>>()))
-                        .ReturnsAsync(new List<RemoteOfferModel> { new RemoteOfferModel() { /*TODO:propertyler buraya yazılacak RemoteOfferModelId = 1, RemoteOfferModelName = "test"*/ } }.AsQueryable());
+                        .ReturnsAsync(new List<RemoteOfferModel> { new RemoteOfferModel()
+                        {
+                            Version = 1,
+                            FinishTime = DateTime.Now.Ticks,
+                            FirstPrice = 12,
+                            GiftTexture = new Byte[]{},
+                            Id = new ObjectId(),
+                            IsActive = true,
+                            IsGift = true,
+                            LastPrice = 10,
+                            Name = "Test",
+                            PlayerPercent = 20,
+                            ProductList = new ProductModel[]{},
+                            ProjectId = "121212",
+                            StartTime = DateTime.Now.Ticks,
+                            ValidityPeriod = 24
 
-            var handler = new GetRemoteOfferModelsQueryHandler(_remoteOfferModelRepository.Object, _mediator.Object);
+                        },new RemoteOfferModel()
+                        {
+                            Version = 4,
+                            FinishTime = DateTime.Now.Ticks,
+                            FirstPrice = 12,
+                            GiftTexture = new Byte[]{},
+                            Id = new ObjectId(),
+                            IsActive = true,
+                            IsGift = true,
+                            LastPrice = 10,
+                            Name = "Test",
+                            PlayerPercent = 20,
+                            ProductList = new ProductModel[]{},
+                            ProjectId = "121212",
+                            StartTime = DateTime.Now.Ticks,
+                            ValidityPeriod = 24
+
+                        },new RemoteOfferModel()
+                        {
+                            Version = 2,
+                            FinishTime = DateTime.Now.Ticks,
+                            FirstPrice = 12,
+                            GiftTexture = new Byte[]{},
+                            Id = new ObjectId(),
+                            IsActive = true,
+                            IsGift = true,
+                            LastPrice = 10,
+                            Name = "Test",
+                            PlayerPercent = 20,
+                            ProductList = new ProductModel[]{},
+                            ProjectId = "121212",
+                            StartTime = DateTime.Now.Ticks,
+                            ValidityPeriod = 24
+
+                        },
+
+                        }.AsQueryable());
+
+            var handler = new GetRemoteOfferModelsByProjectIdQueryHandler(_remoteOfferModelRepository.Object, _mediator.Object);
 
             //Act
             var x = await handler.Handle(query, new System.Threading.CancellationToken());
 
             //Asset
             x.Success.Should().BeTrue();
-            ((List<RemoteOfferModel>)x.Data).Count.Should().BeGreaterThan(1);
+            x.Data.ToList().Count.Should().BeGreaterThan(1);
 
         }
 
         [Test]
         public async Task RemoteOfferModel_CreateCommand_Success()
         {
-            RemoteOfferModel rt = null;
             //Arrange
             var command = new CreateRemoteOfferModelCommand();
-            //propertyler buraya yazılacak
-            //command.RemoteOfferModelName = "deneme";
+            command.FinishTime = new DateTime().Ticks;
+            command.FirstPrice = 12;
+            command.GiftTexture = new byte[] { };
+            command.IsActive = true;
+            command.IsGift = true;
+            command.LastPrice = 2;
+            command.Name = "Test";
+            command.PlayerPercent = 15;
+            command.ProductList = new ProductModel[] { };
+            command.ProjectId = "121212";
+            command.StartTime = DateTime.Now.Ticks;
 
-            _remoteOfferModelRepository.Setup(x => x.GetByIdAsync(It.IsAny<ObjectId>()))
-                        .ReturnsAsync(rt);
+            _remoteOfferModelRepository.Setup(x => 
+                    x.Any(It.IsAny<Expression<Func<RemoteOfferModel, bool>>>()))
+                        .Returns(false);
 
             _remoteOfferModelRepository.Setup(x => x.Add(It.IsAny<RemoteOfferModel>()));
 
@@ -106,13 +146,24 @@ namespace Tests.Business.HandlersTest
         {
             //Arrange
             var command = new CreateRemoteOfferModelCommand();
-            //propertyler buraya yazılacak 
-            //command.RemoteOfferModelName = "test";
+            command.FinishTime = new DateTime().Ticks;
+            command.FirstPrice = 12;
+            command.GiftTexture = new byte[] { };
+            command.IsActive = true;
+            command.IsGift = true;
+            command.LastPrice = 2;
+            command.Name = "Test";
+            command.PlayerPercent = 15;
+            command.ProductList = new ProductModel[] { };
+            command.ProjectId = "121212";
+            command.StartTime = DateTime.Now.Ticks;
 
-            _remoteOfferModelRepository.Setup(x => x.GetListAsync(It.IsAny<Expression<Func<RemoteOfferModel, bool>>>()))
-                                           .ReturnsAsync(new List<RemoteOfferModel> { new RemoteOfferModel() { /*TODO:propertyler buraya yazılacak RemoteOfferModelId = 1, RemoteOfferModelName = "test"*/ } }.AsQueryable());
+            _remoteOfferModelRepository.Setup(x =>
+                    x.Any(It.IsAny<Expression<Func<RemoteOfferModel, bool>>>()))
+                .Returns(true);
 
-            _remoteOfferModelRepository.Setup(x => x.Add(It.IsAny<RemoteOfferModel>()));
+            _remoteOfferModelRepository.Setup(x => 
+                x.Add(It.IsAny<RemoteOfferModel>()));
 
             var handler = new CreateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object);
             var x = await handler.Handle(command, new System.Threading.CancellationToken());
@@ -122,20 +173,60 @@ namespace Tests.Business.HandlersTest
         }
 
         [Test]
-        public async Task RemoteOfferModel_UpdateCommand_Success()
+        public async Task RemoteOfferModel_UpdateCommand_NoContent()
         {
             //Arrange
             var command = new UpdateRemoteOfferModelCommand();
-            //command.RemoteOfferModelName = "test";
+            command.IsActive = true;
+            command.Name = "Test";
+            command.Version = 1;
+            command.playerPercent = 20;
+            command.ProjectId = "121212";
 
-            _remoteOfferModelRepository.Setup(x => x.GetByIdAsync(It.IsAny<ObjectId>()))
-                        .ReturnsAsync(new RemoteOfferModel() { /*TODO:propertyler buraya yazılacak RemoteOfferModelId = 1, RemoteOfferModelName = "deneme"*/ });
+            _remoteOfferModelRepository.Setup(x =>
+                    x.Any(It.IsAny<Expression<Func<RemoteOfferModel, bool>>>()))
+                    .Returns(false);
+
+            _remoteOfferModelRepository.Setup(x =>
+                    x.GetByFilterAsync(It.IsAny<Expression<Func<RemoteOfferModel, bool>>>()))
+                .ReturnsAsync(new RemoteOfferModel());
 
             _remoteOfferModelRepository.Setup(x => x.UpdateAsync(It.IsAny<ObjectId>(), It.IsAny<RemoteOfferModel>()));
 
             var handler = new UpdateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object);
             var x = await handler.Handle(command, new System.Threading.CancellationToken());
 
+
+            x.Success.Should().BeFalse();
+            x.Message.Should().Be(Messages.NoContent);
+        }
+
+        [Test]
+        public async Task RemoteOfferModel_UpdateCommand_Success()
+        {
+            //Arrange
+            var command = new UpdateRemoteOfferModelCommand();
+            command.IsActive = true;
+            command.Name = "Test";
+            command.Version = 1;
+            command.playerPercent = 20;
+            command.ProjectId = "121212";
+
+            _remoteOfferModelRepository.Setup(x =>
+                    x.Any(It.IsAny<Expression<Func<RemoteOfferModel, bool>>>()))
+                    .Returns(true);
+            
+            _remoteOfferModelRepository.Setup(x => 
+                x.GetByFilterAsync(It.IsAny<Expression<Func<RemoteOfferModel, bool>>>()))
+                .ReturnsAsync(new RemoteOfferModel());
+
+            _remoteOfferModelRepository.Setup(x => x.UpdateAsync(It.IsAny<ObjectId>(), It.IsAny<RemoteOfferModel>()));
+
+            _mediator.Setup(x => x.Send(new object(), new System.Threading.CancellationToken()))
+                .ReturnsAsync(new SuccessResult(Messages.Added));
+
+            var handler = new UpdateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object);
+            var x = await handler.Handle(command, new System.Threading.CancellationToken());
 
             x.Success.Should().BeTrue();
             x.Message.Should().Be(Messages.Updated);
@@ -146,15 +237,15 @@ namespace Tests.Business.HandlersTest
         {
             //Arrange
             var command = new DeleteRemoteOfferModelCommand();
+            command.Name = "Test";
+            command.ProjectId = "121212";
+            command.Version = 1;
 
-            _remoteOfferModelRepository.Setup(x => x.GetByIdAsync(It.IsAny<ObjectId>()))
-                        .ReturnsAsync(new RemoteOfferModel() { /*TODO:propertyler buraya yazılacak RemoteOfferModelId = 1, RemoteOfferModelName = "deneme"*/});
-
-            _remoteOfferModelRepository.Setup(x => x.Delete(It.IsAny<RemoteOfferModel>()));
+            _remoteOfferModelRepository.Setup(x => 
+                x.DeleteAsync(It.IsAny<RemoteOfferModel>()));
 
             var handler = new DeleteRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object);
             var x = await handler.Handle(command, new System.Threading.CancellationToken());
-
 
             x.Success.Should().BeTrue();
             x.Message.Should().Be(Messages.Deleted);

@@ -31,12 +31,4 @@
     <ProjectReference Include="..\WebAPI\WebAPI.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Business\Services\" />
-    <Folder Include="Core\Extensions\" />
-    <Folder Include="Helpers\MockInterfaces\" />
-    <Folder Include="Helpers\Token\" />
-    <Folder Include="WebAPI\" />
-  </ItemGroup>
-
 </Project>

@@ -7,14 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using static Business.Handlers.RemoteOfferHistoryModels.Queries.GetRemoteOfferHistoryModelQuery;
+using static Business.Handlers.RemoteOfferHistoryModels.Queries.GetOfferHistoryModelsByProjectIdQuery;
 using Entities.Concrete;
-using static Business.Handlers.RemoteOfferHistoryModels.Queries.GetRemoteOfferHistoryModelsQuery;
 using static Business.Handlers.RemoteOfferHistoryModels.Commands.CreateRemoteOfferHistoryModelCommand;
 using Business.Handlers.RemoteOfferHistoryModels.Commands;
 using Business.Constants;
-using static Business.Handlers.RemoteOfferHistoryModels.Commands.UpdateRemoteOfferHistoryModelCommand;
-using static Business.Handlers.RemoteOfferHistoryModels.Commands.DeleteRemoteOfferHistoryModelCommand;
 using MediatR;
 using System.Linq;
 using FluentAssertions;
@@ -34,62 +31,98 @@ namespace Tests.Business.HandlersTest
             _mediator = new Mock<IMediator>();
         }
 
+    
         [Test]
-        public async Task RemoteOfferHistoryModel_GetQuery_Success()
+        public async Task RemoteOfferHistoryModel_GetByProjectIdQueries_Success()
         {
             //Arrange
-            var query = new GetRemoteOfferHistoryModelQuery();
-
-            _remoteOfferHistoryModelRepository.Setup(x => x.GetByIdAsync(It.IsAny<ObjectId>())).ReturnsAsync(new RemoteOfferHistoryModel()
-//propertyler buraya yazılacak
-//{																		
-//RemoteOfferHistoryModelId = 1,
-//RemoteOfferHistoryModelName = "Test"
-//}
-);
-
-            var handler = new GetRemoteOfferHistoryModelQueryHandler(_remoteOfferHistoryModelRepository.Object, _mediator.Object);
-
-            //Act
-            var x = await handler.Handle(query, new System.Threading.CancellationToken());
-
-            //Asset
-            x.Success.Should().BeTrue();
-            //x.Data.RemoteOfferHistoryModelId.Should().Be(1);
-
-        }
-
-        [Test]
-        public async Task RemoteOfferHistoryModel_GetQueries_Success()
-        {
-            //Arrange
-            var query = new GetRemoteOfferHistoryModelsQuery();
+            var query = new GetOfferHistoryModelsByProjectIdQuery();
+            query.ProjectId = "121212";
 
             _remoteOfferHistoryModelRepository.Setup(x => x.GetListAsync(It.IsAny<Expression<Func<RemoteOfferHistoryModel, bool>>>()))
-                        .ReturnsAsync(new List<RemoteOfferHistoryModel> { new RemoteOfferHistoryModel() { /*TODO:propertyler buraya yazılacak RemoteOfferHistoryModelId = 1, RemoteOfferHistoryModelName = "test"*/ } }.AsQueryable());
+                        .ReturnsAsync(new List<RemoteOfferHistoryModel> { new RemoteOfferHistoryModel()
+                        {
+                            Version = 1,
+                            FinishTime = DateTime.Now.Ticks,
+                            FirstPrice = 12,
+                            GiftTexture = new Byte[]{},
+                            Id = new ObjectId(),
+                            IsActive = true,
+                            IsGift = true,
+                            LastPrice = 10,
+                            Name = "Test",
+                            PlayerPercent = 20,
+                            ProductList = new ProductModel[]{},
+                            ProjectId = "121212",
+                            StartTime = DateTime.Now.Ticks,
+                            ValidityPeriod = 24
+                            
+                        },new RemoteOfferHistoryModel()
+                        {
+                            Version = 2,
+                            FinishTime = DateTime.Now.Ticks,
+                            FirstPrice = 12,
+                            GiftTexture = new Byte[]{},
+                            Id = new ObjectId(),
+                            IsActive = true,
+                            IsGift = true,
+                            LastPrice = 0,
+                            Name = "Test",
+                            PlayerPercent = 20,
+                            ProductList = new ProductModel[]{},
+                            ProjectId = "121212",
+                            StartTime = DateTime.Now.Ticks,
+                            ValidityPeriod = 24
+                            
+                        },new RemoteOfferHistoryModel()
+                        {
+                            Version = 3,
+                            FinishTime = DateTime.Now.Ticks,
+                            FirstPrice = 12,
+                            GiftTexture = new Byte[]{},
+                            Id = new ObjectId(),
+                            IsActive = true,
+                            IsGift = true,
+                            LastPrice = 4,
+                            Name = "Test",
+                            PlayerPercent = 20,
+                            ProductList = new ProductModel[]{},
+                            ProjectId = "121212",
+                            StartTime = DateTime.Now.Ticks,
+                            ValidityPeriod = 48
+                            
+                        },
 
-            var handler = new GetRemoteOfferHistoryModelsQueryHandler(_remoteOfferHistoryModelRepository.Object, _mediator.Object);
+                        }.AsQueryable());
+
+            var handler = new GetOfferHistoryModelsByProjectIdQueryHandler(_remoteOfferHistoryModelRepository.Object, _mediator.Object);
 
             //Act
             var x = await handler.Handle(query, new System.Threading.CancellationToken());
 
             //Asset
             x.Success.Should().BeTrue();
-            ((List<RemoteOfferHistoryModel>)x.Data).Count.Should().BeGreaterThan(1);
+            x.Data.ToList().Count.Should().BeGreaterThan(1);
 
         }
 
         [Test]
         public async Task RemoteOfferHistoryModel_CreateCommand_Success()
         {
-            RemoteOfferHistoryModel rt = null;
             //Arrange
             var command = new CreateRemoteOfferHistoryModelCommand();
-            //propertyler buraya yazılacak
-            //command.RemoteOfferHistoryModelName = "deneme";
+            command.FinishTime = new DateTime().Ticks;
+            command.FirstPrice = 12;
+            command.GiftTexture = new byte[] { };
+            command.IsActive = true;
+            command.IsGift = true;
+            command.LastPrice = 2;
+            command.Name = "Test";
+            command.PlayerPercent = 15;
+            command.ProductList = new ProductModel[] { };
+            command.ProjectId = "121212";
+            command.StartTime = DateTime.Now.Ticks;
 
-            _remoteOfferHistoryModelRepository.Setup(x => x.GetByIdAsync(It.IsAny<ObjectId>()))
-                        .ReturnsAsync(rt);
 
             _remoteOfferHistoryModelRepository.Setup(x => x.Add(It.IsAny<RemoteOfferHistoryModel>()));
 
@@ -101,64 +134,6 @@ namespace Tests.Business.HandlersTest
             x.Message.Should().Be(Messages.Added);
         }
 
-        [Test]
-        public async Task RemoteOfferHistoryModel_CreateCommand_NameAlreadyExist()
-        {
-            //Arrange
-            var command = new CreateRemoteOfferHistoryModelCommand();
-            //propertyler buraya yazılacak 
-            //command.RemoteOfferHistoryModelName = "test";
-
-            _remoteOfferHistoryModelRepository.Setup(x => x.GetListAsync(It.IsAny<Expression<Func<RemoteOfferHistoryModel, bool>>>()))
-                                           .ReturnsAsync(new List<RemoteOfferHistoryModel> { new RemoteOfferHistoryModel() { /*TODO:propertyler buraya yazılacak RemoteOfferHistoryModelId = 1, RemoteOfferHistoryModelName = "test"*/ } }.AsQueryable());
-
-            _remoteOfferHistoryModelRepository.Setup(x => x.Add(It.IsAny<RemoteOfferHistoryModel>()));
-
-            var handler = new CreateRemoteOfferHistoryModelCommandHandler(_remoteOfferHistoryModelRepository.Object, _mediator.Object);
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
-
-            x.Success.Should().BeFalse();
-            x.Message.Should().Be(Messages.NameAlreadyExist);
-        }
-
-        [Test]
-        public async Task RemoteOfferHistoryModel_UpdateCommand_Success()
-        {
-            //Arrange
-            var command = new UpdateRemoteOfferHistoryModelCommand();
-            //command.RemoteOfferHistoryModelName = "test";
-
-            _remoteOfferHistoryModelRepository.Setup(x => x.GetByIdAsync(It.IsAny<ObjectId>()))
-                        .ReturnsAsync(new RemoteOfferHistoryModel() { /*TODO:propertyler buraya yazılacak RemoteOfferHistoryModelId = 1, RemoteOfferHistoryModelName = "deneme"*/ });
-
-            _remoteOfferHistoryModelRepository.Setup(x => x.UpdateAsync(It.IsAny<ObjectId>(), It.IsAny<RemoteOfferHistoryModel>()));
-
-            var handler = new UpdateRemoteOfferHistoryModelCommandHandler(_remoteOfferHistoryModelRepository.Object, _mediator.Object);
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
-
-
-            x.Success.Should().BeTrue();
-            x.Message.Should().Be(Messages.Updated);
-        }
-
-        [Test]
-        public async Task RemoteOfferHistoryModel_DeleteCommand_Success()
-        {
-            //Arrange
-            var command = new DeleteRemoteOfferHistoryModelCommand();
-
-            _remoteOfferHistoryModelRepository.Setup(x => x.GetByIdAsync(It.IsAny<ObjectId>()))
-                        .ReturnsAsync(new RemoteOfferHistoryModel() { /*TODO:propertyler buraya yazılacak RemoteOfferHistoryModelId = 1, RemoteOfferHistoryModelName = "deneme"*/});
-
-            _remoteOfferHistoryModelRepository.Setup(x => x.Delete(It.IsAny<RemoteOfferHistoryModel>()));
-
-            var handler = new DeleteRemoteOfferHistoryModelCommandHandler(_remoteOfferHistoryModelRepository.Object, _mediator.Object);
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
-
-
-            x.Success.Should().BeTrue();
-            x.Message.Should().Be(Messages.Deleted);
-        }
     }
 }
 

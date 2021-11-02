@@ -16,6 +16,7 @@ using Business.Handlers.RemoteOfferModels.ValidationRules;
 using MongoDB.Bson;
 using Business.Handlers.RemoteOfferHistoryModels.Commands;
 using System;
+using Core.Aspects.Autofac.Transaction;
 
 namespace Business.Handlers.RemoteOfferModels.Commands
 {
@@ -44,16 +45,21 @@ namespace Business.Handlers.RemoteOfferModels.Commands
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
+            [TransactionScopeAspectAsync]
             public async Task<IResult> Handle(UpdateRemoteOfferModelCommand request, CancellationToken cancellationToken)
             {
+                var isValid = _remoteOfferModelRepository.Any(r => r.ProjectId == request.ProjectId &&
+                                                                   r.Name == request.Name &&
+                                                                   r.Version == request.Version);
+                if (!isValid)
+                {
+                    return new ErrorResult(Messages.NoContent);
+                }
 
                 var resultData = await _remoteOfferModelRepository.GetByFilterAsync(r => r.ProjectId == request.ProjectId &&
                 r.Name == request.Name &&
                 r.Version == request.Version);
-                if (resultData == null)
-                {
-                    return new ErrorResult(Messages.NoContent);
-                }
+
                 resultData.PlayerPercent = request.playerPercent;
                 resultData.IsActive = request.IsActive;
                 if (request.IsActive)
@@ -61,11 +67,8 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                     resultData.StartTime = DateTime.Now.Ticks;
                     resultData.FinishTime = DateTime.Now.AddHours(resultData.ValidityPeriod).Ticks;
                 }
-                await _remoteOfferModelRepository.UpdateAsync(resultData,
-                    i => i.ProjectId == request.ProjectId && i.Name == request.Name &&
-                    i.Version == request.Version);
 
-                    await _mediator.Send(new CreateRemoteOfferHistoryModelCommand
+                await _mediator.Send(new CreateRemoteOfferHistoryModelCommand
                     {
                         ProjectId = resultData.ProjectId,
                         ProductList = resultData.ProductList,
@@ -82,7 +85,10 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                         FinishTime = resultData.FinishTime
 
                     });
-                
+
+                await _remoteOfferModelRepository.UpdateAsync(resultData,
+                    i => i.ProjectId == request.ProjectId && i.Name == request.Name &&
+                         i.Version == request.Version);
 
                 return new SuccessResult(Messages.Updated);
             }

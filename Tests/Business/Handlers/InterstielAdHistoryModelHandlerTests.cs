@@ -7,14 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using static Business.Handlers.InterstielAdHistoryModels.Queries.GetInterstielAdHistoryModelQuery;
+using static Business.Handlers.InterstielAdHistoryModels.Queries.GetInterstielAdHistoryModelByProjectIdQuery;
 using Entities.Concrete;
-using static Business.Handlers.InterstielAdHistoryModels.Queries.GetInterstielAdHistoryModelsQuery;
 using static Business.Handlers.InterstielAdHistoryModels.Commands.CreateInterstielAdHistoryModelCommand;
 using Business.Handlers.InterstielAdHistoryModels.Commands;
 using Business.Constants;
-using static Business.Handlers.InterstielAdHistoryModels.Commands.UpdateInterstielAdHistoryModelCommand;
-using static Business.Handlers.InterstielAdHistoryModels.Commands.DeleteInterstielAdHistoryModelCommand;
 using MediatR;
 using System.Linq;
 using FluentAssertions;
@@ -34,64 +31,72 @@ namespace Tests.Business.HandlersTest
             _mediator = new Mock<IMediator>();
         }
 
-        [Test]
-        public async Task InterstielAdHistoryModel_GetQuery_Success()
-        {
-            //Arrange
-            var query = new GetInterstielAdHistoryModelQuery();
-
-            _interstielAdHistoryModelRepository.Setup(x => x.GetByIdAsync(It.IsAny<ObjectId>())).ReturnsAsync(new InterstielAdHistoryModel()
-//propertyler buraya yazılacak
-//{																		
-//InterstielAdHistoryModelId = 1,
-//InterstielAdHistoryModelName = "Test"
-//}
-);
-
-            var handler = new GetInterstielAdHistoryModelQueryHandler(_interstielAdHistoryModelRepository.Object, _mediator.Object);
-
-            //Act
-            var x = await handler.Handle(query, new System.Threading.CancellationToken());
-
-            //Asset
-            x.Success.Should().BeTrue();
-            //x.Data.InterstielAdHistoryModelId.Should().Be(1);
-
-        }
-
+      
         [Test]
         public async Task InterstielAdHistoryModel_GetQueries_Success()
         {
             //Arrange
-            var query = new GetInterstielAdHistoryModelsQuery();
+            var query = new GetInterstielAdHistoryModelByProjectIdQuery();
+            query.ProjectId = "121212";
 
             _interstielAdHistoryModelRepository.Setup(x => x.GetListAsync(It.IsAny<Expression<Func<InterstielAdHistoryModel, bool>>>()))
-                        .ReturnsAsync(new List<InterstielAdHistoryModel> { new InterstielAdHistoryModel() { /*TODO:propertyler buraya yazılacak InterstielAdHistoryModelId = 1, InterstielAdHistoryModelName = "test"*/ } }.AsQueryable());
+                        .ReturnsAsync(new List<InterstielAdHistoryModel> { new InterstielAdHistoryModel()
+                        {
+                            ProjectId = "121212",
+                            IsAdvSettingsActive = true,
+                            AdvStrategies = new AdvStrategy[]
+                            {
+                                new AdvStrategy()
+                            },
+                            Id = new ObjectId(),
+                            Name = "test",
+                            StarTime = DateTime.Now,
+                            Version = 1,
+                            playerPercent = 10
+                             
+                        }, 
+                            new InterstielAdHistoryModel()
+                        {
+                            ProjectId = "121212",
+                            IsAdvSettingsActive = true,
+                            AdvStrategies = new AdvStrategy[]
+                            {
+                                new AdvStrategy()
+                            },
+                            Id = new ObjectId(),
+                            Name = "test",
+                            StarTime = DateTime.Now,
+                            Version = 2,
+                            playerPercent = 20
+                             
+                        },
 
-            var handler = new GetInterstielAdHistoryModelsQueryHandler(_interstielAdHistoryModelRepository.Object, _mediator.Object);
+                        }.AsQueryable());
+
+            var handler = new GetInterstielAdHistoryModelByProjectIdQueryHandler(_interstielAdHistoryModelRepository.Object, _mediator.Object);
 
             //Act
             var x = await handler.Handle(query, new System.Threading.CancellationToken());
 
             //Asset
             x.Success.Should().BeTrue();
-            ((List<InterstielAdHistoryModel>)x.Data).Count.Should().BeGreaterThan(1);
+            x.Data.ToList().Count.Should().BeGreaterThan(1);
+            x.Data.ToList().Count.Should().Be(2);
 
         }
 
         [Test]
         public async Task InterstielAdHistoryModel_CreateCommand_Success()
         {
-            InterstielAdHistoryModel rt = null;
             //Arrange
             var command = new CreateInterstielAdHistoryModelCommand();
-            //propertyler buraya yazılacak
-            //command.InterstielAdHistoryModelName = "deneme";
+            command.ProjectId = "121212";
+            command.IsAdvSettingsActive = true;
+            command.Name = "test";
+            command.playerPercent = 20;
 
-            _interstielAdHistoryModelRepository.Setup(x => x.GetByIdAsync(It.IsAny<ObjectId>()))
-                        .ReturnsAsync(rt);
-
-            _interstielAdHistoryModelRepository.Setup(x => x.Add(It.IsAny<InterstielAdHistoryModel>()));
+            _interstielAdHistoryModelRepository.Setup(x => 
+                x.AddAsync(It.IsAny<InterstielAdHistoryModel>()));
 
             var handler = new CreateInterstielAdHistoryModelCommandHandler(_interstielAdHistoryModelRepository.Object, _mediator.Object);
             var x = await handler.Handle(command, new System.Threading.CancellationToken());
@@ -100,65 +105,7 @@ namespace Tests.Business.HandlersTest
             x.Success.Should().BeTrue();
             x.Message.Should().Be(Messages.Added);
         }
-
-        [Test]
-        public async Task InterstielAdHistoryModel_CreateCommand_NameAlreadyExist()
-        {
-            //Arrange
-            var command = new CreateInterstielAdHistoryModelCommand();
-            //propertyler buraya yazılacak 
-            //command.InterstielAdHistoryModelName = "test";
-
-            _interstielAdHistoryModelRepository.Setup(x => x.GetListAsync(It.IsAny<Expression<Func<InterstielAdHistoryModel, bool>>>()))
-                                           .ReturnsAsync(new List<InterstielAdHistoryModel> { new InterstielAdHistoryModel() { /*TODO:propertyler buraya yazılacak InterstielAdHistoryModelId = 1, InterstielAdHistoryModelName = "test"*/ } }.AsQueryable());
-
-            _interstielAdHistoryModelRepository.Setup(x => x.Add(It.IsAny<InterstielAdHistoryModel>()));
-
-            var handler = new CreateInterstielAdHistoryModelCommandHandler(_interstielAdHistoryModelRepository.Object, _mediator.Object);
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
-
-            x.Success.Should().BeFalse();
-            x.Message.Should().Be(Messages.NameAlreadyExist);
-        }
-
-        [Test]
-        public async Task InterstielAdHistoryModel_UpdateCommand_Success()
-        {
-            //Arrange
-            var command = new UpdateInterstielAdHistoryModelCommand();
-            //command.InterstielAdHistoryModelName = "test";
-
-            _interstielAdHistoryModelRepository.Setup(x => x.GetByIdAsync(It.IsAny<ObjectId>()))
-                        .ReturnsAsync(new InterstielAdHistoryModel() { /*TODO:propertyler buraya yazılacak InterstielAdHistoryModelId = 1, InterstielAdHistoryModelName = "deneme"*/ });
-
-            _interstielAdHistoryModelRepository.Setup(x => x.UpdateAsync(It.IsAny<ObjectId>(), It.IsAny<InterstielAdHistoryModel>()));
-
-            var handler = new UpdateInterstielAdHistoryModelCommandHandler(_interstielAdHistoryModelRepository.Object, _mediator.Object);
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
-
-
-            x.Success.Should().BeTrue();
-            x.Message.Should().Be(Messages.Updated);
-        }
-
-        [Test]
-        public async Task InterstielAdHistoryModel_DeleteCommand_Success()
-        {
-            //Arrange
-            var command = new DeleteInterstielAdHistoryModelCommand();
-
-            _interstielAdHistoryModelRepository.Setup(x => x.GetByIdAsync(It.IsAny<ObjectId>()))
-                        .ReturnsAsync(new InterstielAdHistoryModel() { /*TODO:propertyler buraya yazılacak InterstielAdHistoryModelId = 1, InterstielAdHistoryModelName = "deneme"*/});
-
-            _interstielAdHistoryModelRepository.Setup(x => x.Delete(It.IsAny<InterstielAdHistoryModel>()));
-
-            var handler = new DeleteInterstielAdHistoryModelCommandHandler(_interstielAdHistoryModelRepository.Object, _mediator.Object);
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
-
-
-            x.Success.Should().BeTrue();
-            x.Message.Should().Be(Messages.Deleted);
-        }
+        
     }
 }
 

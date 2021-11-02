@@ -13,7 +13,7 @@ namespace Entities.Concrete
         public int Version { get; set; }
         public int PlayerPercent { get; set; }
         public bool IsGift { get; set; }
-        public string GiftTexture { get; set; }
+        public byte[] GiftTexture { get; set; }
         public int ValidityPeriod { get; set; }
         public long StartTime { get; set; }
         public long FinishTime { get; set; }

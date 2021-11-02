@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using Business.Handlers.RemoteOfferHistoryModels.ValidationRules;
+using ServiceStack;
 
 namespace Business.Handlers.RemoteOfferHistoryModels.Commands
 {
@@ -30,7 +31,7 @@ namespace Business.Handlers.RemoteOfferHistoryModels.Commands
         public int Version { get; set; }
         public int PlayerPercent { get; set; }
         public bool IsGift { get; set; }
-        public string GiftTexture { get; set; }
+        public byte[] GiftTexture { get; set; }
         public int ValidityPeriod { get; set; }
         public long StartTime { get; set; }
         public long FinishTime { get; set; }

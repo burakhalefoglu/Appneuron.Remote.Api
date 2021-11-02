@@ -23,7 +23,7 @@ namespace Business.Handlers.InterstielAdHistoryModels.Commands
     {
 
         public string Name { get; set; }
-        public string ProjectId { get; set; }
+        public string ProjectId { get; set; } 
         public float Version { get; set; }
         public int playerPercent { get; set; }
         public bool IsAdvSettingsActive { get; set; }
@@ -45,10 +45,6 @@ namespace Business.Handlers.InterstielAdHistoryModels.Commands
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateInterstielAdHistoryModelCommand request, CancellationToken cancellationToken)
             {
-                var isThereInterstielAdHistoryModelRecord = _interstielAdHistoryModelRepository.Any(u => u.Name == request.Name);
-
-                if (isThereInterstielAdHistoryModelRecord == true)
-                    return new ErrorResult(Messages.NameAlreadyExist);
 
                 var addedInterstielAdHistoryModel = new InterstielAdHistoryModel
                 {
@@ -57,7 +53,6 @@ namespace Business.Handlers.InterstielAdHistoryModels.Commands
                     Version = request.Version,
                     playerPercent = request.playerPercent,
                     IsAdvSettingsActive = request.IsAdvSettingsActive,
-
                 };
 
                 await _interstielAdHistoryModelRepository.AddAsync(addedInterstielAdHistoryModel);

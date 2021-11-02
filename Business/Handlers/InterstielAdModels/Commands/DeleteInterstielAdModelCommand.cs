@@ -38,8 +38,6 @@ namespace Business.Handlers.InterstielAdModels.Commands
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(DeleteInterstielAdModelCommand request, CancellationToken cancellationToken)
             {
-
-
                 await _interstielAdModelRepository.DeleteAsync(i=> i.ProjectId == request.ProjectId && i.Name == request.Name && i.Version == request.Version);
 
                 return new SuccessResult(Messages.Deleted);
