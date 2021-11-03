@@ -24,7 +24,7 @@ namespace Business.Handlers.InterstielAdModels.Commands
         public string ProjectId { get; set; }
         public string Name { get; set; }
         public float Version { get; set; }
-        public int playerPercent { get; set; }
+        public int PlayerPercent { get; set; }
         public bool IsAdvSettingsActive { get; set; }
         public AdvStrategy[] AdvStrategies { get; set; }
 
@@ -55,7 +55,7 @@ namespace Business.Handlers.InterstielAdModels.Commands
                     ProjectId = request.ProjectId,
                     Name = request.Name,
                     Version = request.Version,
-                    playerPercent = request.playerPercent,
+                    PlayerPercent = request.PlayerPercent,
                     IsAdvSettingsActive = request.IsAdvSettingsActive,
                     AdvStrategies = request.AdvStrategies,
 

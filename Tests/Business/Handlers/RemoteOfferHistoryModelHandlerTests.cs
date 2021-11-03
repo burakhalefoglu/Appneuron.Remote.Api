@@ -119,7 +119,6 @@ namespace Tests.Business.HandlersTest
             command.LastPrice = 2;
             command.Name = "Test";
             command.PlayerPercent = 15;
-            command.ProductList = new ProductModel[] { };
             command.ProjectId = "121212";
             command.StartTime = DateTime.Now.Ticks;
 

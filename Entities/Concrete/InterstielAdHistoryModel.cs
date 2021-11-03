@@ -12,7 +12,6 @@ namespace Entities.Concrete
         public float Version { get; set; }
         public int playerPercent { get; set; }
         public bool IsAdvSettingsActive { get; set; }
-        public AdvStrategy[] AdvStrategies { get; set; }
-        public DateTime StarTime { get; set; }      
+        public DateTime StarTime { get; set; }
     }
 }

@@ -48,7 +48,6 @@ namespace Tests.Business.HandlersTest
                         {
                             ProjectId = "121212",
                             Version = 1,
-                            playerPercent = 20,
                             AdvStrategies = new AdvStrategy[]{},
                             Id = new ObjectId(),
                             IsAdvSettingsActive = true,
@@ -58,7 +57,6 @@ namespace Tests.Business.HandlersTest
                         {
                             ProjectId = "121212",
                             Version = 3,
-                            playerPercent = 20,
                             AdvStrategies = new AdvStrategy[]{},
                             Id = new ObjectId(),
                             IsAdvSettingsActive = true,
@@ -68,7 +66,6 @@ namespace Tests.Business.HandlersTest
                         {
                             ProjectId = "121212",
                             Version = 2,
-                            playerPercent = 20,
                             AdvStrategies = new AdvStrategy[]{},
                             Id = new ObjectId(),
                             IsAdvSettingsActive = true,
@@ -99,7 +96,6 @@ namespace Tests.Business.HandlersTest
             command.Name = "Test";
             command.ProjectId = "121212";
             command.Version = 1;
-            command.playerPercent = 20;
 
 
             _interstielAdModelRepository.Setup(x => x.Any(It.IsAny<Expression<Func<InterstielAdModel, bool>>>()))
@@ -125,7 +121,6 @@ namespace Tests.Business.HandlersTest
             command.Name = "Test";
             command.ProjectId = "121212";
             command.Version = 1;
-            command.playerPercent = 20;
 
 
             _interstielAdModelRepository.Setup(x => x.Any(It.IsAny<Expression<Func<InterstielAdModel, bool>>>()))
@@ -149,7 +144,6 @@ namespace Tests.Business.HandlersTest
             command.Name = "Test1";
             command.ProjectId = "121212";
             command.Version = 1;
-            command.playerPercent = 30;
 
             _interstielAdModelRepository.Setup(x => x.Any(It.IsAny<Expression<Func<InterstielAdModel, bool>>>()))
                         .Returns(false);
@@ -172,7 +166,6 @@ namespace Tests.Business.HandlersTest
             command.Name = "Test1";
             command.ProjectId = "121212";
             command.Version = 1;
-            command.playerPercent = 30;
 
             _interstielAdModelRepository.Setup(x => x.Any(
                     It.IsAny<Expression<Func<InterstielAdModel, bool>>>()))

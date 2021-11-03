@@ -87,6 +87,8 @@ namespace Business
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
             ConfigureServices(services);  
+            services.AddTransient<IRemoteOfferEventModelRepository>(x=> new RemoteOfferEventModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferEventModels));
+            services.AddTransient<IInterstitialAdEventModelRepository>(x=> new InterstitialAdEventModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstitialAdEventModels));
             services.AddTransient<IInterstielAdHistoryModelRepository>(x=> new InterstielAdHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdHistoryModels));
             services.AddTransient<IRemoteOfferHistoryModelRepository>(x=> new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferHistoryModels));
             services.AddTransient<IRemoteOfferModelRepository>(x=> new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferModels));
@@ -104,6 +106,8 @@ namespace Business
         public void ConfigureStagingServices(IServiceCollection services)
         {
             ConfigureServices(services);           
+            services.AddTransient<IRemoteOfferEventModelRepository>(x=> new RemoteOfferEventModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferEventModels));
+            services.AddTransient<IInterstitialAdEventModelRepository>(x=> new InterstitialAdEventModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstitialAdEventModels));
             services.AddTransient<IInterstielAdHistoryModelRepository>(x=> new InterstielAdHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdHistoryModels));
             services.AddTransient<IRemoteOfferHistoryModelRepository>(x=> new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferHistoryModels));
             services.AddTransient<IRemoteOfferModelRepository>(x=> new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferModels));
@@ -122,6 +126,8 @@ namespace Business
         public void ConfigureProductionServices(IServiceCollection services)
         {
             ConfigureServices(services);
+            services.AddTransient<IRemoteOfferEventModelRepository>(x=> new RemoteOfferEventModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferEventModels));
+            services.AddTransient<IInterstitialAdEventModelRepository>(x=> new InterstitialAdEventModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstitialAdEventModels));
             services.AddTransient<IInterstielAdHistoryModelRepository>(x=> new InterstielAdHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdHistoryModels));
             services.AddTransient<IRemoteOfferHistoryModelRepository>(x=> new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferHistoryModels));
             services.AddTransient<IRemoteOfferModelRepository>(x=> new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferModels));

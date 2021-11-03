@@ -26,7 +26,7 @@ namespace Business.Handlers.InterstielAdModels.Commands
         public string ProjectId { get; set; }
         public string Name { get; set; }
         public float Version { get; set; }
-        public int playerPercent { get; set; }
+        public int PlayerPercent { get; set; }
         public bool IsAdvSettingsActive { get; set; }
 
         public class UpdateInterstielAdModelCommandHandler : IRequestHandler<UpdateInterstielAdModelCommand, IResult>
@@ -47,7 +47,8 @@ namespace Business.Handlers.InterstielAdModels.Commands
             [TransactionScopeAspectAsync]
             public async Task<IResult> Handle(UpdateInterstielAdModelCommand request, CancellationToken cancellationToken)
             {
-                var isValid = _interstielAdModelRepository.Any( i => i.ProjectId == request.ProjectId && i.Name == request.Name &&
+                var isValid = _interstielAdModelRepository.Any( i => 
+                    i.ProjectId == request.ProjectId && i.Name == request.Name &&
                     i.Version == request.Version);
                 if(!isValid)
                 {
@@ -57,7 +58,7 @@ namespace Business.Handlers.InterstielAdModels.Commands
                 var resultData = await _interstielAdModelRepository.GetByFilterAsync(i => i.ProjectId == request.ProjectId && i.Name == request.Name &&
                    i.Version == request.Version);
 
-                resultData.playerPercent = request.playerPercent;
+                resultData.PlayerPercent = request.PlayerPercent;
                 resultData.IsAdvSettingsActive = request.IsAdvSettingsActive;
 
                 await _mediator.Send(new CreateInterstielAdHistoryModelCommand()
@@ -65,7 +66,8 @@ namespace Business.Handlers.InterstielAdModels.Commands
                     IsAdvSettingsActive = resultData.IsAdvSettingsActive,
                     Name = resultData.Name,
                     Version = resultData.Version,
-                    playerPercent = resultData.playerPercent,
+                    playerPercent = resultData.PlayerPercent,
+                    ProjectId = request.ProjectId
                 });
 
                 await _interstielAdModelRepository.UpdateAsync(resultData,

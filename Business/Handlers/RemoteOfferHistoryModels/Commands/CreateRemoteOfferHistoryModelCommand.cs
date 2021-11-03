@@ -35,7 +35,6 @@ namespace Business.Handlers.RemoteOfferHistoryModels.Commands
         public int ValidityPeriod { get; set; }
         public long StartTime { get; set; }
         public long FinishTime { get; set; }
-        public ProductModel[] ProductList { get; set; }
 
         public class CreateRemoteOfferHistoryModelCommandHandler : IRequestHandler<CreateRemoteOfferHistoryModelCommand, IResult>
         {

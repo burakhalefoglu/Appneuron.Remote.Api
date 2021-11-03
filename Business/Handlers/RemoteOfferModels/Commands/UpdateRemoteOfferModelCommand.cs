@@ -71,7 +71,6 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                 await _mediator.Send(new CreateRemoteOfferHistoryModelCommand
                     {
                         ProjectId = resultData.ProjectId,
-                        ProductList = resultData.ProductList,
                         Name = resultData.Name,
                         IsActive = request.IsActive,
                         FirstPrice = resultData.FirstPrice,

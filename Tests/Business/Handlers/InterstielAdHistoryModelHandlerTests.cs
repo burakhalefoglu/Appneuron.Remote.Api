@@ -44,10 +44,6 @@ namespace Tests.Business.HandlersTest
                         {
                             ProjectId = "121212",
                             IsAdvSettingsActive = true,
-                            AdvStrategies = new AdvStrategy[]
-                            {
-                                new AdvStrategy()
-                            },
                             Id = new ObjectId(),
                             Name = "test",
                             StarTime = DateTime.Now,
@@ -59,10 +55,6 @@ namespace Tests.Business.HandlersTest
                         {
                             ProjectId = "121212",
                             IsAdvSettingsActive = true,
-                            AdvStrategies = new AdvStrategy[]
-                            {
-                                new AdvStrategy()
-                            },
                             Id = new ObjectId(),
                             Name = "test",
                             StarTime = DateTime.Now,

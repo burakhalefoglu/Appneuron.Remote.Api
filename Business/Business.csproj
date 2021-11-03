@@ -35,6 +35,8 @@
    <WCFMetadata Include="Connected Services" />
  </ItemGroup>
  <ItemGroup>
+   <Folder Include="Handlers\InterstitialAdEventModels\Queries\" />
+   <Folder Include="Handlers\RemoteOfferEventModels\Queries\" />
    <Folder Include="Internals\Handlers\" />
    <Folder Include="MessageBrokers\Models\" />
    <Folder Include="Services\" />

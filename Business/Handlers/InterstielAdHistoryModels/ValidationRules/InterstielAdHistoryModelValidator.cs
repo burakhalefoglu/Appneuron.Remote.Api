@@ -9,10 +9,12 @@ namespace Business.Handlers.InterstielAdHistoryModels.ValidationRules
     {
         public CreateInterstielAdHistoryModelValidator()
         {
-            RuleFor(x => x.ProjectId).NotEmpty();
-            RuleFor(x => x.Version).NotEmpty();
-            RuleFor(x => x.playerPercent).NotEmpty();
-            RuleFor(x => x.IsAdvSettingsActive).NotEmpty();
+            RuleFor(x => x.Version).NotNull();
+            RuleFor(x => x.playerPercent).NotNull();
+            RuleFor(x => x.IsAdvSettingsActive).NotNull();
+            RuleFor(x => x.ProjectId).NotNull();
+            RuleFor(x => x.Name).NotNull();
+            
 
         }
     }

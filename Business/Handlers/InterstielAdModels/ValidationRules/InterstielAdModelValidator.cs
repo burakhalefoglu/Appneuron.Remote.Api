@@ -10,7 +10,7 @@ namespace Business.Handlers.InterstielAdModels.ValidationRules
         public CreateInterstielAdModelValidator()
         {
             RuleFor(x => x.Version).NotNull();
-            RuleFor(x => x.playerPercent).NotNull();
+            RuleFor(x => x.PlayerPercent).NotNull();
             RuleFor(x => x.IsAdvSettingsActive).NotNull();
             RuleFor(x => x.AdvStrategies).NotNull();
             RuleFor(x => x.ProjectId).NotNull();
@@ -22,9 +22,9 @@ namespace Business.Handlers.InterstielAdModels.ValidationRules
         public UpdateInterstielAdModelValidator()
         {
             RuleFor(x => x.Version).NotNull();
-            RuleFor(x => x.playerPercent).NotNull();
+            RuleFor(x => x.PlayerPercent).NotNull();
             RuleFor(x => x.IsAdvSettingsActive).NotNull();
-
+            RuleFor(x => x.ProjectId).NotNull();
         }
     }
 }

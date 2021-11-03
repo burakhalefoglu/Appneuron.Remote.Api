@@ -1,4 +1,5 @@
 ﻿
+using System;
 using Business.BusinessAspects;
 using Business.Constants;
 using Core.Aspects.Autofac.Caching;
@@ -39,7 +40,7 @@ namespace Business.Handlers.InterstielAdHistoryModels.Commands
                 _mediator = mediator;
             }
 
-            [ValidationAspect(typeof(CreateInterstielAdHistoryModelValidator), Priority = 1)]
+            [ValidationAspect(typeof(CreateInterstielAdHistoryModelValidator))]
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
@@ -53,6 +54,7 @@ namespace Business.Handlers.InterstielAdHistoryModels.Commands
                     Version = request.Version,
                     playerPercent = request.playerPercent,
                     IsAdvSettingsActive = request.IsAdvSettingsActive,
+                    StarTime = DateTime.Now
                 };
 
                 await _interstielAdHistoryModelRepository.AddAsync(addedInterstielAdHistoryModel);
