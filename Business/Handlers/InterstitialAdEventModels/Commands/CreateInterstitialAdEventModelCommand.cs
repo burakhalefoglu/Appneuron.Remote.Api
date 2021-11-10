@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using Business.Handlers.InterstitialAdEventModels.ValidationRules;
+using Business.MessageBrokers;
 using Business.MessageBrokers.Kafka;
 
 namespace Business.Handlers.InterstitialAdEventModels.Commands
@@ -33,16 +34,16 @@ namespace Business.Handlers.InterstitialAdEventModels.Commands
         {
             private readonly IInterstitialAdEventModelRepository _interstitialAdEventModelRepository;
             private readonly IMediator _mediator;
-            private readonly IKafkaMessageBroker _kafkaMessageBroker; 
+            private readonly IMessageBroker _messageBroker; 
 
             public CreateInterstitialAdEventModelCommandHandler(
                 IInterstitialAdEventModelRepository interstitialAdEventModelRepository,
                 IMediator mediator,
-                IKafkaMessageBroker kafkaMessageBroker)
+                IMessageBroker messageBroker)
             {
                 _interstitialAdEventModelRepository = interstitialAdEventModelRepository;
                 _mediator = mediator;
-                _kafkaMessageBroker = kafkaMessageBroker;
+                _messageBroker = messageBroker;
 
             }
 
@@ -62,7 +63,7 @@ namespace Business.Handlers.InterstitialAdEventModels.Commands
                 };
                 
                 await _interstitialAdEventModelRepository.AddAsync(addedInterstitialAdEventModel);
-                //await _kafkaMessageBroker.SendMessageAsync(addedInterstitialAdEventModel);
+                await _messageBroker.SendMessageAsync(addedInterstitialAdEventModel);
 
                 return new SuccessResult(Messages.Added);
             }

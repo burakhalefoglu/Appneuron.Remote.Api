@@ -25,6 +25,7 @@ using System;
 using System.Reflection;
 using System.Security.Claims;
 using System.Security.Principal;
+using Business.MessageBrokers;
 
 namespace Business
 {
@@ -93,7 +94,7 @@ namespace Business
             services.AddTransient<IRemoteOfferHistoryModelRepository>(x=> new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferHistoryModels));
             services.AddTransient<IRemoteOfferModelRepository>(x=> new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferModels));
             services.AddTransient<IInterstielAdModelRepository>(x=> new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdModels));
-            services.AddTransient<IKafkaMessageBroker, KafkaMessageBroker>();
+            services.AddTransient<IMessageBroker, KafkaMessageBroker>();
 
             services.AddDbContext<ProjectDbContext, DArchInMemory>(ServiceLifetime.Transient);
             services.AddSingleton<MongoDbContextBase, MongoDbContext>();
@@ -112,7 +113,7 @@ namespace Business
             services.AddTransient<IRemoteOfferHistoryModelRepository>(x=> new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferHistoryModels));
             services.AddTransient<IRemoteOfferModelRepository>(x=> new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferModels));
             services.AddTransient<IInterstielAdModelRepository>(x=> new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdModels));
-            services.AddTransient<IKafkaMessageBroker, KafkaMessageBroker>();
+            services.AddTransient<IMessageBroker, KafkaMessageBroker>();
 
             services.AddDbContext<ProjectDbContext>();
 
@@ -132,7 +133,7 @@ namespace Business
             services.AddTransient<IRemoteOfferHistoryModelRepository>(x=> new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferHistoryModels));
             services.AddTransient<IRemoteOfferModelRepository>(x=> new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferModels));
             services.AddTransient<IInterstielAdModelRepository>(x=> new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdModels));
-            services.AddTransient<IKafkaMessageBroker, KafkaMessageBroker>();
+            services.AddTransient<IMessageBroker, KafkaMessageBroker>();
 
             services.AddDbContext<ProjectDbContext>();
 

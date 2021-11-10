@@ -12,6 +12,7 @@ using Business.Handlers.RemoteOfferEventModels.Commands;
 using Business.Constants;
 using MediatR;
 using System.Linq;
+using Business.MessageBrokers;
 using Business.MessageBrokers.Kafka;
 using Core.Utilities.Results;
 using FluentAssertions;
@@ -22,9 +23,9 @@ namespace Tests.Business.HandlersTest
     [TestFixture]
     public class RemoteOfferEventModelHandlerTests
     {
-        Mock<IRemoteOfferEventModelRepository> _remoteOfferEventModelRepository;
-        Mock<IMediator> _mediator;
-        private Mock<IKafkaMessageBroker> _kafka;
+        private Mock<IRemoteOfferEventModelRepository> _remoteOfferEventModelRepository;
+        private Mock<IMediator> _mediator;
+        private Mock<IMessageBroker> _kafka;
 
 
         [SetUp]
@@ -32,7 +33,7 @@ namespace Tests.Business.HandlersTest
         { 
             _remoteOfferEventModelRepository = new Mock<IRemoteOfferEventModelRepository>();
             _mediator = new Mock<IMediator>();
-            _kafka = new Mock<IKafkaMessageBroker>();
+            _kafka = new Mock<IMessageBroker>();
 
         }
 

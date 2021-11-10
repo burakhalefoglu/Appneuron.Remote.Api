@@ -13,7 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
 using Business.Handlers.RemoteOfferEventModels.ValidationRules;
-using Business.MessageBrokers.Kafka;
+using Business.MessageBrokers;
 
 namespace Business.Handlers.RemoteOfferEventModels.Commands
 {
@@ -42,16 +42,16 @@ namespace Business.Handlers.RemoteOfferEventModels.Commands
         {
             private readonly IRemoteOfferEventModelRepository _remoteOfferEventModelRepository;
             private readonly IMediator _mediator;
-            private readonly IKafkaMessageBroker _kafkaMessageBroker;
+            private readonly IMessageBroker _messageBroker;
 
             public CreateRemoteOfferEventModelCommandHandler(
                 IRemoteOfferEventModelRepository remoteOfferEventModelRepository,
                 IMediator mediator,
-                IKafkaMessageBroker kafkaMessageBroker)
+                IMessageBroker messageBroker)
             {
                 _remoteOfferEventModelRepository = remoteOfferEventModelRepository;
                 _mediator = mediator;
-                _kafkaMessageBroker = kafkaMessageBroker;
+                _messageBroker = messageBroker;
 
             }
 
@@ -82,11 +82,10 @@ namespace Business.Handlers.RemoteOfferEventModels.Commands
                     StartTime = request.StartTime,
                     FinishTime = request.FinishTime,
                     ProductList = request.ProductList
-
                 };
 
                 await _remoteOfferEventModelRepository.AddAsync(addedRemoteOfferEventModel);
-                //await _kafkaMessageBroker.SendMessageAsync(addedRemoteOfferEventModel);
+                await _messageBroker.SendMessageAsync(addedRemoteOfferEventModel);
 
                 return new SuccessResult(Messages.Added);
             }

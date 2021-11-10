@@ -12,26 +12,27 @@ using Business.Handlers.InterstitialAdEventModels.Commands;
 using Business.Constants;
 using MediatR;
 using System.Linq;
+using Business.MessageBrokers;
 using Business.MessageBrokers.Kafka;
 using Core.Utilities.Results;
 using FluentAssertions;
 using MongoDB.Bson;
 
-namespace Tests.Business.HandlersTest
+namespace Tests.Business.Handlers
 {
     [TestFixture]
     public class InterstitialAdEventModelHandlerTests
     {
-        Mock<IInterstitialAdEventModelRepository> _interstitialAdEventModelRepository;
-        Mock<IMediator> _mediator;
-        private Mock<IKafkaMessageBroker> _kafka;
+        private Mock<IInterstitialAdEventModelRepository> _interstitialAdEventModelRepository;
+        private Mock<IMediator> _mediator;
+        private Mock<IMessageBroker> _kafka;
 
         [SetUp]
         public void Setup()
         {
             _interstitialAdEventModelRepository = new Mock<IInterstitialAdEventModelRepository>();
             _mediator = new Mock<IMediator>();
-            _kafka = new Mock<IKafkaMessageBroker>();
+            _kafka = new Mock<IMessageBroker>();
         }
 
        
