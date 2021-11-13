@@ -1,27 +1,25 @@
-﻿
-using Business.Handlers.RemoteOfferModels.Queries;
-using DataAccess.Abstract;
-using Moq;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using static Business.Handlers.RemoteOfferModels.Queries.GetRemoteOfferModelsByProjectIdQuery;
-using Entities.Concrete;
-using static Business.Handlers.RemoteOfferModels.Commands.CreateRemoteOfferModelCommand;
-using Business.Handlers.RemoteOfferModels.Commands;
 using Business.Constants;
+using Business.Handlers.RemoteOfferModels.Commands;
+using Business.Handlers.RemoteOfferModels.Queries;
+using Core.Utilities.Results;
+using DataAccess.Abstract;
+using Entities.Concrete;
+using FluentAssertions;
+using MediatR;
+using MongoDB.Bson;
+using Moq;
+using NUnit.Framework;
+using static Business.Handlers.RemoteOfferModels.Queries.GetRemoteOfferModelsByProjectIdQuery;
+using static Business.Handlers.RemoteOfferModels.Commands.CreateRemoteOfferModelCommand;
 using static Business.Handlers.RemoteOfferModels.Commands.UpdateRemoteOfferModelCommand;
 using static Business.Handlers.RemoteOfferModels.Commands.DeleteRemoteOfferModelCommand;
-using MediatR;
-using System.Linq;
-using System.Threading;
-using Core.Utilities.Results;
-using FluentAssertions;
-using MongoDB.Bson;
 
-namespace Tests.Business.HandlersTest
+namespace Tests.Business.Handlers
 {
     [TestFixture]
     public class RemoteOfferModelHandlerTests

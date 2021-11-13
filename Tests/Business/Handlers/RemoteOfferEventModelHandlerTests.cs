@@ -1,24 +1,18 @@
-﻿
+﻿using System;
+using System.Threading.Tasks;
+using Business.Constants;
+using Business.Handlers.RemoteOfferEventModels.Commands;
+using Business.MessageBrokers;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
+using Entities.Concrete;
+using FluentAssertions;
+using MediatR;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Entities.Concrete;
 using static Business.Handlers.RemoteOfferEventModels.Commands.CreateRemoteOfferEventModelCommand;
-using Business.Handlers.RemoteOfferEventModels.Commands;
-using Business.Constants;
-using MediatR;
-using System.Linq;
-using Business.MessageBrokers;
-using Business.MessageBrokers.Kafka;
-using Core.Utilities.Results;
-using FluentAssertions;
-using MongoDB.Bson;
 
-namespace Tests.Business.HandlersTest
+namespace Tests.Business.Handlers
 {
     [TestFixture]
     public class RemoteOfferEventModelHandlerTests

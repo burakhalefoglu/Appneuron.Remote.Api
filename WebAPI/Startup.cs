@@ -107,9 +107,16 @@ namespace WebAPI
             switch (configurationManager.Mode)
             {
                 case ApplicationMode.Development:
+                    app.UseSwagger();
+                    app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "DevArchitecture"); });
+                    break;
                 case ApplicationMode.Profiling:
+                    app.UseSwagger();
+                    app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "DevArchitecture"); });
+                    break;
                 case ApplicationMode.Staging:
-
+                    app.UseSwagger();
+                    app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "DevArchitecture"); });
                     break;
 
                 case ApplicationMode.Production:
@@ -124,13 +131,6 @@ namespace WebAPI
             app.UseDeveloperExceptionPage();
 
             app.ConfigureCustomExceptionMiddleware();
-
-            app.UseSwagger();
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("v1/swagger.json", "DevArchitecture");
-            });
 
             app.UseHttpsRedirection();
 

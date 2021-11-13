@@ -53,7 +53,7 @@ namespace Core.Extensions
             else if (e.GetType() == typeof(SecurityException))
             {
                 message = e.Message;
-                httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
             }
             else
             {

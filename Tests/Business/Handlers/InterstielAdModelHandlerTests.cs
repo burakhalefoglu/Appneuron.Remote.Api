@@ -1,28 +1,25 @@
-﻿
-using Business.Handlers.InterstielAdModels.Queries;
-using DataAccess.Abstract;
-using Moq;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Business.Constants;
+using Business.Handlers.InterstielAdModels.Commands;
+using Business.Handlers.InterstielAdModels.Queries;
+using Core.Utilities.Results;
+using DataAccess.Abstract;
 using Entities.Concrete;
+using FluentAssertions;
+using MediatR;
+using MongoDB.Bson;
+using Moq;
+using NUnit.Framework;
 using static Business.Handlers.InterstielAdModels.Commands.CreateInterstielAdModelCommand;
 using static Business.Handlers.InterstielAdModels.Queries.GetInterstielAdModelsByProjectIdQuery;
-
-using Business.Handlers.InterstielAdModels.Commands;
-using Business.Constants;
 using static Business.Handlers.InterstielAdModels.Commands.UpdateInterstielAdModelCommand;
 using static Business.Handlers.InterstielAdModels.Commands.DeleteInterstielAdModelCommand;
-using MediatR;
-using System.Linq;
-using Business.Handlers.InterstielAdHistoryModels.Commands;
-using Core.Utilities.Results;
-using FluentAssertions;
-using MongoDB.Bson;
 
-namespace Tests.Business.HandlersTest
+namespace Tests.Business.Handlers
 {
     [TestFixture]
     public class InterstielAdModelHandlerTests

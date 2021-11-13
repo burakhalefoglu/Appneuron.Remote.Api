@@ -1,4 +1,5 @@
-﻿using Business.Constants;
+﻿using System;
+using Business.Constants;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
 using Core.Utilities.IoC;
@@ -39,7 +40,7 @@ namespace Business.BusinessAspects
         {
 
             var userId = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Type.EndsWith("nameidentifier"))?.Value;
-            if (userId == null) throw new SecurityException(Messages.AuthorizationsDenied);
+            if (userId == null) throw new UnauthorizedAccessException(Messages.UnauthorizedAccess);
 
             
             var oprClaims = _httpContextAccessor.HttpContext?.User.Claims.Where(x => x.Type.EndsWith("role")).ToList();

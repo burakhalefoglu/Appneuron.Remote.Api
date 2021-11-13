@@ -61,11 +61,6 @@ namespace Business.Handlers.RemoteOfferEventModels.Commands
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateRemoteOfferEventModelCommand request, CancellationToken cancellationToken)
             {
-                var isThereRemoteOfferEventModelRecord = _remoteOfferEventModelRepository.Any(u => u.ProjectId == request.ProjectId);
-
-                if (isThereRemoteOfferEventModelRecord == true)
-                    return new ErrorResult(Messages.NameAlreadyExist);
-
                 var addedRemoteOfferEventModel = new RemoteOfferEventModel
                 {
                     ProjectId = request.ProjectId,
