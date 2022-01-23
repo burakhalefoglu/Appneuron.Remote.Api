@@ -21,7 +21,7 @@ namespace Core.CrossCuttingConcerns.Logging.Serilog.Loggers
             var seriLogConfig = new LoggerConfiguration()
                     .WriteTo
                     .DurableHttpUsingFileSizeRolledBuffers(
-                        requestUri: logConfig.Url,
+                        requestUri: $"http://{logConfig.Host}:{logConfig.Port}",
                         batchFormatter: new ArrayBatchFormatter(),
                         textFormatter: new ElasticsearchJsonFormatter()
                      )
