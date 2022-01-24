@@ -42,7 +42,7 @@ namespace Business.Handlers.InterstielAdHistoryModels.Commands
 
             [ValidationAspect(typeof(CreateInterstielAdHistoryModelValidator))]
             [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))]
+            [LogAspect(typeof(LogstashLogger))]
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateInterstielAdHistoryModelCommand request,
                 CancellationToken cancellationToken)

@@ -32,7 +32,7 @@ namespace Business.Handlers.InterstielAdModels.Queries
 
             [PerformanceAspect(5)]
             [CacheAspect(10)]
-            [LogAspect(typeof(FileLogger))]
+            [LogAspect(typeof(LogstashLogger))]
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<IEnumerable<InterstielAdModel>>> Handle(
                 GetInterstielAdModelsByProjectIdQuery request, CancellationToken cancellationToken)

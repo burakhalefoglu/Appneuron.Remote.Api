@@ -32,7 +32,7 @@ namespace Business.Handlers.InterstielAdModels.Commands
             }
 
             [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(FileLogger))]
+            [LogAspect(typeof(LogstashLogger))]
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(DeleteInterstielAdModelCommand request,
                 CancellationToken cancellationToken)
