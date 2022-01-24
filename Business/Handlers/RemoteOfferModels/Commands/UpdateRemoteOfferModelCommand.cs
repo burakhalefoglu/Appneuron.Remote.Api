@@ -1,27 +1,21 @@
-﻿
-using Business.Constants;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Business.BusinessAspects;
+using Business.Constants;
+using Business.Handlers.RemoteOfferHistoryModels.Commands;
+using Business.Handlers.RemoteOfferModels.ValidationRules;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
+using Core.Aspects.Autofac.Transaction;
+using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
-using Entities.Concrete;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
-using Core.Aspects.Autofac.Validation;
-using Business.Handlers.RemoteOfferModels.ValidationRules;
-using MongoDB.Bson;
-using Business.Handlers.RemoteOfferHistoryModels.Commands;
-using System;
-using Core.Aspects.Autofac.Transaction;
 
 namespace Business.Handlers.RemoteOfferModels.Commands
 {
-
-
     public class UpdateRemoteOfferModelCommand : IRequest<IResult>
     {
         public string ProjectId { get; set; }
@@ -32,10 +26,11 @@ namespace Business.Handlers.RemoteOfferModels.Commands
 
         public class UpdateRemoteOfferModelCommandHandler : IRequestHandler<UpdateRemoteOfferModelCommand, IResult>
         {
-            private readonly IRemoteOfferModelRepository _remoteOfferModelRepository;
             private readonly IMediator _mediator;
+            private readonly IRemoteOfferModelRepository _remoteOfferModelRepository;
 
-            public UpdateRemoteOfferModelCommandHandler(IRemoteOfferModelRepository remoteOfferModelRepository, IMediator mediator)
+            public UpdateRemoteOfferModelCommandHandler(IRemoteOfferModelRepository remoteOfferModelRepository,
+                IMediator mediator)
             {
                 _remoteOfferModelRepository = remoteOfferModelRepository;
                 _mediator = mediator;
@@ -46,19 +41,18 @@ namespace Business.Handlers.RemoteOfferModels.Commands
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
             [TransactionScopeAspectAsync]
-            public async Task<IResult> Handle(UpdateRemoteOfferModelCommand request, CancellationToken cancellationToken)
+            public async Task<IResult> Handle(UpdateRemoteOfferModelCommand request,
+                CancellationToken cancellationToken)
             {
                 var isValid = _remoteOfferModelRepository.Any(r => r.ProjectId == request.ProjectId &&
                                                                    r.Name == request.Name &&
                                                                    r.Version == request.Version);
-                if (!isValid)
-                {
-                    return new ErrorResult(Messages.NoContent);
-                }
+                if (!isValid) return new ErrorResult(Messages.NoContent);
 
-                var resultData = await _remoteOfferModelRepository.GetByFilterAsync(r => r.ProjectId == request.ProjectId &&
-                r.Name == request.Name &&
-                r.Version == request.Version);
+                var resultData = await _remoteOfferModelRepository.GetByFilterAsync(r =>
+                    r.ProjectId == request.ProjectId &&
+                    r.Name == request.Name &&
+                    r.Version == request.Version);
 
                 resultData.PlayerPercent = request.playerPercent;
                 resultData.IsActive = request.IsActive;
@@ -69,21 +63,20 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                 }
 
                 await _mediator.Send(new CreateRemoteOfferHistoryModelCommand
-                    {
-                        ProjectId = resultData.ProjectId,
-                        Name = resultData.Name,
-                        IsActive = request.IsActive,
-                        FirstPrice = resultData.FirstPrice,
-                        LastPrice = resultData.LastPrice,
-                        Version = resultData.Version,
-                        PlayerPercent = resultData.PlayerPercent,
-                        IsGift = resultData.IsGift,
-                        GiftTexture = resultData.GiftTexture,
-                        ValidityPeriod = resultData.ValidityPeriod,
-                        StartTime = resultData.StartTime,
-                        FinishTime = resultData.FinishTime
-
-                    });
+                {
+                    ProjectId = resultData.ProjectId,
+                    Name = resultData.Name,
+                    IsActive = request.IsActive,
+                    FirstPrice = resultData.FirstPrice,
+                    LastPrice = resultData.LastPrice,
+                    Version = resultData.Version,
+                    PlayerPercent = resultData.PlayerPercent,
+                    IsGift = resultData.IsGift,
+                    GiftTexture = resultData.GiftTexture,
+                    ValidityPeriod = resultData.ValidityPeriod,
+                    StartTime = resultData.StartTime,
+                    FinishTime = resultData.FinishTime
+                });
 
                 await _remoteOfferModelRepository.UpdateAsync(resultData,
                     i => i.ProjectId == request.ProjectId && i.Name == request.Name &&
@@ -94,4 +87,3 @@ namespace Business.Handlers.RemoteOfferModels.Commands
         }
     }
 }
-

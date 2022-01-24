@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Core.Entities;
+﻿using Core.Entities;
 
 namespace Entities.Concrete
 {
-    public class RemoteOfferEventModel: DocumentDbEntity
+    public class RemoteOfferEventModel : DocumentDbEntity
     {
         public string ProjectId { get; set; }
         public ProductModel[] ProductList { get; set; }

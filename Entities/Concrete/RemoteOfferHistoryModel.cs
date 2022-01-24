@@ -2,7 +2,7 @@
 
 namespace Entities.Concrete
 {
-    public class RemoteOfferHistoryModel: DocumentDbEntity
+    public class RemoteOfferHistoryModel : DocumentDbEntity
     {
         public string ProjectId { get; set; }
         public ProductModel[] ProductList { get; set; }

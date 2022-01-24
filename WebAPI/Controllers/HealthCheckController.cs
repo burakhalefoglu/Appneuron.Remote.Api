@@ -1,29 +1,27 @@
 ﻿using System.Threading.Tasks;
-using Business.Handlers.Authorizations.Commands;
-using Business.Handlers.Authorizations.Queries;
-using Business.Handlers.Users.Commands;
-using Core.Utilities.Results;
-using Core.Utilities.Security.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace WebAPI.Controllers
-{ 
-
+{
+    /// <summary>
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class HealthCheckController : BaseApiController
     {
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         [Consumes("application/json")]
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [HttpGet()]
-        public async Task<IActionResult> checkHealth()
+        [HttpGet]
+        public Task<IActionResult> CheckHealth()
         {
-            return Ok("ok");
+            return Task.FromResult<IActionResult>(Ok("ok"));
         }
     }
 }

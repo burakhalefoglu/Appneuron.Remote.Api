@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Business.Constants;
 using Business.Handlers.RemoteOfferEventModels.Commands;
@@ -17,19 +18,17 @@ namespace Tests.Business.Handlers
     [TestFixture]
     public class RemoteOfferEventModelHandlerTests
     {
-        private Mock<IRemoteOfferEventModelRepository> _remoteOfferEventModelRepository;
-        private Mock<IMediator> _mediator;
-        private Mock<IMessageBroker> _kafka;
-
-
         [SetUp]
         public void Setup()
-        { 
+        {
             _remoteOfferEventModelRepository = new Mock<IRemoteOfferEventModelRepository>();
             _mediator = new Mock<IMediator>();
             _kafka = new Mock<IMessageBroker>();
-
         }
+
+        private Mock<IRemoteOfferEventModelRepository> _remoteOfferEventModelRepository;
+        private Mock<IMediator> _mediator;
+        private Mock<IMessageBroker> _kafka;
 
         [Test]
         public async Task RemoteOfferEventModel_CreateCommand_Success()
@@ -39,7 +38,7 @@ namespace Tests.Business.Handlers
             command.ClientIdList = new string[] { };
             command.FinishTime = new DateTime().Ticks;
             command.FirstPrice = 12;
-            command.GiftTexture = new byte[]{};
+            command.GiftTexture = new byte[] { };
             command.IsActive = false;
             command.IsGift = true;
             command.LastPrice = 8;
@@ -47,7 +46,7 @@ namespace Tests.Business.Handlers
             command.PlayerPercent = 20;
             command.ProjectId = "121212";
             command.ProductList = new ProductModel[] { };
-            
+
 
             _remoteOfferEventModelRepository.Setup(x => x.Add(It.IsAny<RemoteOfferEventModel>()));
 
@@ -58,7 +57,7 @@ namespace Tests.Business.Handlers
                 _remoteOfferEventModelRepository.Object,
                 _mediator.Object, _kafka.Object);
 
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
+            var x = await handler.Handle(command, new CancellationToken());
 
 
             x.Success.Should().BeTrue();
@@ -66,4 +65,3 @@ namespace Tests.Business.Handlers
         }
     }
 }
-

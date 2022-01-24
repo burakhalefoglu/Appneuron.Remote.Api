@@ -1,13 +1,13 @@
-﻿using Castle.DynamicProxy;
+﻿using System.Transactions;
+using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
-using System.Transactions;
 
 namespace Core.Aspects.Autofac.Transaction
 {
     /// <summary>
-    /// TransactionScopeAspect
+    ///     TransactionScopeAspect
     /// </summary>
-    public class TransactionScopeAspectAttribute : MethodInterceptionAttribute
+    public class TransactionScopeAspectAttribute : MethodInterception
     {
         public override void Intercept(IInvocation invocation)
         {

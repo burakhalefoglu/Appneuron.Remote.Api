@@ -1,10 +1,8 @@
-﻿
-using Business.Handlers.RemoteOfferHistoryModels.Commands;
+﻿using Business.Handlers.RemoteOfferHistoryModels.Commands;
 using FluentValidation;
 
 namespace Business.Handlers.RemoteOfferHistoryModels.ValidationRules
 {
-
     public class CreateRemoteOfferHistoryModelValidator : AbstractValidator<CreateRemoteOfferHistoryModelCommand>
     {
         public CreateRemoteOfferHistoryModelValidator()
@@ -19,7 +17,6 @@ namespace Business.Handlers.RemoteOfferHistoryModels.ValidationRules
             RuleFor(x => x.ValidityPeriod).NotEmpty();
             RuleFor(x => x.StartTime).NotEmpty();
             RuleFor(x => x.FinishTime).NotEmpty();
-
         }
     }
 }

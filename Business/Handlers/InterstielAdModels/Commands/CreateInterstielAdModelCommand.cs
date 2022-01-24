@@ -1,6 +1,8 @@
-﻿
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Business.BusinessAspects;
 using Business.Constants;
+using Business.Handlers.InterstielAdModels.ValidationRules;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Validation;
@@ -9,15 +11,10 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
-using Business.Handlers.InterstielAdModels.ValidationRules;
 
 namespace Business.Handlers.InterstielAdModels.Commands
 {
     /// <summary>
-    /// 
     /// </summary>
     public class CreateInterstielAdModelCommand : IRequest<IResult>
     {
@@ -33,7 +30,9 @@ namespace Business.Handlers.InterstielAdModels.Commands
         {
             private readonly IInterstielAdModelRepository _interstielAdModelRepository;
             private readonly IMediator _mediator;
-            public CreateInterstielAdModelCommandHandler(IInterstielAdModelRepository interstielAdModelRepository, IMediator mediator)
+
+            public CreateInterstielAdModelCommandHandler(IInterstielAdModelRepository interstielAdModelRepository,
+                IMediator mediator)
             {
                 _interstielAdModelRepository = interstielAdModelRepository;
                 _mediator = mediator;
@@ -43,9 +42,11 @@ namespace Business.Handlers.InterstielAdModels.Commands
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
-            public async Task<IResult> Handle(CreateInterstielAdModelCommand request, CancellationToken cancellationToken)
+            public async Task<IResult> Handle(CreateInterstielAdModelCommand request,
+                CancellationToken cancellationToken)
             {
-                var isThereInterstielAdModelRecord = _interstielAdModelRepository.Any(u => u.Name == request.Name && u.ProjectId == request.ProjectId && u.Version == request.Version);
+                var isThereInterstielAdModelRecord = _interstielAdModelRepository.Any(u =>
+                    u.Name == request.Name && u.ProjectId == request.ProjectId && u.Version == request.Version);
 
                 if (isThereInterstielAdModelRecord)
                     return new ErrorResult(Messages.AlreadyExist);
@@ -57,8 +58,7 @@ namespace Business.Handlers.InterstielAdModels.Commands
                     Version = request.Version,
                     PlayerPercent = request.PlayerPercent,
                     IsAdvSettingsActive = request.IsAdvSettingsActive,
-                    AdvStrategies = request.AdvStrategies,
-
+                    AdvStrategies = request.AdvStrategies
                 };
 
                 await _interstielAdModelRepository.AddAsync(addedInterstielAdModel);

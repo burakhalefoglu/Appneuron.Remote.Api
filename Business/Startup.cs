@@ -1,7 +1,13 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using System.Security.Claims;
+using System.Security.Principal;
 using Autofac;
 using Business.Constants;
 using Business.DependencyResolvers;
 using Business.Fakes.DArch;
+using Business.MessageBrokers;
 using Business.MessageBrokers.Kafka;
 using Core.CrossCuttingConcerns.Caching;
 using Core.CrossCuttingConcerns.Caching.Microsoft;
@@ -21,15 +27,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Reflection;
-using System.Security.Claims;
-using System.Security.Principal;
-using Business.MessageBrokers;
 
 namespace Business
 {
-    public partial class BusinessStartup
+    public class BusinessStartup
     {
         protected readonly IHostEnvironment HostEnvironment;
 
@@ -42,25 +43,25 @@ namespace Business
         public IConfiguration Configuration { get; }
 
         /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
+        ///     This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
         /// <remarks>
-        /// It is common to all configurations and must be called. Aspnet core does not call this method because there are other methods.
+        ///     It is common to all configurations and must be called. Aspnet core does not call this method because there are
+        ///     other methods.
         /// </remarks>
         /// <param name="services"></param>
-
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            Func<IServiceProvider, ClaimsPrincipal> getPrincipal = (sp) =>
-
-                            sp.GetService<IHttpContextAccessor>().HttpContext?.User ?? new ClaimsPrincipal(new ClaimsIdentity(Messages.Unknown));
+            Func<IServiceProvider, ClaimsPrincipal> getPrincipal = sp =>
+                sp.GetService<IHttpContextAccessor>().HttpContext?.User ??
+                new ClaimsPrincipal(new ClaimsIdentity(Messages.Unknown));
 
             services.AddScoped<IPrincipal>(getPrincipal);
             services.AddMemoryCache();
 
             services.AddDependencyResolvers(Configuration, new ICoreModule[]
             {
-                    new CoreModule()
+                new CoreModule()
             });
 
             services.AddSingleton<ConfigurationManager>();
@@ -77,23 +78,35 @@ namespace Business
 
             ValidatorOptions.Global.DisplayNameResolver = (type, memberInfo, expression) =>
             {
-                return memberInfo.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()?.GetName();
+                return memberInfo.GetCustomAttribute<DisplayAttribute>()?.GetName();
             };
         }
 
         /// <summary>
-        /// This method gets called by the Development
+        ///     This method gets called by the Development
         /// </summary>
         /// <param name="services"></param>
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
-            ConfigureServices(services);  
-            services.AddTransient<IRemoteOfferEventModelRepository>(x=> new RemoteOfferEventModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferEventModels));
-            services.AddTransient<IInterstitialAdEventModelRepository>(x=> new InterstitialAdEventModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstitialAdEventModels));
-            services.AddTransient<IInterstielAdHistoryModelRepository>(x=> new InterstielAdHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdHistoryModels));
-            services.AddTransient<IRemoteOfferHistoryModelRepository>(x=> new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferHistoryModels));
-            services.AddTransient<IRemoteOfferModelRepository>(x=> new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferModels));
-            services.AddTransient<IInterstielAdModelRepository>(x=> new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdModels));
+            ConfigureServices(services);
+            services.AddTransient<IRemoteOfferEventModelRepository>(x =>
+                new RemoteOfferEventModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.RemoteOfferEventModels));
+            services.AddTransient<IInterstitialAdEventModelRepository>(x =>
+                new InterstitialAdEventModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.InterstitialAdEventModels));
+            services.AddTransient<IInterstielAdHistoryModelRepository>(x =>
+                new InterstielAdHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.InterstielAdHistoryModels));
+            services.AddTransient<IRemoteOfferHistoryModelRepository>(x =>
+                new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.RemoteOfferHistoryModels));
+            services.AddTransient<IRemoteOfferModelRepository>(x =>
+                new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.RemoteOfferModels));
+            services.AddTransient<IInterstielAdModelRepository>(x =>
+                new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.InterstielAdModels));
             services.AddTransient<IMessageBroker, KafkaMessageBroker>();
 
             services.AddDbContext<ProjectDbContext, DArchInMemory>(ServiceLifetime.Transient);
@@ -101,18 +114,30 @@ namespace Business
         }
 
         /// <summary>
-        /// This method gets called by the Staging
+        ///     This method gets called by the Staging
         /// </summary>
         /// <param name="services"></param>
         public void ConfigureStagingServices(IServiceCollection services)
         {
-            ConfigureServices(services);           
-            services.AddTransient<IRemoteOfferEventModelRepository>(x=> new RemoteOfferEventModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferEventModels));
-            services.AddTransient<IInterstitialAdEventModelRepository>(x=> new InterstitialAdEventModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstitialAdEventModels));
-            services.AddTransient<IInterstielAdHistoryModelRepository>(x=> new InterstielAdHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdHistoryModels));
-            services.AddTransient<IRemoteOfferHistoryModelRepository>(x=> new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferHistoryModels));
-            services.AddTransient<IRemoteOfferModelRepository>(x=> new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferModels));
-            services.AddTransient<IInterstielAdModelRepository>(x=> new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdModels));
+            ConfigureServices(services);
+            services.AddTransient<IRemoteOfferEventModelRepository>(x =>
+                new RemoteOfferEventModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.RemoteOfferEventModels));
+            services.AddTransient<IInterstitialAdEventModelRepository>(x =>
+                new InterstitialAdEventModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.InterstitialAdEventModels));
+            services.AddTransient<IInterstielAdHistoryModelRepository>(x =>
+                new InterstielAdHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.InterstielAdHistoryModels));
+            services.AddTransient<IRemoteOfferHistoryModelRepository>(x =>
+                new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.RemoteOfferHistoryModels));
+            services.AddTransient<IRemoteOfferModelRepository>(x =>
+                new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.RemoteOfferModels));
+            services.AddTransient<IInterstielAdModelRepository>(x =>
+                new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.InterstielAdModels));
             services.AddTransient<IMessageBroker, KafkaMessageBroker>();
 
             services.AddDbContext<ProjectDbContext>();
@@ -121,18 +146,30 @@ namespace Business
         }
 
         /// <summary>
-        /// This method gets called by the Production
+        ///     This method gets called by the Production
         /// </summary>
         /// <param name="services"></param>
         public void ConfigureProductionServices(IServiceCollection services)
         {
             ConfigureServices(services);
-            services.AddTransient<IRemoteOfferEventModelRepository>(x=> new RemoteOfferEventModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferEventModels));
-            services.AddTransient<IInterstitialAdEventModelRepository>(x=> new InterstitialAdEventModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstitialAdEventModels));
-            services.AddTransient<IInterstielAdHistoryModelRepository>(x=> new InterstielAdHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdHistoryModels));
-            services.AddTransient<IRemoteOfferHistoryModelRepository>(x=> new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferHistoryModels));
-            services.AddTransient<IRemoteOfferModelRepository>(x=> new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.RemoteOfferModels));
-            services.AddTransient<IInterstielAdModelRepository>(x=> new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(), Collections.InterstielAdModels));
+            services.AddTransient<IRemoteOfferEventModelRepository>(x =>
+                new RemoteOfferEventModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.RemoteOfferEventModels));
+            services.AddTransient<IInterstitialAdEventModelRepository>(x =>
+                new InterstitialAdEventModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.InterstitialAdEventModels));
+            services.AddTransient<IInterstielAdHistoryModelRepository>(x =>
+                new InterstielAdHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.InterstielAdHistoryModels));
+            services.AddTransient<IRemoteOfferHistoryModelRepository>(x =>
+                new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.RemoteOfferHistoryModels));
+            services.AddTransient<IRemoteOfferModelRepository>(x =>
+                new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.RemoteOfferModels));
+            services.AddTransient<IInterstielAdModelRepository>(x =>
+                new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(),
+                    Collections.InterstielAdModels));
             services.AddTransient<IMessageBroker, KafkaMessageBroker>();
 
             services.AddDbContext<ProjectDbContext>();
@@ -141,7 +178,6 @@ namespace Business
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <param name="builder"></param>
         public void ConfigureContainer(ContainerBuilder builder)

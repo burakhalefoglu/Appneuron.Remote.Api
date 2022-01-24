@@ -1,10 +1,8 @@
-﻿
-using Business.Handlers.RemoteOfferEventModels.Commands;
+﻿using Business.Handlers.RemoteOfferEventModels.Commands;
 using FluentValidation;
 
 namespace Business.Handlers.RemoteOfferEventModels.ValidationRules
 {
-
     public class CreateRemoteOfferEventModelValidator : AbstractValidator<CreateRemoteOfferEventModelCommand>
     {
         public CreateRemoteOfferEventModelValidator()
@@ -20,7 +18,6 @@ namespace Business.Handlers.RemoteOfferEventModels.ValidationRules
             RuleFor(x => x.ValidityPeriod).NotEmpty();
             RuleFor(x => x.StartTime).NotEmpty();
             RuleFor(x => x.FinishTime).NotEmpty();
-
         }
     }
 }

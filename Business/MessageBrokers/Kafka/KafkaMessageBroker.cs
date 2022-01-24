@@ -17,17 +17,18 @@ namespace Business.MessageBrokers.Kafka
         public KafkaMessageBroker()
         {
             var configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
-            if (configuration != null) _kafkaOptions = configuration.GetSection("MessageBrokerOptions").Get<MessageBrokerOption>();
+            if (configuration != null)
+                _kafkaOptions = configuration.GetSection("MessageBrokerOptions").Get<MessageBrokerOption>();
         }
 
-        public async Task GetMessageAsync<T>(string topic,  string consumerGroup, Func<T,Task<IResult>> callback)
+        public async Task GetMessageAsync<T>(string topic, string consumerGroup, Func<T, Task<IResult>> callback)
         {
             await Task.Run(async () =>
             {
                 var config = new ConsumerConfig
                 {
                     BootstrapServers = $"{_kafkaOptions.HostName}:{_kafkaOptions.Port}",
-                    GroupId =  consumerGroup, 
+                    GroupId = consumerGroup,
                     EnableAutoCommit = false,
                     StatisticsIntervalMs = 5000,
                     SessionTimeoutMs = 6000,
@@ -92,8 +93,6 @@ namespace Business.MessageBrokers.Kafka
                     consumer.Close();
                 }
             });
-
-
         }
 
         public async Task<IResult> SendMessageAsync<T>(T messageModel) where T :

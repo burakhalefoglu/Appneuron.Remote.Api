@@ -1,20 +1,20 @@
-﻿using Castle.DynamicProxy;
+﻿using System;
+using System.Transactions;
+using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
 using Core.Utilities.IoC;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Transactions;
 
 namespace Core.Aspects.Autofac.Transaction
 {
     /// <summary>
     /// TransactionScopeAspect
     /// </summary>
-    public class TransactionScopeAspectAsyncAttribute : MethodInterceptionAttribute
+    public class TransactionScopeAspectAsync : MethodInterception
     {
         private readonly Type _dbContextType;
 
-        public TransactionScopeAspectAsyncAttribute()
+        public TransactionScopeAspectAsync()
         {
         }
 

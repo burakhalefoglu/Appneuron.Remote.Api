@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Business.Constants;
 using Business.Handlers.InterstielAdModels.Commands;
@@ -24,14 +25,15 @@ namespace Tests.Business.Handlers
     [TestFixture]
     public class InterstielAdModelHandlerTests
     {
-        Mock<IInterstielAdModelRepository> _interstielAdModelRepository;
-        Mock<IMediator> _mediator;
         [SetUp]
         public void Setup()
         {
             _interstielAdModelRepository = new Mock<IInterstielAdModelRepository>();
             _mediator = new Mock<IMediator>();
         }
+
+        private Mock<IInterstielAdModelRepository> _interstielAdModelRepository;
+        private Mock<IMediator> _mediator;
 
         [Test]
         public async Task InterstielAdModel_GetByIdQueries_Success()
@@ -40,47 +42,48 @@ namespace Tests.Business.Handlers
             var query = new GetInterstielAdModelsByProjectIdQuery();
             query.ProjectId = "121212";
 
-            _interstielAdModelRepository.Setup(x => x.GetListAsync(It.IsAny<Expression<Func<InterstielAdModel, bool>>>()))
-                        .ReturnsAsync(new List<InterstielAdModel> { new InterstielAdModel()
-                        {
-                            ProjectId = "121212",
-                            Version = 1,
-                            AdvStrategies = new AdvStrategy[]{},
-                            Id = new ObjectId(),
-                            IsAdvSettingsActive = true,
-                            Name = "Test"
+            _interstielAdModelRepository
+                .Setup(x => x.GetListAsync(It.IsAny<Expression<Func<InterstielAdModel, bool>>>()))
+                .ReturnsAsync(new List<InterstielAdModel>
+                {
+                    new()
+                    {
+                        ProjectId = "121212",
+                        Version = 1,
+                        AdvStrategies = new AdvStrategy[] { },
+                        Id = new ObjectId(),
+                        IsAdvSettingsActive = true,
+                        Name = "Test"
+                    },
+                    new()
+                    {
+                        ProjectId = "121212",
+                        Version = 3,
+                        AdvStrategies = new AdvStrategy[] { },
+                        Id = new ObjectId(),
+                        IsAdvSettingsActive = true,
+                        Name = "Test"
+                    },
+                    new()
+                    {
+                        ProjectId = "121212",
+                        Version = 2,
+                        AdvStrategies = new AdvStrategy[] { },
+                        Id = new ObjectId(),
+                        IsAdvSettingsActive = true,
+                        Name = "Test"
+                    }
+                }.AsQueryable());
 
-                        },new InterstielAdModel()
-                        {
-                            ProjectId = "121212",
-                            Version = 3,
-                            AdvStrategies = new AdvStrategy[]{},
-                            Id = new ObjectId(),
-                            IsAdvSettingsActive = true,
-                            Name = "Test"
-
-                        },new InterstielAdModel()
-                        {
-                            ProjectId = "121212",
-                            Version = 2,
-                            AdvStrategies = new AdvStrategy[]{},
-                            Id = new ObjectId(),
-                            IsAdvSettingsActive = true,
-                            Name = "Test"
-
-                        },
-
-                        }.AsQueryable());
-
-            var handler = new GetInterstielAdModelsByProjectIdQueryHandler(_interstielAdModelRepository.Object, _mediator.Object);
+            var handler =
+                new GetInterstielAdModelsByProjectIdQueryHandler(_interstielAdModelRepository.Object, _mediator.Object);
 
             //Act
-            var x = await handler.Handle(query, new System.Threading.CancellationToken());
+            var x = await handler.Handle(query, new CancellationToken());
 
             //Asset
             x.Success.Should().BeTrue();
             x.Data.ToList().Count.Should().BeGreaterThan(1);
-
         }
 
         [Test]
@@ -88,7 +91,7 @@ namespace Tests.Business.Handlers
         {
             //Arrange
             var command = new CreateInterstielAdModelCommand();
-            command.AdvStrategies = new AdvStrategy[]{};
+            command.AdvStrategies = new AdvStrategy[] { };
             command.IsAdvSettingsActive = true;
             command.Name = "Test";
             command.ProjectId = "121212";
@@ -96,12 +99,13 @@ namespace Tests.Business.Handlers
 
 
             _interstielAdModelRepository.Setup(x => x.Any(It.IsAny<Expression<Func<InterstielAdModel, bool>>>()))
-                        .Returns(false);
+                .Returns(false);
 
             _interstielAdModelRepository.Setup(x => x.Add(It.IsAny<InterstielAdModel>()));
 
-            var handler = new CreateInterstielAdModelCommandHandler(_interstielAdModelRepository.Object, _mediator.Object);
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
+            var handler =
+                new CreateInterstielAdModelCommandHandler(_interstielAdModelRepository.Object, _mediator.Object);
+            var x = await handler.Handle(command, new CancellationToken());
 
 
             x.Success.Should().BeTrue();
@@ -125,8 +129,9 @@ namespace Tests.Business.Handlers
 
             _interstielAdModelRepository.Setup(x => x.Add(It.IsAny<InterstielAdModel>()));
 
-            var handler = new CreateInterstielAdModelCommandHandler(_interstielAdModelRepository.Object, _mediator.Object);
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
+            var handler =
+                new CreateInterstielAdModelCommandHandler(_interstielAdModelRepository.Object, _mediator.Object);
+            var x = await handler.Handle(command, new CancellationToken());
 
             x.Success.Should().BeFalse();
             x.Message.Should().Be(Messages.AlreadyExist);
@@ -143,17 +148,18 @@ namespace Tests.Business.Handlers
             command.Version = 1;
 
             _interstielAdModelRepository.Setup(x => x.Any(It.IsAny<Expression<Func<InterstielAdModel, bool>>>()))
-                        .Returns(false);
+                .Returns(false);
 
 
-            var handler = new UpdateInterstielAdModelCommandHandler(_interstielAdModelRepository.Object, _mediator.Object);
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
+            var handler =
+                new UpdateInterstielAdModelCommandHandler(_interstielAdModelRepository.Object, _mediator.Object);
+            var x = await handler.Handle(command, new CancellationToken());
 
 
             x.Success.Should().BeFalse();
             x.Message.Should().Be(Messages.NoContent);
         }
-        
+
         [Test]
         public async Task InterstielAdModel_UpdateCommand_Success()
         {
@@ -167,18 +173,19 @@ namespace Tests.Business.Handlers
             _interstielAdModelRepository.Setup(x => x.Any(
                     It.IsAny<Expression<Func<InterstielAdModel, bool>>>()))
                 .Returns(true);
-            
-            
+
+
             _interstielAdModelRepository.Setup(x => x.GetByFilterAsync(
                     It.IsAny<Expression<Func<InterstielAdModel, bool>>>()))
                 .ReturnsAsync(new InterstielAdModel());
 
 
-            _mediator.Setup(x => x.Send(new object(), 
-                new System.Threading.CancellationToken())).ReturnsAsync(new SuccessResult(Messages.Added));
+            _mediator.Setup(x => x.Send(new object(),
+                new CancellationToken())).ReturnsAsync(new SuccessResult(Messages.Added));
 
-            var handler = new UpdateInterstielAdModelCommandHandler(_interstielAdModelRepository.Object, _mediator.Object);
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
+            var handler =
+                new UpdateInterstielAdModelCommandHandler(_interstielAdModelRepository.Object, _mediator.Object);
+            var x = await handler.Handle(command, new CancellationToken());
 
 
             x.Success.Should().BeTrue();
@@ -193,12 +200,13 @@ namespace Tests.Business.Handlers
             command.Name = "Test";
             command.ProjectId = "121212";
             command.Version = 1;
-            
-            _interstielAdModelRepository.Setup(x => 
+
+            _interstielAdModelRepository.Setup(x =>
                 x.DeleteAsync(It.IsAny<InterstielAdModel>()));
 
-            var handler = new DeleteInterstielAdModelCommandHandler(_interstielAdModelRepository.Object, _mediator.Object);
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
+            var handler =
+                new DeleteInterstielAdModelCommandHandler(_interstielAdModelRepository.Object, _mediator.Object);
+            var x = await handler.Handle(command, new CancellationToken());
 
 
             x.Success.Should().BeTrue();
@@ -206,4 +214,3 @@ namespace Tests.Business.Handlers
         }
     }
 }
-

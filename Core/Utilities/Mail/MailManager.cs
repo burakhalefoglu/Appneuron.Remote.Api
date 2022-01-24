@@ -1,9 +1,9 @@
-﻿using MailKit.Net.Smtp;
+﻿using System;
+using System.Linq;
+using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 using MimeKit.Text;
-using System;
-using System.Linq;
 
 namespace Core.Utilities.Mail
 {
@@ -33,8 +33,7 @@ namespace Core.Utilities.Mail
             using (var emailClient = new SmtpClient())
             {
                 emailClient.Connect(_configuration.GetSection("EmailConfiguration").GetSection("SmtpServer").Value,
-                    Convert.ToInt32(_configuration.GetSection("EmailConfiguration").GetSection("SmtpPort").Value),
-                    MailKit.Security.SecureSocketOptions.Auto);
+                    Convert.ToInt32(_configuration.GetSection("EmailConfiguration").GetSection("SmtpPort").Value));
                 emailClient.Send(message);
                 emailClient.Disconnect(true);
             }

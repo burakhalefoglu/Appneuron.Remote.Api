@@ -1,15 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using System.Text;
+using Microsoft.Extensions.Configuration;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System;
-using System.Text;
 
 namespace Core.Utilities.MessageBrokers.RabbitMq
 {
     public class MqConsumerHelper : IMessageConsumer
     {
-        private readonly IConfiguration _configuration;
         private readonly MessageBrokerOptions _brokerOptions;
+        private readonly IConfiguration _configuration;
 
         public MqConsumerHelper(IConfiguration configuration)
         {
@@ -19,7 +19,7 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
 
         public void GetQueue()
         {
-            var factory = new ConnectionFactory()
+            var factory = new ConnectionFactory
             {
                 HostName = _brokerOptions.HostName,
                 UserName = _brokerOptions.UserName,
@@ -28,11 +28,11 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.QueueDeclare(queue: "DArchQueue",
-                                                         durable: false,
-                                                         exclusive: false,
-                                                         autoDelete: false,
-                                                         arguments: null);
+                channel.QueueDeclare("DArchQueue",
+                    false,
+                    false,
+                    false,
+                    null);
 
                 var consumer = new EventingBasicConsumer(channel);
 
@@ -44,9 +44,9 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
                     Console.WriteLine($"Message: {message}");
                 };
 
-                channel.BasicConsume(queue: "DArchQueue",
-                                                      autoAck: true,
-                                                      consumer: consumer);
+                channel.BasicConsume("DArchQueue",
+                    true,
+                    consumer);
                 Console.ReadKey();
             }
         }

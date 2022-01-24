@@ -8,6 +8,7 @@ namespace Core.Utilities.helper
         public static string GetRandomString(int length)
         {
             var r = new Random();
-            return new string(Enumerable.Range(0, length).Select(n => (char)(r.Next(32, 127))).ToArray());
-        }    }
+            return new string(Enumerable.Range(0, length).Select(n => (char) r.Next(32, 127)).ToArray());
+        }
+    }
 }

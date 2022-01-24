@@ -1,32 +1,23 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Business.Constants;
+using Business.Handlers.InterstitialAdEventModels.Commands;
+using Business.MessageBrokers;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
+using Entities.Concrete;
+using FluentAssertions;
+using MediatR;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using Entities.Concrete;
 using static Business.Handlers.InterstitialAdEventModels.Commands.CreateInterstitialAdEventModelCommand;
-using Business.Handlers.InterstitialAdEventModels.Commands;
-using Business.Constants;
-using MediatR;
-using System.Linq;
-using Business.MessageBrokers;
-using Business.MessageBrokers.Kafka;
-using Core.Utilities.Results;
-using FluentAssertions;
-using MongoDB.Bson;
 
 namespace Tests.Business.Handlers
 {
     [TestFixture]
     public class InterstitialAdEventModelHandlerTests
     {
-        private Mock<IInterstitialAdEventModelRepository> _interstitialAdEventModelRepository;
-        private Mock<IMediator> _mediator;
-        private Mock<IMessageBroker> _kafka;
-
         [SetUp]
         public void Setup()
         {
@@ -35,7 +26,11 @@ namespace Tests.Business.Handlers
             _kafka = new Mock<IMessageBroker>();
         }
 
-       
+        private Mock<IInterstitialAdEventModelRepository> _interstitialAdEventModelRepository;
+        private Mock<IMediator> _mediator;
+        private Mock<IMessageBroker> _kafka;
+
+
         [Test]
         public async Task InterstitialAdEventModel_CreateCommand_Success()
         {
@@ -55,7 +50,7 @@ namespace Tests.Business.Handlers
 
             var handler = new CreateInterstitialAdEventModelCommandHandler(
                 _interstitialAdEventModelRepository.Object, _mediator.Object, _kafka.Object);
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
+            var x = await handler.Handle(command, new CancellationToken());
 
 
             x.Success.Should().BeTrue();
@@ -63,4 +58,3 @@ namespace Tests.Business.Handlers
         }
     }
 }
-

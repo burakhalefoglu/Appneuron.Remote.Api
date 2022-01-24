@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace WebAPI.Controllers
 {
     /// <summary>
-    /// Base controller
+    ///     Base controller
     /// </summary>
     [Authorize]
     [Route("[controller]")]
@@ -17,37 +17,58 @@ namespace WebAPI.Controllers
         private IMediator _mediator;
 
         /// <summary>
-        /// It is for getting the Mediator instance creation process from the base controller.
+        ///     It is for getting the Mediator instance creation process from the base controller.
         /// </summary>
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="result"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult GetResponse<T>(IDataResult<T> result)
+        protected IActionResult GetResponse<T>(IDataResult<T> result)
         {
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult GetResponseOnlyResult(IResult result)
+        protected IActionResult GetResponseOnlyResult(IResult result)
         {
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult GetResponseOnlyResultMessage(IResult result)
+        protected IActionResult GetResponseOnlyResultMessage(IResult result)
         {
             return result.Success ? Ok(result.Message) : BadRequest(result.Message);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="result"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult GetResponseOnlyResultData<T>(IDataResult<T> result)
+        protected IActionResult GetResponseOnlyResultData<T>(IDataResult<T> result)
         {
             return result.Success ? Ok(result.Data) : BadRequest(result.Message);
         }
 
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="message"></param>
@@ -67,7 +88,6 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
@@ -79,7 +99,6 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="message"></param>
@@ -99,19 +118,17 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <returns></returns>
         [NonAction]
-        protected IActionResult Created<T>(ApiResult<T> data)
+        internal IActionResult Created<T>(ApiResult<T> data)
         {
             return StatusCode(201, data);
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="message"></param>
@@ -131,7 +148,6 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
@@ -143,7 +159,6 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="message"></param>
@@ -163,7 +178,6 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
@@ -175,7 +189,6 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="message"></param>
@@ -195,7 +208,6 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
@@ -207,7 +219,6 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="message"></param>
@@ -227,7 +238,6 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
@@ -239,7 +249,6 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="message"></param>
@@ -259,7 +268,6 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
@@ -271,7 +279,6 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="message"></param>
@@ -291,7 +298,6 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>

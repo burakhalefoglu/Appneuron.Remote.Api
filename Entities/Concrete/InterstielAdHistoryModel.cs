@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Core.Entities;
 
 namespace Entities.Concrete
 {
-    public class InterstielAdHistoryModel: DocumentDbEntity
+    public class InterstielAdHistoryModel : DocumentDbEntity
     {
         public string Name { get; set; }
         public string ProjectId { get; set; }

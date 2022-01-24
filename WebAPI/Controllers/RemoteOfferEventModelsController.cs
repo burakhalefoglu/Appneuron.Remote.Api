@@ -1,28 +1,20 @@
-﻿
+﻿using System.Threading.Tasks;
 using Business.Handlers.RemoteOfferEventModels.Commands;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Entities.Concrete;
-using System.Collections.Generic;
 using Core.Utilities.Results;
-using MongoDB.Bson;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
 namespace WebAPI.Controllers
 {
     /// <summary>
-    /// RemoteOfferEventModels If controller methods will not be Authorize, [AllowAnonymous] is used.
+    ///     RemoteOfferEventModels If controller methods will not be Authorize, [AllowAnonymous] is used.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class RemoteOfferEventModelsController : BaseApiController
     {
-      
-
-       
-
         /// <summary>
-        /// Add RemoteOfferEventModel.
+        ///     Add RemoteOfferEventModel.
         /// </summary>
         /// <param name="createRemoteOfferEventModel"></param>
         /// <returns></returns>
@@ -33,10 +25,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> Add([FromBody] CreateRemoteOfferEventModelCommand createRemoteOfferEventModel)
         {
             var result = await Mediator.Send(createRemoteOfferEventModel);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
+            if (result.Success) return Ok(result);
             return BadRequest(result);
         }
     }

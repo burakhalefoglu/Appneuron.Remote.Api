@@ -7,12 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Core.Aspects.Autofac.Caching
 {
     /// <summary>
-    /// CacheRemoveAspect
+    ///     CacheRemoveAspect
     /// </summary>
-    public class CacheRemoveAspectAttribute : MethodInterceptionAttribute
+    public class CacheRemoveAspectAttribute : MethodInterception
     {
-        private readonly string _pattern;
         private readonly ICacheManager _cacheManager;
+        private readonly string _pattern;
 
         public CacheRemoveAspectAttribute(string pattern)
         {

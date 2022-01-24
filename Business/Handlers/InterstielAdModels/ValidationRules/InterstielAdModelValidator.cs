@@ -1,10 +1,8 @@
-﻿
-using Business.Handlers.InterstielAdModels.Commands;
+﻿using Business.Handlers.InterstielAdModels.Commands;
 using FluentValidation;
 
 namespace Business.Handlers.InterstielAdModels.ValidationRules
 {
-
     public class CreateInterstielAdModelValidator : AbstractValidator<CreateInterstielAdModelCommand>
     {
         public CreateInterstielAdModelValidator()
@@ -14,9 +12,9 @@ namespace Business.Handlers.InterstielAdModels.ValidationRules
             RuleFor(x => x.IsAdvSettingsActive).NotNull();
             RuleFor(x => x.AdvStrategies).NotNull();
             RuleFor(x => x.ProjectId).NotNull();
-
         }
     }
+
     public class UpdateInterstielAdModelValidator : AbstractValidator<UpdateInterstielAdModelCommand>
     {
         public UpdateInterstielAdModelValidator()

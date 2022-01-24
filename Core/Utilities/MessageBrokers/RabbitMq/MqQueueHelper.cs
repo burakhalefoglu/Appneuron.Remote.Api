@@ -1,14 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Text;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
-using System.Text;
 
 namespace Core.Utilities.MessageBrokers.RabbitMq
 {
     public class MqQueueHelper : IMessageBrokerHelper
     {
-        public IConfiguration Configuration;
         private readonly MessageBrokerOptions _brokerOptions;
+        public IConfiguration Configuration;
 
         public MqQueueHelper(IConfiguration configuration)
         {
@@ -28,16 +28,16 @@ namespace Core.Utilities.MessageBrokers.RabbitMq
             using (var channel = connection.CreateModel())
             {
                 channel.QueueDeclare(
-                        queue: "DArchQueue",
-                        durable: false,
-                        exclusive: false,
-                        autoDelete: false,
-                        arguments: null);
+                    "DArchQueue",
+                    false,
+                    false,
+                    false,
+                    null);
 
                 var message = JsonConvert.SerializeObject(messageText);
                 var body = Encoding.UTF8.GetBytes(message);
 
-                channel.BasicPublish(exchange: "", routingKey: "DArchQueue", basicProperties: null, body: body);
+                channel.BasicPublish("", "DArchQueue", null, body);
             }
         }
     }

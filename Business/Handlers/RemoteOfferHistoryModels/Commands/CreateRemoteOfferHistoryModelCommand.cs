@@ -1,6 +1,8 @@
-﻿
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Business.BusinessAspects;
 using Business.Constants;
+using Business.Handlers.RemoteOfferHistoryModels.ValidationRules;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Validation;
@@ -9,20 +11,13 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
-using Business.Handlers.RemoteOfferHistoryModels.ValidationRules;
-using ServiceStack;
 
 namespace Business.Handlers.RemoteOfferHistoryModels.Commands
 {
     /// <summary>
-    /// 
     /// </summary>
     public class CreateRemoteOfferHistoryModelCommand : IRequest<IResult>
     {
-
         public string ProjectId { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
@@ -36,11 +31,14 @@ namespace Business.Handlers.RemoteOfferHistoryModels.Commands
         public long StartTime { get; set; }
         public long FinishTime { get; set; }
 
-        public class CreateRemoteOfferHistoryModelCommandHandler : IRequestHandler<CreateRemoteOfferHistoryModelCommand, IResult>
+        public class
+            CreateRemoteOfferHistoryModelCommandHandler : IRequestHandler<CreateRemoteOfferHistoryModelCommand, IResult>
         {
-            private readonly IRemoteOfferHistoryModelRepository _remoteOfferHistoryModelRepository;
             private readonly IMediator _mediator;
-            public CreateRemoteOfferHistoryModelCommandHandler(IRemoteOfferHistoryModelRepository remoteOfferHistoryModelRepository, IMediator mediator)
+            private readonly IRemoteOfferHistoryModelRepository _remoteOfferHistoryModelRepository;
+
+            public CreateRemoteOfferHistoryModelCommandHandler(
+                IRemoteOfferHistoryModelRepository remoteOfferHistoryModelRepository, IMediator mediator)
             {
                 _remoteOfferHistoryModelRepository = remoteOfferHistoryModelRepository;
                 _mediator = mediator;
@@ -50,7 +48,8 @@ namespace Business.Handlers.RemoteOfferHistoryModels.Commands
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
-            public async Task<IResult> Handle(CreateRemoteOfferHistoryModelCommand request, CancellationToken cancellationToken)
+            public async Task<IResult> Handle(CreateRemoteOfferHistoryModelCommand request,
+                CancellationToken cancellationToken)
             {
                 var addedRemoteOfferHistoryModel = new RemoteOfferHistoryModel
                 {
@@ -65,8 +64,7 @@ namespace Business.Handlers.RemoteOfferHistoryModels.Commands
                     GiftTexture = request.GiftTexture,
                     ValidityPeriod = request.ValidityPeriod,
                     StartTime = request.StartTime,
-                    FinishTime = request.FinishTime,
-
+                    FinishTime = request.FinishTime
                 };
 
                 await _remoteOfferHistoryModelRepository.AddAsync(addedRemoteOfferHistoryModel);

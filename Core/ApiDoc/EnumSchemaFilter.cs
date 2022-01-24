@@ -1,13 +1,13 @@
-﻿using Microsoft.OpenApi.Any;
+﻿using System;
+using System.Linq;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System;
-using System.Linq;
 
 namespace Core.ApiDoc
 {
     /// <summary>
-    /// Plugin made to send Enum values and names correctly in APIs.
+    ///     Plugin made to send Enum values and names correctly in APIs.
     /// </summary>
     internal class EnumSchemaFilter : ISchemaFilter
     {
@@ -21,7 +21,7 @@ namespace Core.ApiDoc
                 foreach (var n in Enum.GetNames(context.Type).ToList())
                 {
                     schema.Enum.Add(new OpenApiString(n));
-                    schema.Title = ((OpenApiPrimitive<int>)enumValues[i]).Value.ToString();
+                    schema.Title = ((OpenApiPrimitive<int>) enumValues[i]).Value.ToString();
                     i++;
                 }
             }

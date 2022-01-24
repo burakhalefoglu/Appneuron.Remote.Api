@@ -1,8 +1,8 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Core.Utilities.Security.Encyption
 {
@@ -15,20 +15,20 @@ namespace Core.Utilities.Security.Encyption
 
         public static string DecryptString(string key, string encryptValue)
         {
-            byte[] iv = new byte[16];
-            byte[] buffer = Convert.FromBase64String(encryptValue);
+            var iv = new byte[16];
+            var buffer = Convert.FromBase64String(encryptValue);
 
-            using (Aes aes = Aes.Create())
+            using (var aes = Aes.Create())
             {
                 aes.Key = Encoding.UTF8.GetBytes(key);
                 aes.IV = iv;
-                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+                var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 
-                using (MemoryStream memoryStream = new MemoryStream(buffer))
+                using (var memoryStream = new MemoryStream(buffer))
                 {
-                    using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, decryptor, CryptoStreamMode.Read))
+                    using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
                     {
-                        using (StreamReader streamReader = new StreamReader((Stream)cryptoStream))
+                        using (var streamReader = new StreamReader(cryptoStream))
                         {
                             return streamReader.ReadToEnd();
                         }

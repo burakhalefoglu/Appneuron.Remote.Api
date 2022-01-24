@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Business.Constants;
 using Business.Handlers.InterstielAdHistoryModels.Commands;
@@ -21,8 +22,6 @@ namespace Tests.Business.Handlers
     [TestFixture]
     public class InterstielAdHistoryModelHandlerTests
     {
-        Mock<IInterstielAdHistoryModelRepository> _interstielAdHistoryModelRepository;
-        Mock<IMediator> _mediator;
         [SetUp]
         public void Setup()
         {
@@ -30,7 +29,10 @@ namespace Tests.Business.Handlers
             _mediator = new Mock<IMediator>();
         }
 
-      
+        private Mock<IInterstielAdHistoryModelRepository> _interstielAdHistoryModelRepository;
+        private Mock<IMediator> _mediator;
+
+
         [Test]
         public async Task InterstielAdHistoryModel_GetQueries_Success()
         {
@@ -38,42 +40,43 @@ namespace Tests.Business.Handlers
             var query = new GetInterstielAdHistoryModelByProjectIdQuery();
             query.ProjectId = "121212";
 
-            _interstielAdHistoryModelRepository.Setup(x => x.GetListAsync(It.IsAny<Expression<Func<InterstielAdHistoryModel, bool>>>()))
-                        .ReturnsAsync(new List<InterstielAdHistoryModel> { new InterstielAdHistoryModel()
-                        {
-                            ProjectId = "121212",
-                            IsAdvSettingsActive = true,
-                            Id = new ObjectId(),
-                            Name = "test",
-                            StarTime = DateTime.Now,
-                            Version = 1,
-                            playerPercent = 10
-                             
-                        }, 
-                            new InterstielAdHistoryModel()
-                        {
-                            ProjectId = "121212",
-                            IsAdvSettingsActive = true,
-                            Id = new ObjectId(),
-                            Name = "test",
-                            StarTime = DateTime.Now,
-                            Version = 2,
-                            playerPercent = 20
-                             
-                        },
+            _interstielAdHistoryModelRepository.Setup(x =>
+                    x.GetListAsync(It.IsAny<Expression<Func<InterstielAdHistoryModel, bool>>>()))
+                .ReturnsAsync(new List<InterstielAdHistoryModel>
+                {
+                    new()
+                    {
+                        ProjectId = "121212",
+                        IsAdvSettingsActive = true,
+                        Id = new ObjectId(),
+                        Name = "test",
+                        StarTime = DateTime.Now,
+                        Version = 1,
+                        playerPercent = 10
+                    },
+                    new()
+                    {
+                        ProjectId = "121212",
+                        IsAdvSettingsActive = true,
+                        Id = new ObjectId(),
+                        Name = "test",
+                        StarTime = DateTime.Now,
+                        Version = 2,
+                        playerPercent = 20
+                    }
+                }.AsQueryable());
 
-                        }.AsQueryable());
-
-            var handler = new GetInterstielAdHistoryModelByProjectIdQueryHandler(_interstielAdHistoryModelRepository.Object, _mediator.Object);
+            var handler =
+                new GetInterstielAdHistoryModelByProjectIdQueryHandler(_interstielAdHistoryModelRepository.Object,
+                    _mediator.Object);
 
             //Act
-            var x = await handler.Handle(query, new System.Threading.CancellationToken());
+            var x = await handler.Handle(query, new CancellationToken());
 
             //Asset
             x.Success.Should().BeTrue();
             x.Data.ToList().Count.Should().BeGreaterThan(1);
             x.Data.ToList().Count.Should().Be(2);
-
         }
 
         [Test]
@@ -86,17 +89,17 @@ namespace Tests.Business.Handlers
             command.Name = "test";
             command.playerPercent = 20;
 
-            _interstielAdHistoryModelRepository.Setup(x => 
+            _interstielAdHistoryModelRepository.Setup(x =>
                 x.AddAsync(It.IsAny<InterstielAdHistoryModel>()));
 
-            var handler = new CreateInterstielAdHistoryModelCommandHandler(_interstielAdHistoryModelRepository.Object, _mediator.Object);
-            var x = await handler.Handle(command, new System.Threading.CancellationToken());
+            var handler =
+                new CreateInterstielAdHistoryModelCommandHandler(_interstielAdHistoryModelRepository.Object,
+                    _mediator.Object);
+            var x = await handler.Handle(command, new CancellationToken());
 
 
             x.Success.Should().BeTrue();
             x.Message.Should().Be(Messages.Added);
         }
-        
     }
 }
-

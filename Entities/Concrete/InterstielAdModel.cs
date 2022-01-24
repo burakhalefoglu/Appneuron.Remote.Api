@@ -2,7 +2,7 @@
 
 namespace Entities.Concrete
 {
-    public class InterstielAdModel: DocumentDbEntity
+    public class InterstielAdModel : DocumentDbEntity
     {
         public string Name { get; set; }
         public string ProjectId { get; set; }

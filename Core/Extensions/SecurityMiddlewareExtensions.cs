@@ -8,7 +8,6 @@ namespace Core.Extensions
         public static IApplicationBuilder UseSecurityHeaders(this IApplicationBuilder app)
         {
             return app.UseMiddleware<SecurityHeadersMiddleware>();
-            
         }
     }
-} 
+}

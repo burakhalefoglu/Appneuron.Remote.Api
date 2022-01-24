@@ -1,26 +1,20 @@
-﻿
-using System;
-using Business.Constants;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Business.BusinessAspects;
+using Business.Constants;
+using Business.Handlers.InterstielAdHistoryModels.Commands;
+using Business.Handlers.InterstielAdModels.ValidationRules;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
+using Core.Aspects.Autofac.Transaction;
+using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
-using Entities.Concrete;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
-using Business.Handlers.InterstielAdHistoryModels.Commands;
-using Core.Aspects.Autofac.Validation;
-using Business.Handlers.InterstielAdModels.ValidationRules;
-using Core.Aspects.Autofac.Transaction;
 
 namespace Business.Handlers.InterstielAdModels.Commands
 {
-
-
     public class UpdateInterstielAdModelCommand : IRequest<IResult>
     {
         public string ProjectId { get; set; }
@@ -34,7 +28,8 @@ namespace Business.Handlers.InterstielAdModels.Commands
             private readonly IInterstielAdModelRepository _interstielAdModelRepository;
             private readonly IMediator _mediator;
 
-            public UpdateInterstielAdModelCommandHandler(IInterstielAdModelRepository interstielAdModelRepository, IMediator mediator)
+            public UpdateInterstielAdModelCommandHandler(IInterstielAdModelRepository interstielAdModelRepository,
+                IMediator mediator)
             {
                 _interstielAdModelRepository = interstielAdModelRepository;
                 _mediator = mediator;
@@ -45,23 +40,22 @@ namespace Business.Handlers.InterstielAdModels.Commands
             [LogAspect(typeof(FileLogger))]
             [SecuredOperation(Priority = 1)]
             [TransactionScopeAspectAsync]
-            public async Task<IResult> Handle(UpdateInterstielAdModelCommand request, CancellationToken cancellationToken)
+            public async Task<IResult> Handle(UpdateInterstielAdModelCommand request,
+                CancellationToken cancellationToken)
             {
-                var isValid = _interstielAdModelRepository.Any( i => 
+                var isValid = _interstielAdModelRepository.Any(i =>
                     i.ProjectId == request.ProjectId && i.Name == request.Name &&
                     i.Version == request.Version);
-                if(!isValid)
-                {
-                    return new ErrorResult(Messages.NoContent);
-                }
+                if (!isValid) return new ErrorResult(Messages.NoContent);
 
-                var resultData = await _interstielAdModelRepository.GetByFilterAsync(i => i.ProjectId == request.ProjectId && i.Name == request.Name &&
-                   i.Version == request.Version);
+                var resultData = await _interstielAdModelRepository.GetByFilterAsync(i =>
+                    i.ProjectId == request.ProjectId && i.Name == request.Name &&
+                    i.Version == request.Version);
 
                 resultData.PlayerPercent = request.PlayerPercent;
                 resultData.IsAdvSettingsActive = request.IsAdvSettingsActive;
 
-                await _mediator.Send(new CreateInterstielAdHistoryModelCommand()
+                await _mediator.Send(new CreateInterstielAdHistoryModelCommand
                 {
                     IsAdvSettingsActive = resultData.IsAdvSettingsActive,
                     Name = resultData.Name,
@@ -71,12 +65,11 @@ namespace Business.Handlers.InterstielAdModels.Commands
                 });
 
                 await _interstielAdModelRepository.UpdateAsync(resultData,
-                    i=> i.ProjectId == request.ProjectId && i.Name == request.Name &&
-                    i.Version == request.Version);
+                    i => i.ProjectId == request.ProjectId && i.Name == request.Name &&
+                         i.Version == request.Version);
 
                 return new SuccessResult(Messages.Updated);
             }
         }
     }
 }
-
