@@ -38,7 +38,7 @@ spec:
       volumes:
         - name: appconfig
           secret:
-            name: app-config-dotnet
+            secretName: app-config-dotnet
             items:
             - key: appsettings.json
               path: appsettings.json
