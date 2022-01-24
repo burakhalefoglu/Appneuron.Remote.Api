@@ -63,7 +63,7 @@ spec:
               hostPort: 8000
           livenessProbe:
             httpGet:
-              path: /api/HealthChecks
+              path: /api/HealthChecks/get
               port: 8000
               httpHeaders:
               - name: Custom-Header
