@@ -25,7 +25,7 @@ namespace WebAPI.Controllers
         [HttpGet("get")]
         public Task<IActionResult> CheckHealth()
         {
-            return Task.FromResult<IActionResult>(Ok(new SuccessResult("Success")));
+            return Task.FromResult<IActionResult>(Ok(new SuccessResult()));
         }
     }
 }
