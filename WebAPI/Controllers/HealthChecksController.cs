@@ -9,7 +9,7 @@ namespace WebAPI.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class HealthCheckController : BaseApiController
+    public class HealthChecksController : BaseApiController
     {
         /// <summary>
         /// </summary>
