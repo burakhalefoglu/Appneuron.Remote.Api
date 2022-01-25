@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: remote-server-service
-  namespace: development
+  namespace: service-app-dev
 spec:
   type: ClusterIP
   ports:
@@ -17,9 +17,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: remote-server 
-  namespace: development
+  namespace: service-app-dev
 spec:
-  replicas: 2
+  replicas: 4
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -38,7 +38,7 @@ spec:
       volumes:
         - name: appconfig
           secret:
-            secretName: app-config-dotnet
+            secretName: remote-config-service-secret
             items:
             - key: appsettings.json
               path: appsettings.json
@@ -48,11 +48,11 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              memory: "500M"
-              cpu: "250m"
+              memory: "250M"
+              cpu: "0.1"
             limits:
-              memory: "1000M"
-              cpu: "0.5"
+              memory: "500M"
+              cpu: "0.2"
           volumeMounts:
           - name: appconfig
             mountPath: /app/appsettings.json
@@ -81,7 +81,7 @@ apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: webapi-remote-ingress
-  namespace: development
+  namespace: service-app-dev
 spec:
   tls:
     - hosts:
