@@ -1,4 +1,7 @@
-﻿namespace Entities.Concrete
+using System;
+using Core.Entities;
+
+namespace Entities.Concrete
 {
     public class AdvStrategy : DocumentDbEntity
     {
