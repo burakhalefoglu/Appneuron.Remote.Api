@@ -19,7 +19,7 @@ metadata:
   name: remote-server 
   namespace: service-app-dev
 spec:
-  replicas: 4
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
