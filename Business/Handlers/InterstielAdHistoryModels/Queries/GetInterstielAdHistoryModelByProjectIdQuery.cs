@@ -33,7 +33,7 @@ namespace Business.Handlers.InterstielAdHistoryModels.Queries
 
             [PerformanceAspect(5)]
             [CacheAspect(10)]
-            [LogAspect(typeof(LogstashLogger))]
+            [LogAspect(typeof(ConsoleLogger))]
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<IEnumerable<InterstielAdHistoryModel>>> Handle(
                 GetInterstielAdHistoryModelByProjectIdQuery request, CancellationToken cancellationToken)

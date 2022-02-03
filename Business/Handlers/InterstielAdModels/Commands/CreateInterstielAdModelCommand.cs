@@ -40,7 +40,7 @@ namespace Business.Handlers.InterstielAdModels.Commands
 
             [ValidationAspect(typeof(CreateInterstielAdModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(LogstashLogger))]
+            [LogAspect(typeof(ConsoleLogger))]
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateInterstielAdModelCommand request,
                 CancellationToken cancellationToken)

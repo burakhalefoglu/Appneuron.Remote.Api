@@ -32,7 +32,7 @@ namespace Business.Handlers.RemoteOfferModels.Commands
             }
 
             [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(LogstashLogger))]
+            [LogAspect(typeof(ConsoleLogger))]
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(DeleteRemoteOfferModelCommand request,
                 CancellationToken cancellationToken)

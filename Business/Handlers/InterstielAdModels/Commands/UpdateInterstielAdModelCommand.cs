@@ -37,7 +37,7 @@ namespace Business.Handlers.InterstielAdModels.Commands
 
             [ValidationAspect(typeof(UpdateInterstielAdModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(LogstashLogger))]
+            [LogAspect(typeof(ConsoleLogger))]
             [SecuredOperation(Priority = 1)]
             [TransactionScopeAspectAsync]
             public async Task<IResult> Handle(UpdateInterstielAdModelCommand request,
