@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Business.Handlers.InterstielAdModels.Commands;
-using Business.Handlers.InterstielAdModels.Queries;
+using Business.Handlers.InterstitialAdModels.Commands;
+using Business.Handlers.InterstitialAdModels.Queries;
 using Core.Utilities.Results;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
@@ -23,12 +23,12 @@ namespace WebAPI.Controllers
         /// <return>List InterstielAdModels</return>
         /// <response code="200"></response>
         [Produces("application/json", "text/plain")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<IEnumerable<InterstielAdModel>>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<IEnumerable<InterstitialAdModel>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
         [HttpGet("getByProjectId")]
         public async Task<IActionResult> GetByProjectId(string projectId)
         {
-            var result = await Mediator.Send(new GetInterstielAdModelsByProjectIdQuery
+            var result = await Mediator.Send(new GetInterstitialAdModelsByProjectIdQuery
             {
                 ProjectId = projectId
             });
@@ -40,15 +40,15 @@ namespace WebAPI.Controllers
         /// <summary>
         ///     Add InterstielAdModel.
         /// </summary>
-        /// <param name="createInterstielAdModel"></param>
+        /// <param name="createInterstitialAdModel"></param>
         /// <returns></returns>
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IResult))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] CreateInterstielAdModelCommand createInterstielAdModel)
+        public async Task<IActionResult> Add([FromBody] CreateInterstitialAdModelCommand createInterstitialAdModel)
         {
-            var result = await Mediator.Send(createInterstielAdModel);
+            var result = await Mediator.Send(createInterstitialAdModel);
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }
@@ -56,15 +56,15 @@ namespace WebAPI.Controllers
         /// <summary>
         ///     Update InterstielAdModel.
         /// </summary>
-        /// <param name="updateInterstielAdModel"></param>
+        /// <param name="updateInterstitialAdModel"></param>
         /// <returns></returns>
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IResult))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateInterstielAdModelCommand updateInterstielAdModel)
+        public async Task<IActionResult> Update([FromBody] UpdateInterstitialAdModelCommand updateInterstitialAdModel)
         {
-            var result = await Mediator.Send(updateInterstielAdModel);
+            var result = await Mediator.Send(updateInterstitialAdModel);
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }
@@ -72,15 +72,15 @@ namespace WebAPI.Controllers
         /// <summary>
         ///     Delete InterstielAdModel.
         /// </summary>
-        /// <param name="deleteInterstielAdModel"></param>
+        /// <param name="deleteInterstitialAdModel"></param>
         /// <returns></returns>
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IResult))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] DeleteInterstielAdModelCommand deleteInterstielAdModel)
+        public async Task<IActionResult> Delete([FromBody] DeleteInterstitialAdModelCommand deleteInterstitialAdModel)
         {
-            var result = await Mediator.Send(deleteInterstielAdModel);
+            var result = await Mediator.Send(deleteInterstitialAdModel);
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }

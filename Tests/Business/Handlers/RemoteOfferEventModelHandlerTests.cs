@@ -8,7 +8,6 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using FluentAssertions;
-using MediatR;
 using Moq;
 using NUnit.Framework;
 using static Business.Handlers.RemoteOfferEventModels.Commands.CreateRemoteOfferEventModelCommand;
@@ -22,30 +21,30 @@ namespace Tests.Business.Handlers
         public void Setup()
         {
             _remoteOfferEventModelRepository = new Mock<IRemoteOfferEventModelRepository>();
-            _mediator = new Mock<IMediator>();
             _kafka = new Mock<IMessageBroker>();
         }
 
         private Mock<IRemoteOfferEventModelRepository> _remoteOfferEventModelRepository;
-        private Mock<IMediator> _mediator;
         private Mock<IMessageBroker> _kafka;
 
         [Test]
         public async Task RemoteOfferEventModel_CreateCommand_Success()
         {
             //Arrange
-            var command = new CreateRemoteOfferEventModelCommand();
-            command.ClientIdList = new string[] { };
-            command.FinishTime = new DateTime().Ticks;
-            command.FirstPrice = 12;
-            command.GiftTexture = new byte[] { };
-            command.IsActive = false;
-            command.IsGift = true;
-            command.LastPrice = 8;
-            command.Name = "test";
-            command.PlayerPercent = 20;
-            command.ProjectId = "121212";
-            command.ProductList = new ProductModel[] { };
+            var command = new CreateRemoteOfferEventModelCommand
+            {
+                ClientIdList = Array.Empty<string>(),
+                FinishTime = new DateTime().Ticks,
+                FirstPrice = 12,
+                GiftTexture = Array.Empty<byte>(),
+                IsActive = false,
+                IsGift = true,
+                LastPrice = 8,
+                Name = "test",
+                PlayerPercent = 20,
+                ProjectId = "121212",
+                ProductList = Array.Empty<ProductModel>()
+            };
 
 
             _remoteOfferEventModelRepository.Setup(x => x.Add(It.IsAny<RemoteOfferEventModel>()));
@@ -54,8 +53,7 @@ namespace Tests.Business.Handlers
                 .ReturnsAsync(new SuccessResult());
 
             var handler = new CreateRemoteOfferEventModelCommandHandler(
-                _remoteOfferEventModelRepository.Object,
-                _mediator.Object, _kafka.Object);
+                _remoteOfferEventModelRepository.Object, _kafka.Object);
 
             var x = await handler.Handle(command, new CancellationToken());
 

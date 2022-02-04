@@ -22,7 +22,7 @@ namespace Business.Handlers.RemoteOfferModels.Commands
         public bool IsActive { get; set; }
         public float FirstPrice { get; set; }
         public float LastPrice { get; set; }
-        public int Version { get; set; }
+        public string Version { get; set; }
         public int PlayerPercent { get; set; }
         public bool IsGift { get; set; }
         public byte[] GiftTexture { get; set; }
@@ -33,14 +33,11 @@ namespace Business.Handlers.RemoteOfferModels.Commands
 
         public class CreateRemoteOfferModelCommandHandler : IRequestHandler<CreateRemoteOfferModelCommand, IResult>
         {
-            private readonly IMediator _mediator;
             private readonly IRemoteOfferModelRepository _remoteOfferModelRepository;
 
-            public CreateRemoteOfferModelCommandHandler(IRemoteOfferModelRepository remoteOfferModelRepository,
-                IMediator mediator)
+            public CreateRemoteOfferModelCommandHandler(IRemoteOfferModelRepository remoteOfferModelRepository)
             {
                 _remoteOfferModelRepository = remoteOfferModelRepository;
-                _mediator = mediator;
             }
 
             [ValidationAspect(typeof(CreateRemoteOfferModelValidator), Priority = 1)]
@@ -51,10 +48,11 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                 CancellationToken cancellationToken)
             {
                 var isThereRemoteOfferModelRecord =
-                    _remoteOfferModelRepository
-                        .Any(u => u.ProjectId == request.ProjectId &&
+                    await _remoteOfferModelRepository
+                        .AnyAsync(u => u.ProjectId == request.ProjectId &&
                                   u.Name == request.Name &&
-                                  u.Version == request.Version);
+                                  u.Version == request.Version && 
+                                  u.Status == true);
 
                 if (isThereRemoteOfferModelRecord)
                     return new ErrorResult(Messages.NameAlreadyExist);

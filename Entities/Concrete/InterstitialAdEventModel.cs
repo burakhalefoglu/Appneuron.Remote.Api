@@ -9,5 +9,6 @@ namespace Entities.Concrete
         public string[] ClientIdList { get; set; }
         public bool IsAdvSettingsActive { get; set; }
         public Dictionary<string, int> AdvFrequencyStrategies { get; set; }
+        public bool Status = true;
     }
 }

@@ -17,18 +17,15 @@ namespace Business.Handlers.RemoteOfferModels.Commands
     {
         public string ProjectId { get; set; }
         public string Name { get; set; }
-        public int Version { get; set; }
+        public string Version { get; set; }
 
         public class DeleteRemoteOfferModelCommandHandler : IRequestHandler<DeleteRemoteOfferModelCommand, IResult>
         {
-            private readonly IMediator _mediator;
             private readonly IRemoteOfferModelRepository _remoteOfferModelRepository;
 
-            public DeleteRemoteOfferModelCommandHandler(IRemoteOfferModelRepository remoteOfferModelRepository,
-                IMediator mediator)
+            public DeleteRemoteOfferModelCommandHandler(IRemoteOfferModelRepository remoteOfferModelRepository)
             {
                 _remoteOfferModelRepository = remoteOfferModelRepository;
-                _mediator = mediator;
             }
 
             [CacheRemoveAspect("Get")]
@@ -37,9 +34,19 @@ namespace Business.Handlers.RemoteOfferModels.Commands
             public async Task<IResult> Handle(DeleteRemoteOfferModelCommand request,
                 CancellationToken cancellationToken)
             {
-                await _remoteOfferModelRepository.DeleteAsync(i => i.ProjectId == request.ProjectId &&
-                                                                   i.Name == request.Name &&
-                                                                   i.Version == request.Version);
+                var isThereInterstitialAdModelRecord = await _remoteOfferModelRepository.GetAsync(u =>
+                    u.Name == request.Name &&
+                    u.ProjectId == request.ProjectId &&
+                    u.Version == request.Version &&
+                    u.Status == true);
+
+                if (isThereInterstitialAdModelRecord is null)
+                    return new ErrorResult(Messages.NotFound);
+                isThereInterstitialAdModelRecord.Status = false;
+                await _remoteOfferModelRepository.UpdateAsync(isThereInterstitialAdModelRecord, i 
+                    => i.ProjectId == request.ProjectId &&
+                       i.Name == request.Name &&
+                       i.Version == request.Version);
 
                 return new SuccessResult(Messages.Deleted);
             }

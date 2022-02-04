@@ -23,7 +23,7 @@ namespace Business.Handlers.RemoteOfferHistoryModels.Commands
         public bool IsActive { get; set; }
         public float FirstPrice { get; set; }
         public float LastPrice { get; set; }
-        public int Version { get; set; }
+        public string Version { get; set; }
         public int PlayerPercent { get; set; }
         public bool IsGift { get; set; }
         public byte[] GiftTexture { get; set; }

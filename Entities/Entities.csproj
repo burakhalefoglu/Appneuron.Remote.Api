@@ -6,11 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Core\Core.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Dtos\"/>
+        <ProjectReference Include="..\Core\Core.csproj" />
     </ItemGroup>
 
 </Project>

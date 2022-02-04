@@ -22,17 +22,13 @@ namespace Core.DataAccess
 
         void Update(T record, Expression<Func<T, bool>> predicate);
 
-        void Delete(ObjectId id);
-
-        void Delete(T record);
-
         Task AddAsync(T entity);
 
         Task<IQueryable<T>> GetListAsync(Expression<Func<T, bool>> predicate = null);
 
-        Task<T> GetByFilterAsync(Expression<Func<T, bool>> predicate);
-
         Task<T> GetByIdAsync(ObjectId id);
+
+        Task<T> GetAsync(Expression<Func<T, bool>> predicate);
 
         Task AddManyAsync(IEnumerable<T> entities);
 
@@ -40,12 +36,7 @@ namespace Core.DataAccess
 
         Task UpdateAsync(T record, Expression<Func<T, bool>> predicate);
 
-        Task DeleteAsync(ObjectId id);
-
-        Task DeleteAsync(Expression<Func<T, bool>> predicate);
-
-        Task DeleteAsync(T record);
-
         bool Any(Expression<Func<T, bool>> predicate = null);
+        Task<bool> AnyAsync(Expression<Func<T, bool>> predicate = null);
     }
 }

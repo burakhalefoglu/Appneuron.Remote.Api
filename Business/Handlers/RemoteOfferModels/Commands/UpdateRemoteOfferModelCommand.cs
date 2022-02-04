@@ -20,8 +20,8 @@ namespace Business.Handlers.RemoteOfferModels.Commands
     {
         public string ProjectId { get; set; }
         public string Name { get; set; }
-        public float Version { get; set; }
-        public int playerPercent { get; set; }
+        public string Version { get; set; }
+        public int PlayerPercent { get; set; }
         public bool IsActive { get; set; }
 
         public class UpdateRemoteOfferModelCommandHandler : IRequestHandler<UpdateRemoteOfferModelCommand, IResult>
@@ -44,17 +44,19 @@ namespace Business.Handlers.RemoteOfferModels.Commands
             public async Task<IResult> Handle(UpdateRemoteOfferModelCommand request,
                 CancellationToken cancellationToken)
             {
-                var isValid = _remoteOfferModelRepository.Any(r => r.ProjectId == request.ProjectId &&
+                var isValid = await _remoteOfferModelRepository.AnyAsync(r => r.ProjectId == request.ProjectId &&
                                                                    r.Name == request.Name &&
-                                                                   r.Version == request.Version);
+                                                                   r.Version == request.Version &&
+                                                                   r.Status == true);
                 if (!isValid) return new ErrorResult(Messages.NoContent);
 
-                var resultData = await _remoteOfferModelRepository.GetByFilterAsync(r =>
+                var resultData = await 
+                    _remoteOfferModelRepository.GetAsync(r =>
                     r.ProjectId == request.ProjectId &&
                     r.Name == request.Name &&
                     r.Version == request.Version);
 
-                resultData.PlayerPercent = request.playerPercent;
+                resultData.PlayerPercent = request.PlayerPercent;
                 resultData.IsActive = request.IsActive;
                 if (request.IsActive)
                 {

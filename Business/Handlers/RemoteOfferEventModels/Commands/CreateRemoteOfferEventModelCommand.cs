@@ -25,7 +25,7 @@ namespace Business.Handlers.RemoteOfferEventModels.Commands
         public bool IsActive { get; set; }
         public float FirstPrice { get; set; }
         public float LastPrice { get; set; }
-        public int Version { get; set; }
+        public string Version { get; set; }
         public int PlayerPercent { get; set; }
         public bool IsGift { get; set; }
         public byte[] GiftTexture { get; set; }
@@ -37,17 +37,14 @@ namespace Business.Handlers.RemoteOfferEventModels.Commands
         public class
             CreateRemoteOfferEventModelCommandHandler : IRequestHandler<CreateRemoteOfferEventModelCommand, IResult>
         {
-            private readonly IMediator _mediator;
             private readonly IMessageBroker _messageBroker;
             private readonly IRemoteOfferEventModelRepository _remoteOfferEventModelRepository;
 
             public CreateRemoteOfferEventModelCommandHandler(
                 IRemoteOfferEventModelRepository remoteOfferEventModelRepository,
-                IMediator mediator,
                 IMessageBroker messageBroker)
             {
                 _remoteOfferEventModelRepository = remoteOfferEventModelRepository;
-                _mediator = mediator;
                 _messageBroker = messageBroker;
             }
 
@@ -58,6 +55,16 @@ namespace Business.Handlers.RemoteOfferEventModels.Commands
             public async Task<IResult> Handle(CreateRemoteOfferEventModelCommand request,
                 CancellationToken cancellationToken)
             {
+                var isThereRemoteOfferAdModelRecord = await _remoteOfferEventModelRepository.AnyAsync(u =>
+                    u.Name == request.Name 
+                    && u.ProjectId == request.ProjectId 
+                    && u.Version == request.Version 
+                    && u.Status == true);
+
+                if (isThereRemoteOfferAdModelRecord)
+                    return new ErrorResult(Messages.AlreadyExist);
+
+                
                 var addedRemoteOfferEventModel = new RemoteOfferEventModel
                 {
                     ProjectId = request.ProjectId,

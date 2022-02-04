@@ -37,8 +37,10 @@ namespace Tests.Business.Handlers
         public async Task RemoteOfferHistoryModel_GetByProjectIdQueries_Success()
         {
             //Arrange
-            var query = new GetOfferHistoryModelsByProjectIdQuery();
-            query.ProjectId = "121212";
+            var query = new GetOfferHistoryModelsByProjectIdQuery
+            {
+                ProjectId = "121212"
+            };
 
             _remoteOfferHistoryModelRepository.Setup(x =>
                     x.GetListAsync(It.IsAny<Expression<Func<RemoteOfferHistoryModel, bool>>>()))
@@ -46,51 +48,51 @@ namespace Tests.Business.Handlers
                 {
                     new()
                     {
-                        Version = 1,
+                        Version = "1",
                         FinishTime = DateTime.Now.Ticks,
                         FirstPrice = 12,
-                        GiftTexture = new byte[] { },
+                        GiftTexture = Array.Empty<byte>(),
                         Id = new ObjectId(),
                         IsActive = true,
                         IsGift = true,
                         LastPrice = 10,
                         Name = "Test",
                         PlayerPercent = 20,
-                        ProductList = new ProductModel[] { },
+                        ProductList = Array.Empty<ProductModel>(),
                         ProjectId = "121212",
                         StartTime = DateTime.Now.Ticks,
                         ValidityPeriod = 24
                     },
                     new()
                     {
-                        Version = 2,
+                        Version = "2",
                         FinishTime = DateTime.Now.Ticks,
                         FirstPrice = 12,
-                        GiftTexture = new byte[] { },
+                        GiftTexture = Array.Empty<byte>(),
                         Id = new ObjectId(),
                         IsActive = true,
                         IsGift = true,
                         LastPrice = 0,
                         Name = "Test",
                         PlayerPercent = 20,
-                        ProductList = new ProductModel[] { },
+                        ProductList = Array.Empty<ProductModel>(),
                         ProjectId = "121212",
                         StartTime = DateTime.Now.Ticks,
                         ValidityPeriod = 24
                     },
                     new()
                     {
-                        Version = 3,
+                        Version = "3",
                         FinishTime = DateTime.Now.Ticks,
                         FirstPrice = 12,
-                        GiftTexture = new byte[] { },
+                        GiftTexture = Array.Empty<byte>(),
                         Id = new ObjectId(),
                         IsActive = true,
                         IsGift = true,
                         LastPrice = 4,
                         Name = "Test",
                         PlayerPercent = 20,
-                        ProductList = new ProductModel[] { },
+                        ProductList = Array.Empty<ProductModel>(),
                         ProjectId = "121212",
                         StartTime = DateTime.Now.Ticks,
                         ValidityPeriod = 48
@@ -113,17 +115,19 @@ namespace Tests.Business.Handlers
         public async Task RemoteOfferHistoryModel_CreateCommand_Success()
         {
             //Arrange
-            var command = new CreateRemoteOfferHistoryModelCommand();
-            command.FinishTime = new DateTime().Ticks;
-            command.FirstPrice = 12;
-            command.GiftTexture = new byte[] { };
-            command.IsActive = true;
-            command.IsGift = true;
-            command.LastPrice = 2;
-            command.Name = "Test";
-            command.PlayerPercent = 15;
-            command.ProjectId = "121212";
-            command.StartTime = DateTime.Now.Ticks;
+            var command = new CreateRemoteOfferHistoryModelCommand
+            {
+                FinishTime = new DateTime().Ticks,
+                FirstPrice = 12,
+                GiftTexture = Array.Empty<byte>(),
+                IsActive = true,
+                IsGift = true,
+                LastPrice = 2,
+                Name = "Test",
+                PlayerPercent = 15,
+                ProjectId = "121212",
+                StartTime = DateTime.Now.Ticks
+            };
 
 
             _remoteOfferHistoryModelRepository.Setup(x => x.Add(It.IsAny<RemoteOfferHistoryModel>()));

@@ -5,8 +5,8 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Business.Constants;
-using Business.Handlers.InterstielAdHistoryModels.Commands;
 using Business.Handlers.InterstielAdHistoryModels.Queries;
+using Business.Handlers.InterstitialAdHistoryModels.Commands;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using FluentAssertions;
@@ -15,32 +15,34 @@ using MongoDB.Bson;
 using Moq;
 using NUnit.Framework;
 using static Business.Handlers.InterstielAdHistoryModels.Queries.GetInterstielAdHistoryModelByProjectIdQuery;
-using static Business.Handlers.InterstielAdHistoryModels.Commands.CreateInterstielAdHistoryModelCommand;
+using static Business.Handlers.InterstitialAdHistoryModels.Commands.CreateInterstitialAdHistoryModelCommand;
 
 namespace Tests.Business.Handlers
 {
     [TestFixture]
-    public class InterstielAdHistoryModelHandlerTests
+    public class InterstitialAdHistoryModelHandlerTests
     {
         [SetUp]
         public void Setup()
         {
-            _interstielAdHistoryModelRepository = new Mock<IInterstielAdHistoryModelRepository>();
+            _interstitialAdHistoryModelRepository = new Mock<IInterstielAdHistoryModelRepository>();
             _mediator = new Mock<IMediator>();
         }
 
-        private Mock<IInterstielAdHistoryModelRepository> _interstielAdHistoryModelRepository;
+        private Mock<IInterstielAdHistoryModelRepository> _interstitialAdHistoryModelRepository;
         private Mock<IMediator> _mediator;
 
 
         [Test]
-        public async Task InterstielAdHistoryModel_GetQueries_Success()
+        public async Task InterstitialAdHistoryModel_GetQueries_Success()
         {
             //Arrange
-            var query = new GetInterstielAdHistoryModelByProjectIdQuery();
-            query.ProjectId = "121212";
+            var query = new GetInterstielAdHistoryModelByProjectIdQuery
+            {
+                ProjectId = "121212"
+            };
 
-            _interstielAdHistoryModelRepository.Setup(x =>
+            _interstitialAdHistoryModelRepository.Setup(x =>
                     x.GetListAsync(It.IsAny<Expression<Func<InterstielAdHistoryModel, bool>>>()))
                 .ReturnsAsync(new List<InterstielAdHistoryModel>
                 {
@@ -51,7 +53,7 @@ namespace Tests.Business.Handlers
                         Id = new ObjectId(),
                         Name = "test",
                         StarTime = DateTime.Now,
-                        Version = 1,
+                        Version = "1",
                         playerPercent = 10
                     },
                     new()
@@ -61,13 +63,13 @@ namespace Tests.Business.Handlers
                         Id = new ObjectId(),
                         Name = "test",
                         StarTime = DateTime.Now,
-                        Version = 2,
+                        Version = "2",
                         playerPercent = 20
                     }
                 }.AsQueryable());
 
             var handler =
-                new GetInterstielAdHistoryModelByProjectIdQueryHandler(_interstielAdHistoryModelRepository.Object,
+                new GetInterstielAdHistoryModelByProjectIdQueryHandler(_interstitialAdHistoryModelRepository.Object,
                     _mediator.Object);
 
             //Act
@@ -80,21 +82,22 @@ namespace Tests.Business.Handlers
         }
 
         [Test]
-        public async Task InterstielAdHistoryModel_CreateCommand_Success()
+        public async Task InterstitialAdHistoryModel_CreateCommand_Success()
         {
             //Arrange
-            var command = new CreateInterstielAdHistoryModelCommand();
-            command.ProjectId = "121212";
-            command.IsAdvSettingsActive = true;
-            command.Name = "test";
-            command.playerPercent = 20;
+            var command = new CreateInterstitialAdHistoryModelCommand
+            {
+                ProjectId = "121212",
+                IsAdvSettingsActive = true,
+                Name = "test",
+                PlayerPercent = 20
+            };
 
-            _interstielAdHistoryModelRepository.Setup(x =>
+            _interstitialAdHistoryModelRepository.Setup(x =>
                 x.AddAsync(It.IsAny<InterstielAdHistoryModel>()));
 
             var handler =
-                new CreateInterstielAdHistoryModelCommandHandler(_interstielAdHistoryModelRepository.Object,
-                    _mediator.Object);
+                new CreateInterstitialAdHistoryModelCommandHandler(_interstitialAdHistoryModelRepository.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
 

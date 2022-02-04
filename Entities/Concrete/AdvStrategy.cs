@@ -7,5 +7,6 @@ namespace Entities.Concrete
     {
         public string Name { get; set; }
         public float Count { get; set; }
+        public bool Status = true;
     }
 }

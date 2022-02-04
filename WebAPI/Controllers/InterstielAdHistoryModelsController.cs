@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Business.Handlers.InterstielAdHistoryModels.Commands;
 using Business.Handlers.InterstielAdHistoryModels.Queries;
+using Business.Handlers.InterstitialAdHistoryModels.Commands;
 using Core.Utilities.Results;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
@@ -40,16 +40,16 @@ namespace WebAPI.Controllers
         /// <summary>
         ///     Add InterstielAdHistoryModel.
         /// </summary>
-        /// <param name="createInterstielAdHistoryModel"></param>
+        /// <param name="createInterstitialAdHistoryModel"></param>
         /// <returns></returns>
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IResult))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
         [HttpPost]
         public async Task<IActionResult> Add(
-            [FromBody] CreateInterstielAdHistoryModelCommand createInterstielAdHistoryModel)
+            [FromBody] CreateInterstitialAdHistoryModelCommand createInterstitialAdHistoryModel)
         {
-            var result = await Mediator.Send(createInterstielAdHistoryModel);
+            var result = await Mediator.Send(createInterstitialAdHistoryModel);
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }

@@ -7,9 +7,10 @@ namespace Entities.Concrete
     {
         public string Name { get; set; }
         public string ProjectId { get; set; }
-        public float Version { get; set; }
+        public string Version { get; set; }
         public int playerPercent { get; set; }
         public bool IsAdvSettingsActive { get; set; }
         public DateTime StarTime { get; set; }
+        public bool Status = true;
     }
 }

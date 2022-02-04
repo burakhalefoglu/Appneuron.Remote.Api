@@ -21,34 +21,8 @@ namespace Core.DataAccess.MongoDb.Concrete
             var url =
                 $"mongodb://{mongoConnectionSetting.UserName}:{mongoConnectionSetting.Password}@{mongoConnectionSetting.Host}:{mongoConnectionSetting.Port}/?readPreference=primary&appname=MongoDB%20Compass&ssl=false";
             var client = new MongoClient(url);
-
             var database = client.GetDatabase(mongoConnectionSetting.DatabaseName);
             _collection = database.GetCollection<T>(collectionName);
-        }
-
-        public virtual void Delete(ObjectId id)
-        {
-            _collection.FindOneAndDelete(x => x.Id == id);
-        }
-
-        public virtual void Delete(T record)
-        {
-            _collection.FindOneAndDelete(x => x.Id == record.Id);
-        }
-
-        public async Task DeleteAsync(Expression<Func<T, bool>> predicate)
-        {
-            await _collection.DeleteManyAsync(predicate);
-        }
-
-        public virtual async Task DeleteAsync(ObjectId id)
-        {
-            await _collection.FindOneAndDeleteAsync(x => x.Id == id);
-        }
-
-        public virtual async Task DeleteAsync(T record)
-        {
-            await _collection.FindOneAndDeleteAsync(x => x.Id == record.Id);
         }
 
         public virtual T GetById(ObjectId id)
@@ -59,6 +33,11 @@ namespace Core.DataAccess.MongoDb.Concrete
         public virtual async Task<T> GetByIdAsync(ObjectId id)
         {
             return await _collection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public virtual async Task<T> GetAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _collection.Find(predicate).FirstOrDefaultAsync();
         }
 
         public virtual void Add(T entity)
@@ -102,11 +81,6 @@ namespace Core.DataAccess.MongoDb.Concrete
             });
         }
 
-        public async Task<T> GetByFilterAsync(Expression<Func<T, bool>> predicate)
-        {
-            return await Task.Run(() => { return _collection.Find(predicate).FirstOrDefault(); });
-        }
-
         public virtual void Update(ObjectId id, T record)
         {
             _collection.FindOneAndReplace(x => x.Id == id, record);
@@ -133,9 +107,19 @@ namespace Core.DataAccess.MongoDb.Concrete
                 ? _collection.AsQueryable()
                 : _collection.AsQueryable().Where(predicate);
 
-            if (data.FirstOrDefault() == null)
-                return false;
-            return true;
+            return data.FirstOrDefault() != null;
+        }
+
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate = null)
+        {
+            return await Task.Run(() =>
+            {
+                var data = predicate == null
+                    ? _collection.AsQueryable()
+                    : _collection.AsQueryable().Where(predicate);
+
+                return data.FirstOrDefault() != null;
+            });
         }
     }
 }

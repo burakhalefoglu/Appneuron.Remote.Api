@@ -5,7 +5,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.MongoDb
 {
-    public class InterstielAdModelRepository : MongoDbRepositoryBase<InterstielAdModel>, IInterstielAdModelRepository
+    public class InterstielAdModelRepository : MongoDbRepositoryBase<InterstitialAdModel>, IInterstielAdModelRepository
     {
         public InterstielAdModelRepository(MongoDbContextBase mongoDbContext, string collectionName) : base(
             mongoDbContext.MongoConnectionSettings, collectionName)

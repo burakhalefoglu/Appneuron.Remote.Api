@@ -20,14 +20,11 @@ namespace Business.Handlers.RemoteOfferModels.Queries
         public class GetRemoteOfferModelsByProjectIdQueryHandler : IRequestHandler<GetRemoteOfferModelsByProjectIdQuery,
             IDataResult<IEnumerable<RemoteOfferModel>>>
         {
-            private readonly IMediator _mediator;
             private readonly IRemoteOfferModelRepository _remoteOfferModelRepository;
 
-            public GetRemoteOfferModelsByProjectIdQueryHandler(IRemoteOfferModelRepository remoteOfferModelRepository,
-                IMediator mediator)
+            public GetRemoteOfferModelsByProjectIdQueryHandler(IRemoteOfferModelRepository remoteOfferModelRepository)
             {
                 _remoteOfferModelRepository = remoteOfferModelRepository;
-                _mediator = mediator;
             }
 
             [PerformanceAspect(5)]
@@ -38,7 +35,7 @@ namespace Business.Handlers.RemoteOfferModels.Queries
                 GetRemoteOfferModelsByProjectIdQuery request, CancellationToken cancellationToken)
             {
                 var result = await _remoteOfferModelRepository
-                    .GetListAsync(r => r.ProjectId == request.ProjectId);
+                    .GetListAsync(r => r.ProjectId == request.ProjectId && r.Status == true);
 
                 return new SuccessDataResult<IEnumerable<RemoteOfferModel>>(result);
             }
