@@ -46,7 +46,11 @@ namespace Business.Handlers.RemoteOfferHistoryModels.Commands
 
             [ValidationAspect(typeof(CreateRemoteOfferHistoryModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
+<<<<<<< Updated upstream
             [LogAspect(typeof(ConsoleLogger))]
+=======
+            [LogAspect(typeof(LogstashLogger))]
+>>>>>>> Stashed changes
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateRemoteOfferHistoryModelCommand request,
                 CancellationToken cancellationToken)

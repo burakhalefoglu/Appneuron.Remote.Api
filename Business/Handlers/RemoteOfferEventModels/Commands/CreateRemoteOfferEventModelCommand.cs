@@ -50,7 +50,11 @@ namespace Business.Handlers.RemoteOfferEventModels.Commands
 
             [ValidationAspect(typeof(CreateRemoteOfferEventModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
+<<<<<<< Updated upstream
             [LogAspect(typeof(ConsoleLogger))]
+=======
+            [LogAspect(typeof(LogstashLogger))]
+>>>>>>> Stashed changes
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateRemoteOfferEventModelCommand request,
                 CancellationToken cancellationToken)

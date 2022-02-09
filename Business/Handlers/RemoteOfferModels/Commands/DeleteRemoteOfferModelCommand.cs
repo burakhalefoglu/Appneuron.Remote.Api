@@ -29,7 +29,11 @@ namespace Business.Handlers.RemoteOfferModels.Commands
             }
 
             [CacheRemoveAspect("Get")]
+<<<<<<< Updated upstream
             [LogAspect(typeof(ConsoleLogger))]
+=======
+            [LogAspect(typeof(LogstashLogger))]
+>>>>>>> Stashed changes
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(DeleteRemoteOfferModelCommand request,
                 CancellationToken cancellationToken)

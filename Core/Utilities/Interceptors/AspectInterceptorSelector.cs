@@ -15,7 +15,11 @@ namespace Core.Utilities.Interceptors
             var methodAttributes =
                 type.GetMethod(method.Name).GetCustomAttributes<MethodInterceptionBase>(true);
             classAttributes.AddRange(methodAttributes);
+<<<<<<< Updated upstream
             classAttributes.Add(new ExceptionLogAspectAttribute(typeof(ConsoleLogger)));
+=======
+            classAttributes.Add(new ExceptionLogAspectAttribute(typeof(LogstashLogger)));
+>>>>>>> Stashed changes
             return classAttributes.OrderBy(x => x.Priority).ToArray();
         }
     }

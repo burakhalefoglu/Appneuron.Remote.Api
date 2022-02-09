@@ -32,7 +32,11 @@ namespace Business.Handlers.RemoteOfferHistoryModels.Queries
 
             [PerformanceAspect(5)]
             [CacheAspect(10)]
+<<<<<<< Updated upstream
             [LogAspect(typeof(ConsoleLogger))]
+=======
+            [LogAspect(typeof(LogstashLogger))]
+>>>>>>> Stashed changes
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<IEnumerable<RemoteOfferHistoryModel>>> Handle(
                 GetOfferHistoryModelsByProjectIdQuery request, CancellationToken cancellationToken)

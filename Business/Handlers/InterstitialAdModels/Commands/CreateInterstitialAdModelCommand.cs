@@ -37,7 +37,11 @@ namespace Business.Handlers.InterstitialAdModels.Commands
 
             [ValidationAspect(typeof(CreateInterstielAdModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
+<<<<<<< Updated upstream:Business/Handlers/InterstitialAdModels/Commands/CreateInterstitialAdModelCommand.cs
             [LogAspect(typeof(ConsoleLogger))]
+=======
+            [LogAspect(typeof(LogstashLogger))]
+>>>>>>> Stashed changes:Business/Handlers/InterstielAdModels/Commands/CreateInterstielAdModelCommand.cs
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateInterstitialAdModelCommand request,
                 CancellationToken cancellationToken)

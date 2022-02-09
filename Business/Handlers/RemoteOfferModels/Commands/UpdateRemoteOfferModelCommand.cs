@@ -38,7 +38,11 @@ namespace Business.Handlers.RemoteOfferModels.Commands
 
             [ValidationAspect(typeof(UpdateRemoteOfferModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
+<<<<<<< Updated upstream
             [LogAspect(typeof(ConsoleLogger))]
+=======
+            [LogAspect(typeof(LogstashLogger))]
+>>>>>>> Stashed changes
             [SecuredOperation(Priority = 1)]
             [TransactionScopeAspectAsync]
             public async Task<IResult> Handle(UpdateRemoteOfferModelCommand request,

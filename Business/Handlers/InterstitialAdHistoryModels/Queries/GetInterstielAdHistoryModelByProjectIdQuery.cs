@@ -33,7 +33,11 @@ namespace Business.Handlers.InterstielAdHistoryModels.Queries
 
             [PerformanceAspect(5)]
             [CacheAspect(10)]
+<<<<<<< Updated upstream:Business/Handlers/InterstitialAdHistoryModels/Queries/GetInterstielAdHistoryModelByProjectIdQuery.cs
             [LogAspect(typeof(ConsoleLogger))]
+=======
+            [LogAspect(typeof(LogstashLogger))]
+>>>>>>> Stashed changes:Business/Handlers/InterstielAdHistoryModels/Queries/GetInterstielAdHistoryModelByProjectIdQuery.cs
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<IEnumerable<InterstielAdHistoryModel>>> Handle(
                 GetInterstielAdHistoryModelByProjectIdQuery request, CancellationToken cancellationToken)
