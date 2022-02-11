@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Business.BusinessAspects;
 using Business.Constants;
 using Business.Handlers.RemoteOfferHistoryModels.ValidationRules;
 using Core.Aspects.Autofac.Caching;
@@ -18,7 +17,7 @@ namespace Business.Handlers.RemoteOfferHistoryModels.Commands
     /// </summary>
     public class CreateRemoteOfferHistoryModelCommand : IRequest<IResult>
     {
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
         public float FirstPrice { get; set; }
@@ -46,13 +45,8 @@ namespace Business.Handlers.RemoteOfferHistoryModels.Commands
 
             [ValidationAspect(typeof(CreateRemoteOfferHistoryModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
-<<<<<<< Updated upstream
             [LogAspect(typeof(ConsoleLogger))]
-=======
-            [LogAspect(typeof(LogstashLogger))]
->>>>>>> Stashed changes
-            [SecuredOperation(Priority = 1)]
-            public async Task<IResult> Handle(CreateRemoteOfferHistoryModelCommand request,
+public async Task<IResult> Handle(CreateRemoteOfferHistoryModelCommand request,
                 CancellationToken cancellationToken)
             {
                 var addedRemoteOfferHistoryModel = new RemoteOfferHistoryModel

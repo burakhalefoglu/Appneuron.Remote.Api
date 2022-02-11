@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Business.BusinessAspects;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Performance;
@@ -15,7 +14,7 @@ namespace Business.Handlers.RemoteOfferModels.Queries
 {
     public class GetRemoteOfferModelsByProjectIdQuery : IRequest<IDataResult<IEnumerable<RemoteOfferModel>>>
     {
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
 
         public class GetRemoteOfferModelsByProjectIdQueryHandler : IRequestHandler<GetRemoteOfferModelsByProjectIdQuery,
             IDataResult<IEnumerable<RemoteOfferModel>>>
@@ -29,13 +28,8 @@ namespace Business.Handlers.RemoteOfferModels.Queries
 
             [PerformanceAspect(5)]
             [CacheAspect(10)]
-<<<<<<< Updated upstream
             [LogAspect(typeof(ConsoleLogger))]
-=======
-            [LogAspect(typeof(LogstashLogger))]
->>>>>>> Stashed changes
-            [SecuredOperation(Priority = 1)]
-            public async Task<IDataResult<IEnumerable<RemoteOfferModel>>> Handle(
+public async Task<IDataResult<IEnumerable<RemoteOfferModel>>> Handle(
                 GetRemoteOfferModelsByProjectIdQuery request, CancellationToken cancellationToken)
             {
                 var result = await _remoteOfferModelRepository

@@ -17,7 +17,7 @@ namespace Business.Handlers.InterstitialAdModels.Commands
 {
     public class UpdateInterstitialAdModelCommand : IRequest<IResult>
     {
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public string Name { get; set; }
         public string Version { get; set; }
         public int PlayerPercent { get; set; }
@@ -37,11 +37,7 @@ namespace Business.Handlers.InterstitialAdModels.Commands
 
             [ValidationAspect(typeof(UpdateInterstielAdModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
-<<<<<<< Updated upstream:Business/Handlers/InterstitialAdModels/Commands/UpdateInterstitialAdModelCommand.cs
             [LogAspect(typeof(ConsoleLogger))]
-=======
-            [LogAspect(typeof(LogstashLogger))]
->>>>>>> Stashed changes:Business/Handlers/InterstielAdModels/Commands/UpdateInterstielAdModelCommand.cs
             [SecuredOperation(Priority = 1)]
             [TransactionScopeAspectAsync]
             public async Task<IResult> Handle(UpdateInterstitialAdModelCommand request,
@@ -68,9 +64,7 @@ namespace Business.Handlers.InterstitialAdModels.Commands
                     ProjectId = request.ProjectId
                 }, cancellationToken);
 
-                await _interstitialAdModelRepository.UpdateAsync(resultData,
-                    i => i.ProjectId == request.ProjectId && i.Name == request.Name &&
-                         i.Version == request.Version);
+                await _interstitialAdModelRepository.UpdateAsync(resultData);
 
                 return new SuccessResult(Messages.Updated);
             }

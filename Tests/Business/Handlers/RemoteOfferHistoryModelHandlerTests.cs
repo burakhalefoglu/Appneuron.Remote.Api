@@ -11,7 +11,6 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using FluentAssertions;
 using MediatR;
-using MongoDB.Bson;
 using Moq;
 using NUnit.Framework;
 using static Business.Handlers.RemoteOfferHistoryModels.Queries.GetOfferHistoryModelsByProjectIdQuery;
@@ -39,7 +38,7 @@ namespace Tests.Business.Handlers
             //Arrange
             var query = new GetOfferHistoryModelsByProjectIdQuery
             {
-                ProjectId = "121212"
+                ProjectId = 3
             };
 
             _remoteOfferHistoryModelRepository.Setup(x =>
@@ -52,14 +51,14 @@ namespace Tests.Business.Handlers
                         FinishTime = DateTime.Now.Ticks,
                         FirstPrice = 12,
                         GiftTexture = Array.Empty<byte>(),
-                        Id = new ObjectId(),
+                        Id = 1,
                         IsActive = true,
                         IsGift = true,
                         LastPrice = 10,
                         Name = "Test",
                         PlayerPercent = 20,
                         ProductList = Array.Empty<ProductModel>(),
-                        ProjectId = "121212",
+                        ProjectId = 112,
                         StartTime = DateTime.Now.Ticks,
                         ValidityPeriod = 24
                     },
@@ -69,14 +68,14 @@ namespace Tests.Business.Handlers
                         FinishTime = DateTime.Now.Ticks,
                         FirstPrice = 12,
                         GiftTexture = Array.Empty<byte>(),
-                        Id = new ObjectId(),
+                        Id = 2,
                         IsActive = true,
                         IsGift = true,
                         LastPrice = 0,
                         Name = "Test",
                         PlayerPercent = 20,
                         ProductList = Array.Empty<ProductModel>(),
-                        ProjectId = "121212",
+                        ProjectId = 122,
                         StartTime = DateTime.Now.Ticks,
                         ValidityPeriod = 24
                     },
@@ -86,14 +85,14 @@ namespace Tests.Business.Handlers
                         FinishTime = DateTime.Now.Ticks,
                         FirstPrice = 12,
                         GiftTexture = Array.Empty<byte>(),
-                        Id = new ObjectId(),
+                        Id = 3,
                         IsActive = true,
                         IsGift = true,
                         LastPrice = 4,
                         Name = "Test",
                         PlayerPercent = 20,
                         ProductList = Array.Empty<ProductModel>(),
-                        ProjectId = "121212",
+                        ProjectId = 54,
                         StartTime = DateTime.Now.Ticks,
                         ValidityPeriod = 48
                     }
@@ -125,7 +124,7 @@ namespace Tests.Business.Handlers
                 LastPrice = 2,
                 Name = "Test",
                 PlayerPercent = 15,
-                ProjectId = "121212",
+                ProjectId = 3,
                 StartTime = DateTime.Now.Ticks
             };
 

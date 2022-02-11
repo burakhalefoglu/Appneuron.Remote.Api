@@ -15,7 +15,7 @@ namespace Business.Handlers.InterstitialAdModels.Commands
     /// </summary>
     public class DeleteInterstitialAdModelCommand : IRequest<IResult>
     {
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public string Name { get; set; }
         public string Version { get; set; }
 
@@ -42,8 +42,7 @@ namespace Business.Handlers.InterstitialAdModels.Commands
 
                 isThereInterstitialAdModelRecord.Status = false;
                 
-                await _interstitialAdModelRepository.UpdateAsync(isThereInterstitialAdModelRecord, i =>
-                    i.ProjectId == request.ProjectId && i.Name == request.Name && i.Version == request.Version);
+                await _interstitialAdModelRepository.UpdateAsync(isThereInterstitialAdModelRecord);
 
                 return new SuccessResult(Messages.Deleted);
             }

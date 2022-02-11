@@ -12,7 +12,6 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using FluentAssertions;
 using MediatR;
-using MongoDB.Bson;
 using Moq;
 using NUnit.Framework;
 using static Business.Handlers.RemoteOfferModels.Queries.GetRemoteOfferModelsByProjectIdQuery;
@@ -42,7 +41,7 @@ namespace Tests.Business.Handlers
             //Arrange
             var query = new GetRemoteOfferModelsByProjectIdQuery
             {
-                ProjectId = "121212"
+                ProjectId = 1
             };
 
             _remoteOfferModelRepository.Setup(x => x.GetListAsync(It.IsAny<Expression<Func<RemoteOfferModel, bool>>>()))
@@ -54,14 +53,14 @@ namespace Tests.Business.Handlers
                         FinishTime = DateTime.Now.Ticks,
                         FirstPrice = 12,
                         GiftTexture = Array.Empty<byte>(),
-                        Id = new ObjectId(),
+                        Id = 1,
                         IsActive = true,
                         IsGift = true,
                         LastPrice = 10,
                         Name = "Test",
                         PlayerPercent = 20,
                         ProductList = Array.Empty<ProductModel>(),
-                        ProjectId = "121212",
+                        ProjectId = 3,
                         StartTime = DateTime.Now.Ticks,
                         ValidityPeriod = 24
                     },
@@ -71,14 +70,14 @@ namespace Tests.Business.Handlers
                         FinishTime = DateTime.Now.Ticks,
                         FirstPrice = 12,
                         GiftTexture = Array.Empty<byte>(),
-                        Id = new ObjectId(),
+                        Id = 4,
                         IsActive = true,
                         IsGift = true,
                         LastPrice = 10,
                         Name = "Test",
                         PlayerPercent = 20,
                         ProductList = Array.Empty<ProductModel>(),
-                        ProjectId = "121212",
+                        ProjectId = 23,
                         StartTime = DateTime.Now.Ticks,
                         ValidityPeriod = 24
                     },
@@ -88,14 +87,14 @@ namespace Tests.Business.Handlers
                         FinishTime = DateTime.Now.Ticks,
                         FirstPrice = 12,
                         GiftTexture = Array.Empty<byte>(),
-                        Id = new ObjectId(),
+                        Id = 13,
                         IsActive = true,
                         IsGift = true,
                         LastPrice = 10,
                         Name = "Test",
                         PlayerPercent = 20,
                         ProductList = Array.Empty<ProductModel>(),
-                        ProjectId = "121212",
+                        ProjectId = 56,
                         StartTime = DateTime.Now.Ticks,
                         ValidityPeriod = 24
                     }
@@ -127,7 +126,7 @@ namespace Tests.Business.Handlers
                 Name = "Test",
                 PlayerPercent = 15,
                 ProductList = Array.Empty<ProductModel>(),
-                ProjectId = "121212",
+                ProjectId = 3,
                 StartTime = DateTime.Now.Ticks
             };
 
@@ -161,7 +160,7 @@ namespace Tests.Business.Handlers
                 Name = "Test",
                 PlayerPercent = 15,
                 ProductList = Array.Empty<ProductModel>(),
-                ProjectId = "121212",
+                ProjectId = 3,
                 StartTime = DateTime.Now.Ticks
             };
 
@@ -190,7 +189,7 @@ namespace Tests.Business.Handlers
                 Name = "Test",
                 Version = "1",
                 PlayerPercent = 20,
-                ProjectId = "121212"
+                ProjectId = 3
             };
 
             _remoteOfferModelRepository.Setup(x =>
@@ -201,8 +200,7 @@ namespace Tests.Business.Handlers
                     x.GetAsync(It.IsAny<Expression<Func<RemoteOfferModel, bool>>>()))
                 .ReturnsAsync(new RemoteOfferModel());
 
-            _remoteOfferModelRepository.Setup(x => x.UpdateAsync(
-                It.IsAny<ObjectId>(), It.IsAny<RemoteOfferModel>()));
+            _remoteOfferModelRepository.Setup(x => x.UpdateAsync(It.IsAny<RemoteOfferModel>()));
 
             var handler =
                 new UpdateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object);
@@ -223,7 +221,7 @@ namespace Tests.Business.Handlers
                 Name = "Test",
                 Version = "1",
                 PlayerPercent = 20,
-                ProjectId = "121212"
+                ProjectId = 1
             };
 
             _remoteOfferModelRepository.Setup(x =>
@@ -234,7 +232,7 @@ namespace Tests.Business.Handlers
                     x.GetAsync(It.IsAny<Expression<Func<RemoteOfferModel, bool>>>()))
                 .ReturnsAsync(new RemoteOfferModel());
 
-            _remoteOfferModelRepository.Setup(x => x.UpdateAsync(It.IsAny<ObjectId>(), It.IsAny<RemoteOfferModel>()));
+            _remoteOfferModelRepository.Setup(x => x.UpdateAsync(It.IsAny<RemoteOfferModel>()));
 
             _mediator.Setup(x => x.Send(new object(), new CancellationToken()))
                 .ReturnsAsync(new SuccessResult(Messages.Added));
@@ -254,7 +252,7 @@ namespace Tests.Business.Handlers
             var command = new DeleteRemoteOfferModelCommand
             {
                 Name = "Test",
-                ProjectId = "121212",
+                ProjectId = 1,
                 Version = "1"
             };
             _remoteOfferModelRepository.Setup(x =>
@@ -262,7 +260,7 @@ namespace Tests.Business.Handlers
                 .ReturnsAsync(new RemoteOfferModel());
 
             _remoteOfferModelRepository.Setup(x =>
-                x.UpdateAsync(It.IsAny<RemoteOfferModel>(), It.IsAny<Expression<Func<RemoteOfferModel,bool>>>()));
+                x.UpdateAsync(It.IsAny<RemoteOfferModel>()));
 
             var handler =
                 new DeleteRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object);

@@ -15,10 +15,10 @@ using Core.Aspects.Autofac.Caching;
 namespace Business.Handlers.InterstielAdModels.Queries
 {
 
-    public class GetInterstielAdModelsByProjectIdQuery : IRequest<IDataResult<IEnumerable<InterstielAdModel>>>
+    public class GetInterstielAdModelsByProjectIdQuery : IRequest<IDataResult<IEnumerable<InterstitialAdModel>>>
     {
-        public string ProjectId { get; set; }
-        public class GetInterstielAdModelsByProjectIdQueryHandler : IRequestHandler<GetInterstielAdModelsByProjectIdQuery, IDataResult<IEnumerable<InterstielAdModel>>>
+        public long ProjectId { get; set; }
+        public class GetInterstielAdModelsByProjectIdQueryHandler : IRequestHandler<GetInterstielAdModelsByProjectIdQuery, IDataResult<IEnumerable<InterstitialAdModel>>>
         {
             private readonly IInterstielAdModelRepository _interstielAdModelRepository;
             private readonly IMediator _mediator;
@@ -33,10 +33,10 @@ namespace Business.Handlers.InterstielAdModels.Queries
             [CacheAspect(10)]
             [LogAspect(typeof(LogstashLogger))]
             [SecuredOperation(Priority = 1)]
-            public async Task<IDataResult<IEnumerable<InterstielAdModel>>> Handle(GetInterstielAdModelsByProjectIdQuery request, CancellationToken cancellationToken)
+            public async Task<IDataResult<IEnumerable<InterstitialAdModel>>> Handle(GetInterstielAdModelsByProjectIdQuery request, CancellationToken cancellationToken)
             {
                 var result = await _interstielAdModelRepository.GetListAsync(i=> i.ProjectId == request.ProjectId);
-                return new SuccessDataResult<IEnumerable<InterstielAdModel>>(result);
+                return new SuccessDataResult<IEnumerable<InterstitialAdModel>>(result);
             }
         }
     }

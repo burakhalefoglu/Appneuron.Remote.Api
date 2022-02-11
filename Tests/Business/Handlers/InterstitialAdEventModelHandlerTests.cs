@@ -39,7 +39,7 @@ namespace Tests.Business.Handlers
             command.AdvFrequencyStrategies = new Dictionary<string, int>();
             command.ClientIdList = new string[] { };
             command.IsAdvSettingsActive = true;
-            command.ProjectId = "121212";
+            command.ProjectId = 1;
 
 
             _interstitialAdEventModelRepository.Setup(

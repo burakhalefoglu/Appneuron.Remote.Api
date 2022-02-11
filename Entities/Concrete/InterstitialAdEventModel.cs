@@ -3,12 +3,13 @@ using Core.Entities;
 
 namespace Entities.Concrete
 {
-    public class InterstitialAdEventModel : DocumentDbEntity
+    public class InterstitialAdEventModel : IEntity
     {
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public string[] ClientIdList { get; set; }
         public bool IsAdvSettingsActive { get; set; }
         public Dictionary<string, int> AdvFrequencyStrategies { get; set; }
         public bool Status = true;
+        public long Id { get; set; }
     }
 }

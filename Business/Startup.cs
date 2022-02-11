@@ -17,10 +17,10 @@ using Core.Utilities.ElasticSearch;
 using Core.Utilities.IoC;
 using Core.Utilities.MessageBrokers.RabbitMq;
 using DataAccess.Abstract;
+using DataAccess.Concrete.Cassandra;
+using DataAccess.Concrete.Cassandra.Contexts;
+using DataAccess.Concrete.Cassandra.Tables;
 using DataAccess.Concrete.EntityFramework.Contexts;
-using DataAccess.Concrete.MongoDb;
-using DataAccess.Concrete.MongoDb.Collections;
-using DataAccess.Concrete.MongoDb.Context;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -53,7 +53,7 @@ namespace Business
         public virtual void ConfigureServices(IServiceCollection services)
         {
             Func<IServiceProvider, ClaimsPrincipal> getPrincipal = sp =>
-                sp.GetService<IHttpContextAccessor>().HttpContext?.User ??
+                sp.GetService<IHttpContextAccessor>()?.HttpContext?.User ??
                 new ClaimsPrincipal(new ClaimsIdentity(Messages.Unknown));
 
             services.AddScoped<IPrincipal>(getPrincipal);
@@ -67,7 +67,7 @@ namespace Business
             services.AddSingleton<ConfigurationManager>();
 
             services.AddTransient<IElasticSearch, ElasticSearchManager>();
-
+            services.AddTransient<IMessageBroker, KafkaMessageBroker>();
             services.AddTransient<IMessageBrokerHelper, MqQueueHelper>();
             services.AddTransient<IMessageConsumer, MqConsumerHelper>();
             services.AddSingleton<ICacheManager, MemoryCacheManager>();
@@ -89,28 +89,29 @@ namespace Business
         public void ConfigureDevelopmentServices(IServiceCollection services)
         {
             ConfigureServices(services);
+            
             services.AddTransient<IRemoteOfferEventModelRepository>(x =>
-                new RemoteOfferEventModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.RemoteOfferEventModels));
+                new CassRemoteOfferEventModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.RemoteOfferEventModels));
             services.AddTransient<IInterstitialAdEventModelRepository>(x =>
-                new InterstitialAdEventModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.InterstitialAdEventModels));
+                new CassInterstitialAdEventModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.InterstitialAdEventModels));
             services.AddTransient<IInterstielAdHistoryModelRepository>(x =>
-                new InterstielAdHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.InterstielAdHistoryModels));
+                new CassInterstitialAdHistoryModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.InterstitialAdHistoryModels));
             services.AddTransient<IRemoteOfferHistoryModelRepository>(x =>
-                new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.RemoteOfferHistoryModels));
+                new CassRemoteOfferHistoryModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.RemoteOfferHistoryModels));
             services.AddTransient<IRemoteOfferModelRepository>(x =>
-                new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.RemoteOfferModels));
+                new CassRemoteOfferModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.RemoteOfferModels));
             services.AddTransient<IInterstielAdModelRepository>(x =>
-                new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.InterstielAdModels));
-            services.AddTransient<IMessageBroker, KafkaMessageBroker>();
+                new CassInterstitialAdModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.InterstitialAdModels));
 
             services.AddDbContext<ProjectDbContext, DArchInMemory>(ServiceLifetime.Transient);
-            services.AddSingleton<MongoDbContextBase, MongoDbContext>();
+
+            services.AddSingleton<CassandraContextBase, CassandraContext>();
         }
 
         /// <summary>
@@ -120,29 +121,29 @@ namespace Business
         public void ConfigureStagingServices(IServiceCollection services)
         {
             ConfigureServices(services);
+
             services.AddTransient<IRemoteOfferEventModelRepository>(x =>
-                new RemoteOfferEventModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.RemoteOfferEventModels));
+                new CassRemoteOfferEventModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.RemoteOfferEventModels));
             services.AddTransient<IInterstitialAdEventModelRepository>(x =>
-                new InterstitialAdEventModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.InterstitialAdEventModels));
+                new CassInterstitialAdEventModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.InterstitialAdEventModels));
             services.AddTransient<IInterstielAdHistoryModelRepository>(x =>
-                new InterstielAdHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.InterstielAdHistoryModels));
+                new CassInterstitialAdHistoryModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.InterstitialAdHistoryModels));
             services.AddTransient<IRemoteOfferHistoryModelRepository>(x =>
-                new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.RemoteOfferHistoryModels));
+                new CassRemoteOfferHistoryModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.RemoteOfferHistoryModels));
             services.AddTransient<IRemoteOfferModelRepository>(x =>
-                new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.RemoteOfferModels));
+                new CassRemoteOfferModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.RemoteOfferModels));
             services.AddTransient<IInterstielAdModelRepository>(x =>
-                new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.InterstielAdModels));
-            services.AddTransient<IMessageBroker, KafkaMessageBroker>();
+                new CassInterstitialAdModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.InterstitialAdModels));
 
-            services.AddDbContext<ProjectDbContext>();
+            // services.AddDbContext<ProjectDbContext>();
 
-            services.AddSingleton<MongoDbContextBase, MongoDbContext>();
+            services.AddSingleton<CassandraContextBase, CassandraContext>();
         }
 
         /// <summary>
@@ -152,29 +153,29 @@ namespace Business
         public void ConfigureProductionServices(IServiceCollection services)
         {
             ConfigureServices(services);
+
             services.AddTransient<IRemoteOfferEventModelRepository>(x =>
-                new RemoteOfferEventModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.RemoteOfferEventModels));
+                new CassRemoteOfferEventModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.RemoteOfferEventModels));
             services.AddTransient<IInterstitialAdEventModelRepository>(x =>
-                new InterstitialAdEventModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.InterstitialAdEventModels));
+                new CassInterstitialAdEventModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.InterstitialAdEventModels));
             services.AddTransient<IInterstielAdHistoryModelRepository>(x =>
-                new InterstielAdHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.InterstielAdHistoryModels));
+                new CassInterstitialAdHistoryModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.InterstitialAdHistoryModels));
             services.AddTransient<IRemoteOfferHistoryModelRepository>(x =>
-                new RemoteOfferHistoryModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.RemoteOfferHistoryModels));
+                new CassRemoteOfferHistoryModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.RemoteOfferHistoryModels));
             services.AddTransient<IRemoteOfferModelRepository>(x =>
-                new RemoteOfferModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.RemoteOfferModels));
+                new CassRemoteOfferModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.RemoteOfferModels));
             services.AddTransient<IInterstielAdModelRepository>(x =>
-                new InterstielAdModelRepository(x.GetRequiredService<MongoDbContextBase>(),
-                    Collections.InterstielAdModels));
-            services.AddTransient<IMessageBroker, KafkaMessageBroker>();
+                new CassInterstitialAdModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.InterstitialAdModels));
 
-            services.AddDbContext<ProjectDbContext>();
+            // services.AddDbContext<ProjectDbContext>();
 
-            services.AddSingleton<MongoDbContextBase, MongoDbContext>();
+            services.AddSingleton<CassandraContextBase, CassandraContext>();
         }
 
         /// <summary>

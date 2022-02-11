@@ -42,7 +42,7 @@ namespace Tests.Business.Handlers
                 LastPrice = 8,
                 Name = "test",
                 PlayerPercent = 20,
-                ProjectId = "121212",
+                ProjectId = 2,
                 ProductList = Array.Empty<ProductModel>()
             };
 

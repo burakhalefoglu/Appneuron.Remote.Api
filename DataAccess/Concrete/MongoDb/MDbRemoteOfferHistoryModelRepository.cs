@@ -5,9 +5,10 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.MongoDb
 {
-    public class RemoteOfferModelRepository : MongoDbRepositoryBase<RemoteOfferModel>, IRemoteOfferModelRepository
+    public class MDbRemoteOfferHistoryModelRepository : MongoDbRepositoryBase<RemoteOfferHistoryModel>,
+        IRemoteOfferHistoryModelRepository
     {
-        public RemoteOfferModelRepository(MongoDbContextBase mongoDbContext, string collectionName) : base(
+        public MDbRemoteOfferHistoryModelRepository(MongoDbContextBase mongoDbContext, string collectionName) : base(
             mongoDbContext.MongoConnectionSettings, collectionName)
         {
         }

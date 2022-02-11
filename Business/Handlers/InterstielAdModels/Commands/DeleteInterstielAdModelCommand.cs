@@ -1,15 +1,13 @@
-﻿
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Business.BusinessAspects;
 using Business.Constants;
 using Core.Aspects.Autofac.Caching;
-using Business.BusinessAspects;
 using Core.Aspects.Autofac.Logging;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-using MongoDB.Bson;
 
 namespace Business.Handlers.InterstielAdModels.Commands
 {
@@ -18,16 +16,16 @@ namespace Business.Handlers.InterstielAdModels.Commands
     /// </summary>
     public class DeleteInterstielAdModelCommand : IRequest<IResult>
     {
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public string Name { get; set; }
-        public int Version { get; set; }
+        public string Version { get; set; }
 
-        public class DeleteInterstielAdModelCommandHandler : IRequestHandler<DeleteInterstielAdModelCommand, IResult>
+        public class DeleteInterstitialAdModelCommandHandler : IRequestHandler<DeleteInterstielAdModelCommand, IResult>
         {
             private readonly IInterstielAdModelRepository _interstielAdModelRepository;
             private readonly IMediator _mediator;
 
-            public DeleteInterstielAdModelCommandHandler(IInterstielAdModelRepository interstielAdModelRepository, IMediator mediator)
+            public DeleteInterstitialAdModelCommandHandler(IInterstielAdModelRepository interstielAdModelRepository, IMediator mediator)
             {
                 _interstielAdModelRepository = interstielAdModelRepository;
                 _mediator = mediator;
@@ -38,8 +36,15 @@ namespace Business.Handlers.InterstielAdModels.Commands
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(DeleteInterstielAdModelCommand request, CancellationToken cancellationToken)
             {
-                await _interstielAdModelRepository.DeleteAsync(i=> i.ProjectId == request.ProjectId && i.Name == request.Name && i.Version == request.Version);
+                var isThereInterstitialAdModelRecord = await _interstielAdModelRepository.GetAsync(u =>
+                    u.Name == request.Name && u.ProjectId == request.ProjectId && u.Version == request.Version && u.Status == true);
 
+                if (isThereInterstitialAdModelRecord is null)
+                    return new ErrorResult(Messages.NotFound);
+
+                isThereInterstitialAdModelRecord.Status = false;
+                
+                await _interstielAdModelRepository.UpdateAsync(isThereInterstitialAdModelRecord);
                 return new SuccessResult(Messages.Deleted);
             }
         }

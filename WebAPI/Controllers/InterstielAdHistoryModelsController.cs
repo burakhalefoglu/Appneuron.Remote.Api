@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Business.Handlers.InterstielAdHistoryModels.Queries;
 using Business.Handlers.InterstitialAdHistoryModels.Commands;
+using Business.Handlers.InterstitialAdHistoryModels.Queries;
 using Core.Utilities.Results;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
@@ -24,10 +24,10 @@ namespace WebAPI.Controllers
         /// <response code="200"></response>
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK,
-            Type = typeof(IDataResult<IEnumerable<InterstielAdHistoryModel>>))]
+            Type = typeof(IDataResult<IEnumerable<InterstitialAdHistoryModel>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
         [HttpGet("getListByProjectId")]
-        public async Task<IActionResult> GetListByProjectId(string projectId)
+        public async Task<IActionResult> GetListByProjectId(long projectId)
         {
             var result = await Mediator.Send(new GetInterstielAdHistoryModelByProjectIdQuery
             {

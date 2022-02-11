@@ -3,7 +3,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Abstract
 {
-    public interface IInterstielAdHistoryModelRepository : IDocumentDbRepository<InterstielAdHistoryModel>
+    public interface IInterstielAdHistoryModelRepository : IRepository<InterstitialAdHistoryModel>
     {
     }
 }

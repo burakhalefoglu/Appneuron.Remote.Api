@@ -5,10 +5,9 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.MongoDb
 {
-    public class RemoteOfferEventModelRepository : MongoDbRepositoryBase<RemoteOfferEventModel>,
-        IRemoteOfferEventModelRepository
+    public class MDbInterstitialAdModelRepository : MongoDbRepositoryBase<InterstitialAdModel>, IInterstielAdModelRepository
     {
-        public RemoteOfferEventModelRepository(MongoDbContextBase mongoDbContext, string collectionName) : base(
+        public MDbInterstitialAdModelRepository(MongoDbContextBase mongoDbContext, string collectionName) : base(
             mongoDbContext.MongoConnectionSettings, collectionName)
         {
         }

@@ -27,7 +27,7 @@ namespace WebAPI.Controllers
             Type = typeof(IDataResult<IEnumerable<RemoteOfferHistoryModel>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
         [HttpGet("getByProjectId")]
-        public async Task<IActionResult> GetByProjectId(string projectId)
+        public async Task<IActionResult> GetByProjectId(long projectId)
         {
             var result = await Mediator.Send(new GetOfferHistoryModelsByProjectIdQuery
             {

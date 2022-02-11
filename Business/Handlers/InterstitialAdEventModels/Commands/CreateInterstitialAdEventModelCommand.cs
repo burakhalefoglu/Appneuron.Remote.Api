@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Business.BusinessAspects;
 using Business.Constants;
 using Business.Handlers.InterstitialAdEventModels.ValidationRules;
 using Business.MessageBrokers;
@@ -20,7 +19,7 @@ namespace Business.Handlers.InterstitialAdEventModels.Commands
     /// </summary>
     public class CreateInterstitialAdEventModelCommand : IRequest<IResult>
     {
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public string[] ClientIdList { get; set; }
         public bool IsAdvSettingsActive { get; set; }
         public Dictionary<string, int> AdvFrequencyStrategies { get; set; }
@@ -46,13 +45,8 @@ namespace Business.Handlers.InterstitialAdEventModels.Commands
 
             [ValidationAspect(typeof(CreateInterstitialAdEventModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
-<<<<<<< Updated upstream
             [LogAspect(typeof(ConsoleLogger))]
-=======
-            [LogAspect(typeof(LogstashLogger))]
->>>>>>> Stashed changes
-            [SecuredOperation(Priority = 1)]
-            public async Task<IResult> Handle(CreateInterstitialAdEventModelCommand request,
+public async Task<IResult> Handle(CreateInterstitialAdEventModelCommand request,
                 CancellationToken cancellationToken)
             {
                 var addedInterstitialAdEventModel = new InterstitialAdEventModel

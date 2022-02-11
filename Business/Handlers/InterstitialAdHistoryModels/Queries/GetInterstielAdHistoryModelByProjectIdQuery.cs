@@ -11,15 +11,15 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using MediatR;
 
-namespace Business.Handlers.InterstielAdHistoryModels.Queries
+namespace Business.Handlers.InterstitialAdHistoryModels.Queries
 {
     public class
-        GetInterstielAdHistoryModelByProjectIdQuery : IRequest<IDataResult<IEnumerable<InterstielAdHistoryModel>>>
+        GetInterstielAdHistoryModelByProjectIdQuery : IRequest<IDataResult<IEnumerable<InterstitialAdHistoryModel>>>
     {
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
 
         public class GetInterstielAdHistoryModelByProjectIdQueryHandler : IRequestHandler<
-            GetInterstielAdHistoryModelByProjectIdQuery, IDataResult<IEnumerable<InterstielAdHistoryModel>>>
+            GetInterstielAdHistoryModelByProjectIdQuery, IDataResult<IEnumerable<InterstitialAdHistoryModel>>>
         {
             private readonly IInterstielAdHistoryModelRepository _interstielAdHistoryModelRepository;
             private readonly IMediator _mediator;
@@ -33,19 +33,15 @@ namespace Business.Handlers.InterstielAdHistoryModels.Queries
 
             [PerformanceAspect(5)]
             [CacheAspect(10)]
-<<<<<<< Updated upstream:Business/Handlers/InterstitialAdHistoryModels/Queries/GetInterstielAdHistoryModelByProjectIdQuery.cs
             [LogAspect(typeof(ConsoleLogger))]
-=======
-            [LogAspect(typeof(LogstashLogger))]
->>>>>>> Stashed changes:Business/Handlers/InterstielAdHistoryModels/Queries/GetInterstielAdHistoryModelByProjectIdQuery.cs
             [SecuredOperation(Priority = 1)]
-            public async Task<IDataResult<IEnumerable<InterstielAdHistoryModel>>> Handle(
+            public async Task<IDataResult<IEnumerable<InterstitialAdHistoryModel>>> Handle(
                 GetInterstielAdHistoryModelByProjectIdQuery request, CancellationToken cancellationToken)
             {
                 var result = await _interstielAdHistoryModelRepository
                     .GetListAsync(r => r.ProjectId == request.ProjectId);
 
-                return new SuccessDataResult<IEnumerable<InterstielAdHistoryModel>>(result);
+                return new SuccessDataResult<IEnumerable<InterstitialAdHistoryModel>>(result);
             }
         }
     }

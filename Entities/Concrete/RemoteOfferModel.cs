@@ -2,9 +2,9 @@
 
 namespace Entities.Concrete
 {
-    public class RemoteOfferModel : DocumentDbEntity
+    public class RemoteOfferModel : IEntity
     {
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public ProductModel[] ProductList { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
@@ -18,5 +18,6 @@ namespace Entities.Concrete
         public long StartTime { get; set; }
         public long FinishTime { get; set; }
         public bool Status = true;
+        public long Id { get; set; }
     }
 }

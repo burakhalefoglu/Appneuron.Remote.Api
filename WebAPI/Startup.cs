@@ -83,8 +83,12 @@ namespace WebAPI
                 c.IncludeXmlComments(Path.ChangeExtension(typeof(Startup).Assembly.Location, ".xml"));
             });
 
+            services.AddTransient<MongoDbLogger>();
+            services.AddTransient<ConsoleLogger>();
             services.AddTransient<FileLogger>();
+            services.AddTransient<LogstashLogger>();
             services.AddTransient<PostgreSqlLogger>();
+            services.AddTransient<MsTeamsLogger>();
             services.AddTransient<MsSqlLogger>();
 
             base.ConfigureServices(services);

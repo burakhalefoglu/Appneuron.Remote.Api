@@ -19,7 +19,7 @@ namespace Business.Handlers.RemoteOfferEventModels.Commands
     /// </summary>
     public class CreateRemoteOfferEventModelCommand : IRequest<IResult>
     {
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public string[] ClientIdList { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
@@ -50,13 +50,8 @@ namespace Business.Handlers.RemoteOfferEventModels.Commands
 
             [ValidationAspect(typeof(CreateRemoteOfferEventModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
-<<<<<<< Updated upstream
             [LogAspect(typeof(ConsoleLogger))]
-=======
-            [LogAspect(typeof(LogstashLogger))]
->>>>>>> Stashed changes
-            [SecuredOperation(Priority = 1)]
-            public async Task<IResult> Handle(CreateRemoteOfferEventModelCommand request,
+public async Task<IResult> Handle(CreateRemoteOfferEventModelCommand request,
                 CancellationToken cancellationToken)
             {
                 var isThereRemoteOfferAdModelRecord = await _remoteOfferEventModelRepository.AnyAsync(u =>

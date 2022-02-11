@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Business.BusinessAspects;
 using Business.Constants;
@@ -20,7 +19,7 @@ namespace Business.Handlers.InterstitialAdHistoryModels.Commands
     public class CreateInterstitialAdHistoryModelCommand : IRequest<IResult>
     {
         public string Name { get; set; }
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public string Version { get; set; }
         public int PlayerPercent { get; set; }
         public bool IsAdvSettingsActive { get; set; }
@@ -40,23 +39,18 @@ namespace Business.Handlers.InterstitialAdHistoryModels.Commands
 
             [ValidationAspect(typeof(CreateInterstielAdHistoryModelValidator))]
             [CacheRemoveAspect("Get")]
-<<<<<<< Updated upstream:Business/Handlers/InterstitialAdHistoryModels/Commands/CreateInterstitialAdHistoryModelCommand.cs
             [LogAspect(typeof(ConsoleLogger))]
-=======
-            [LogAspect(typeof(LogstashLogger))]
->>>>>>> Stashed changes:Business/Handlers/InterstielAdHistoryModels/Commands/CreateInterstielAdHistoryModelCommand.cs
             [SecuredOperation(Priority = 1)]
             public async Task<IResult> Handle(CreateInterstitialAdHistoryModelCommand request,
                 CancellationToken cancellationToken)
             {
-                var addedInterstitialAdHistoryModel = new InterstielAdHistoryModel
+                var addedInterstitialAdHistoryModel = new InterstitialAdHistoryModel
                 {
                     Name = request.Name,
-                    ProjectId = request.ProjectId,
                     Version = request.Version,
-                    playerPercent = request.PlayerPercent,
-                    IsAdvSettingsActive = request.IsAdvSettingsActive,
-                    StarTime = DateTime.Now
+                    PlayerPercent = request.PlayerPercent,
+                    ProjectId = request.ProjectId,
+                    IsAdvSettingsActive = request.IsAdvSettingsActive
                 };
 
                 await _interstitialAdHistoryModelRepository.AddAsync(addedInterstitialAdHistoryModel);

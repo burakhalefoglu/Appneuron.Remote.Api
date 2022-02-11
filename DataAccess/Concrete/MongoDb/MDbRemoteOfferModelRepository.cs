@@ -5,10 +5,9 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.MongoDb
 {
-    public class InterstielAdHistoryModelRepository : MongoDbRepositoryBase<InterstielAdHistoryModel>,
-        IInterstielAdHistoryModelRepository
+    public class MDbRemoteOfferModelRepository : MongoDbRepositoryBase<RemoteOfferModel>, IRemoteOfferModelRepository
     {
-        public InterstielAdHistoryModelRepository(MongoDbContextBase mongoDbContext, string collectionName) : base(
+        public MDbRemoteOfferModelRepository(MongoDbContextBase mongoDbContext, string collectionName) : base(
             mongoDbContext.MongoConnectionSettings, collectionName)
         {
         }

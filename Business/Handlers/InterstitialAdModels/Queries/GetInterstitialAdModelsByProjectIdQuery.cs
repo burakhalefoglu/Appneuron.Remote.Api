@@ -15,7 +15,7 @@ namespace Business.Handlers.InterstitialAdModels.Queries
 {
     public class GetInterstitialAdModelsByProjectIdQuery : IRequest<IDataResult<IEnumerable<InterstitialAdModel>>>
     {
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
 
         public class GetInterstitialAdModelsByProjectIdQueryHandler : IRequestHandler<
             GetInterstitialAdModelsByProjectIdQuery, IDataResult<IEnumerable<InterstitialAdModel>>>

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Business.BusinessAspects;
 using Business.Constants;
 using Business.Handlers.RemoteOfferHistoryModels.Commands;
 using Business.Handlers.RemoteOfferModels.ValidationRules;
@@ -18,7 +17,7 @@ namespace Business.Handlers.RemoteOfferModels.Commands
 {
     public class UpdateRemoteOfferModelCommand : IRequest<IResult>
     {
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public string Name { get; set; }
         public string Version { get; set; }
         public int PlayerPercent { get; set; }
@@ -38,12 +37,7 @@ namespace Business.Handlers.RemoteOfferModels.Commands
 
             [ValidationAspect(typeof(UpdateRemoteOfferModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
-<<<<<<< Updated upstream
             [LogAspect(typeof(ConsoleLogger))]
-=======
-            [LogAspect(typeof(LogstashLogger))]
->>>>>>> Stashed changes
-            [SecuredOperation(Priority = 1)]
             [TransactionScopeAspectAsync]
             public async Task<IResult> Handle(UpdateRemoteOfferModelCommand request,
                 CancellationToken cancellationToken)
@@ -84,9 +78,7 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                     FinishTime = resultData.FinishTime
                 });
 
-                await _remoteOfferModelRepository.UpdateAsync(resultData,
-                    i => i.ProjectId == request.ProjectId && i.Name == request.Name &&
-                         i.Version == request.Version);
+                await _remoteOfferModelRepository.UpdateAsync(resultData);
 
                 return new SuccessResult(Messages.Updated);
             }

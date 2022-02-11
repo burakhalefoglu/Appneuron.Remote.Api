@@ -12,7 +12,6 @@ using DataAccess.Abstract;
 using Entities.Concrete;
 using FluentAssertions;
 using MediatR;
-using MongoDB.Bson;
 using Moq;
 using NUnit.Framework;
 using static Business.Handlers.InterstitialAdModels.Commands.CreateInterstitialAdModelCommand;
@@ -41,7 +40,7 @@ namespace Tests.Business.Handlers
             //Arrange
             var query = new GetInterstitialAdModelsByProjectIdQuery
             {
-                ProjectId = "121212"
+                ProjectId = 1
             };
 
             _interstitialAdModelRepository
@@ -51,28 +50,28 @@ namespace Tests.Business.Handlers
                 {
                     new()
                     {
-                        ProjectId = "121212",
+                        ProjectId = 1,
                         Version = "1",
                         AdvStrategies = Array.Empty<AdvStrategy>(),
-                        Id = new ObjectId(),
+                        Id = 1,
                         IsAdvSettingsActive = true,
                         Name = "Test"
                     },
                     new()
                     {
-                        ProjectId = "121212",
+                        ProjectId = 2,
                         Version = "3",
                         AdvStrategies = Array.Empty<AdvStrategy>(),
-                        Id = new ObjectId(),
+                        Id = 2,
                         IsAdvSettingsActive = true,
                         Name = "Test"
                     },
                     new()
                     {
-                        ProjectId = "121212",
+                        ProjectId =3,
                         Version = "2",
                         AdvStrategies = Array.Empty<AdvStrategy>(),
-                        Id = new ObjectId(),
+                        Id = 3,
                         IsAdvSettingsActive = true,
                         Name = "Test"
                     }
@@ -98,7 +97,7 @@ namespace Tests.Business.Handlers
                 AdvStrategies = Array.Empty<AdvStrategy>(),
                 IsAdvSettingsActive = true,
                 Name = "Test",
-                ProjectId = "121212",
+                ProjectId = 1,
                 Version = "1"
             };
 
@@ -126,7 +125,7 @@ namespace Tests.Business.Handlers
                 AdvStrategies = Array.Empty<AdvStrategy>(),
                 IsAdvSettingsActive = true,
                 Name = "Test",
-                ProjectId = "121212",
+                ProjectId = 1,
                 Version = "1"
             };
 
@@ -152,7 +151,7 @@ namespace Tests.Business.Handlers
             {
                 IsAdvSettingsActive = false,
                 Name = "Test1",
-                ProjectId = "121212",
+                ProjectId = 1,
                 Version = "1"
             };
 
@@ -177,7 +176,7 @@ namespace Tests.Business.Handlers
             {
                 IsAdvSettingsActive = false,
                 Name = "Test1",
-                ProjectId = "121212",
+                ProjectId = 1,
                 Version = "1"
             };
 
@@ -212,14 +211,14 @@ namespace Tests.Business.Handlers
             var command = new DeleteInterstitialAdModelCommand
             {
                 Name = "Test",
-                ProjectId = "121212",
+                ProjectId = 2,
                 Version = "1"
             };
       _interstitialAdModelRepository.Setup(x =>
                 x.GetAsync(It.IsAny<Expression<Func<InterstitialAdModel,bool>>>())).ReturnsAsync(new InterstitialAdModel());
             
             _interstitialAdModelRepository.Setup(x =>
-                x.UpdateAsync(It.IsAny<InterstitialAdModel>(), It.IsAny<Expression<Func<InterstitialAdModel,bool>>>()));
+                x.UpdateAsync(It.IsAny<InterstitialAdModel>()));
 
             var handler =
                 new DeleteInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object);

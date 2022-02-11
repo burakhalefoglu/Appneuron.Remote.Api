@@ -3,14 +3,15 @@ using Core.Entities;
 
 namespace Entities.Concrete
 {
-    public class InterstielAdHistoryModel : DocumentDbEntity
+    public class InterstitialAdHistoryModel : IEntity
     {
         public string Name { get; set; }
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public string Version { get; set; }
-        public int playerPercent { get; set; }
+        public int PlayerPercent { get; set; }
         public bool IsAdvSettingsActive { get; set; }
         public DateTime StarTime { get; set; }
         public bool Status = true;
+        public long Id { get; set; }
     }
 }

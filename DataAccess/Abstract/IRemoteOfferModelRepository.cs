@@ -3,7 +3,7 @@ using Entities.Concrete;
 
 namespace DataAccess.Abstract
 {
-    public interface IRemoteOfferModelRepository : IDocumentDbRepository<RemoteOfferModel>
+    public interface IRemoteOfferModelRepository : IRepository<RemoteOfferModel>
     {
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Business.BusinessAspects;
 using Business.Constants;
 using Business.Handlers.RemoteOfferModels.ValidationRules;
 using Core.Aspects.Autofac.Caching;
@@ -16,7 +15,7 @@ namespace Business.Handlers.RemoteOfferModels.Commands
 {
     public class CreateRemoteOfferModelCommand : IRequest<IResult>
     {
-        public string ProjectId { get; set; }
+        public long ProjectId { get; set; }
         public ProductModel[] ProductList { get; set; }
         public string Name { get; set; }
         public bool IsActive { get; set; }
@@ -42,13 +41,8 @@ namespace Business.Handlers.RemoteOfferModels.Commands
 
             [ValidationAspect(typeof(CreateRemoteOfferModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
-<<<<<<< Updated upstream
             [LogAspect(typeof(ConsoleLogger))]
-=======
-            [LogAspect(typeof(LogstashLogger))]
->>>>>>> Stashed changes
-            [SecuredOperation(Priority = 1)]
-            public async Task<IResult> Handle(CreateRemoteOfferModelCommand request,
+public async Task<IResult> Handle(CreateRemoteOfferModelCommand request,
                 CancellationToken cancellationToken)
             {
                 var isThereRemoteOfferModelRecord =

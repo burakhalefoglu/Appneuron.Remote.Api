@@ -5,16 +5,15 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Business.Constants;
-using Business.Handlers.InterstielAdHistoryModels.Queries;
 using Business.Handlers.InterstitialAdHistoryModels.Commands;
+using Business.Handlers.InterstitialAdHistoryModels.Queries;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using FluentAssertions;
 using MediatR;
-using MongoDB.Bson;
 using Moq;
 using NUnit.Framework;
-using static Business.Handlers.InterstielAdHistoryModels.Queries.GetInterstielAdHistoryModelByProjectIdQuery;
+using static Business.Handlers.InterstitialAdHistoryModels.Queries.GetInterstielAdHistoryModelByProjectIdQuery;
 using static Business.Handlers.InterstitialAdHistoryModels.Commands.CreateInterstitialAdHistoryModelCommand;
 
 namespace Tests.Business.Handlers
@@ -39,32 +38,32 @@ namespace Tests.Business.Handlers
             //Arrange
             var query = new GetInterstielAdHistoryModelByProjectIdQuery
             {
-                ProjectId = "121212"
+                ProjectId = 1
             };
 
             _interstitialAdHistoryModelRepository.Setup(x =>
-                    x.GetListAsync(It.IsAny<Expression<Func<InterstielAdHistoryModel, bool>>>()))
-                .ReturnsAsync(new List<InterstielAdHistoryModel>
+                    x.GetListAsync(It.IsAny<Expression<Func<InterstitialAdHistoryModel, bool>>>()))
+                .ReturnsAsync(new List<InterstitialAdHistoryModel>
                 {
                     new()
                     {
-                        ProjectId = "121212",
+                        ProjectId = 12,
                         IsAdvSettingsActive = true,
-                        Id = new ObjectId(),
-                        Name = "test",
-                        StarTime = DateTime.Now,
-                        Version = "1",
-                        playerPercent = 10
-                    },
-                    new()
-                    {
-                        ProjectId = "121212",
-                        IsAdvSettingsActive = true,
-                        Id = new ObjectId(),
+                        Id = 1,
                         Name = "test",
                         StarTime = DateTime.Now,
                         Version = "2",
-                        playerPercent = 20
+                        PlayerPercent = 20
+                    },
+                    new()
+                    {
+                        ProjectId = 13,
+                        IsAdvSettingsActive = true,
+                        Id = 1,
+                        Name = "test",
+                        StarTime = DateTime.Now,
+                        Version = "2",
+                        PlayerPercent = 20
                     }
                 }.AsQueryable());
 
@@ -87,14 +86,14 @@ namespace Tests.Business.Handlers
             //Arrange
             var command = new CreateInterstitialAdHistoryModelCommand
             {
-                ProjectId = "121212",
+                ProjectId = 2,
                 IsAdvSettingsActive = true,
                 Name = "test",
                 PlayerPercent = 20
             };
 
             _interstitialAdHistoryModelRepository.Setup(x =>
-                x.AddAsync(It.IsAny<InterstielAdHistoryModel>()));
+                x.AddAsync(It.IsAny<InterstitialAdHistoryModel>()));
 
             var handler =
                 new CreateInterstitialAdHistoryModelCommandHandler(_interstitialAdHistoryModelRepository.Object);
