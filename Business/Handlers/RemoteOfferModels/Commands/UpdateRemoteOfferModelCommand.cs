@@ -1,16 +1,20 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Business.BusinessAspects;
 using Business.Constants;
-using Business.Handlers.RemoteOfferHistoryModels.Commands;
 using Business.Handlers.RemoteOfferModels.ValidationRules;
+using Business.Handlers.RemoteOfferProductModels.Queries;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using Core.Utilities.MessageBrokers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using Entities.Dtos;
 using MediatR;
 
 namespace Business.Handlers.RemoteOfferModels.Commands
@@ -27,18 +31,22 @@ namespace Business.Handlers.RemoteOfferModels.Commands
         {
             private readonly IMediator _mediator;
             private readonly IRemoteOfferModelRepository _remoteOfferModelRepository;
+            private readonly IMessageBroker _messageBroker;
 
             public UpdateRemoteOfferModelCommandHandler(IRemoteOfferModelRepository remoteOfferModelRepository,
-                IMediator mediator)
+                IMediator mediator, IMessageBroker messageBroker)
             {
                 _remoteOfferModelRepository = remoteOfferModelRepository;
                 _mediator = mediator;
+                _messageBroker = messageBroker;
             }
 
             [ValidationAspect(typeof(UpdateRemoteOfferModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(ConsoleLogger))]
             [TransactionScopeAspectAsync]
+            [SecuredOperation(Priority = 1)]
+
             public async Task<IResult> Handle(UpdateRemoteOfferModelCommand request,
                 CancellationToken cancellationToken)
             {
@@ -60,24 +68,32 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                 {
                     resultData.StartTime = DateTime.Now.Ticks;
                     resultData.FinishTime = DateTime.Now.AddHours(resultData.ValidityPeriod).Ticks;
+                    var remoteOfferModelDto = new RemoteOfferModelDto
+                    {
+                        Name = request.Name,
+                        Version = request.Version,
+                        FinishTime = resultData.FinishTime,
+                        FirstPrice = resultData.FirstPrice,
+                        GiftTexture = resultData.GiftTexture,
+                        IsActive = request.IsActive,
+                        IsGift = resultData.IsGift,
+                        LastPrice = resultData.LastPrice,
+                        PlayerPercent = request.PlayerPercent,
+                        ProjectId = request.ProjectId,
+                        StartTime = resultData.StartTime,
+                        ValidityPeriod = resultData.ValidityPeriod,
+                    };
+                    var resultProductModels = await _mediator.Send(new GetRemoteOfferProductModelsQuery
+                    {
+                        Version = resultData.Version,
+                        RemoteOfferName = resultData.Name
+                    }, cancellationToken);
+                    
+                    if (resultProductModels.Data.Any())
+                        remoteOfferModelDto.RemoteOfferProductModels = resultProductModels.Data.ToArray();
+                  
+                    await _messageBroker.SendMessageAsync(remoteOfferModelDto);
                 }
-
-                await _mediator.Send(new CreateRemoteOfferHistoryModelCommand
-                {
-                    ProjectId = resultData.ProjectId,
-                    Name = resultData.Name,
-                    IsActive = request.IsActive,
-                    FirstPrice = resultData.FirstPrice,
-                    LastPrice = resultData.LastPrice,
-                    Version = resultData.Version,
-                    PlayerPercent = resultData.PlayerPercent,
-                    IsGift = resultData.IsGift,
-                    GiftTexture = resultData.GiftTexture,
-                    ValidityPeriod = resultData.ValidityPeriod,
-                    StartTime = resultData.StartTime,
-                    FinishTime = resultData.FinishTime
-                });
-
                 await _remoteOfferModelRepository.UpdateAsync(resultData);
 
                 return new SuccessResult(Messages.Updated);

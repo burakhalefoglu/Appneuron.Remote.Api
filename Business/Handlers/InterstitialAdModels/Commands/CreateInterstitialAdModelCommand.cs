@@ -2,14 +2,17 @@
 using System.Threading.Tasks;
 using Business.BusinessAspects;
 using Business.Constants;
+using Business.Handlers.AdvStrategies.Command;
 using Business.Handlers.InterstielAdModels.ValidationRules;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using Core.Utilities.MessageBrokers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.Dtos;
 using MediatR;
 
 namespace Business.Handlers.InterstitialAdModels.Commands
@@ -26,13 +29,20 @@ namespace Business.Handlers.InterstitialAdModels.Commands
         public AdvStrategy[] AdvStrategies { get; set; }
 
 
-        public class CreateInterstitialAdModelCommandHandler : IRequestHandler<CreateInterstitialAdModelCommand, IResult>
+        public class
+            CreateInterstitialAdModelCommandHandler : IRequestHandler<CreateInterstitialAdModelCommand, IResult>
         {
             private readonly IInterstielAdModelRepository _interstitialAdModelRepository;
+            private readonly IMessageBroker _messageBroker;
+            private readonly IMediator _mediator;
 
-            public CreateInterstitialAdModelCommandHandler(IInterstielAdModelRepository interstitialAdModelRepository)
+
+            public CreateInterstitialAdModelCommandHandler(IInterstielAdModelRepository interstitialAdModelRepository,
+                IMessageBroker messageBroker, IMediator mediator)
             {
                 _interstitialAdModelRepository = interstitialAdModelRepository;
+                _messageBroker = messageBroker;
+                _mediator = mediator;
             }
 
             [ValidationAspect(typeof(CreateInterstielAdModelValidator), Priority = 1)]
@@ -42,8 +52,9 @@ namespace Business.Handlers.InterstitialAdModels.Commands
             public async Task<IResult> Handle(CreateInterstitialAdModelCommand request,
                 CancellationToken cancellationToken)
             {
-                var isThereInterstitialAdModelRecord = _interstitialAdModelRepository.Any(u =>
-                    u.Name == request.Name && u.ProjectId == request.ProjectId && u.Version == request.Version && u.Status == true);
+                var isThereInterstitialAdModelRecord = await _interstitialAdModelRepository.AnyAsync(u =>
+                    u.Name == request.Name && u.ProjectId == request.ProjectId && u.Version == request.Version &&
+                    u.Status == true);
 
                 if (isThereInterstitialAdModelRecord)
                     return new ErrorResult(Messages.AlreadyExist);
@@ -55,10 +66,29 @@ namespace Business.Handlers.InterstitialAdModels.Commands
                     Version = request.Version,
                     PlayerPercent = request.PlayerPercent,
                     IsAdvSettingsActive = request.IsAdvSettingsActive,
-                    AdvStrategies = request.AdvStrategies
                 };
 
                 await _interstitialAdModelRepository.AddAsync(addedInterstitialAdModel);
+
+                foreach (var advStrategy in request.AdvStrategies)
+                {
+                    await _mediator.Send(new CreateAdvStrategyCommand
+                    {
+                        Count = advStrategy.Count,
+                        Name = advStrategy.Name
+                    }, cancellationToken);
+                }
+                
+                await _messageBroker.SendMessageAsync(new InterstitialAdModelDto
+                {
+                    ProjectId = request.ProjectId,
+                    Name = request.Name,
+                    Version = request.Version,
+                    PlayerPercent = request.PlayerPercent,
+                    IsAdvSettingsActive = request.IsAdvSettingsActive,
+                    AdvStrategies = request.AdvStrategies
+                    
+                });
 
                 return new SuccessResult(Messages.Added);
             }

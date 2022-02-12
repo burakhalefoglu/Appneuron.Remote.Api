@@ -7,15 +7,14 @@ using Autofac;
 using Business.Constants;
 using Business.DependencyResolvers;
 using Business.Fakes.DArch;
-using Business.MessageBrokers;
-using Business.MessageBrokers.Kafka;
 using Core.CrossCuttingConcerns.Caching;
 using Core.CrossCuttingConcerns.Caching.Microsoft;
 using Core.DependencyResolvers;
 using Core.Extensions;
 using Core.Utilities.ElasticSearch;
 using Core.Utilities.IoC;
-using Core.Utilities.MessageBrokers.RabbitMq;
+using Core.Utilities.MessageBrokers;
+using Core.Utilities.MessageBrokers.Kafka;
 using DataAccess.Abstract;
 using DataAccess.Concrete.Cassandra;
 using DataAccess.Concrete.Cassandra.Contexts;
@@ -68,8 +67,6 @@ namespace Business
 
             services.AddTransient<IElasticSearch, ElasticSearchManager>();
             services.AddTransient<IMessageBroker, KafkaMessageBroker>();
-            services.AddTransient<IMessageBrokerHelper, MqQueueHelper>();
-            services.AddTransient<IMessageConsumer, MqConsumerHelper>();
             services.AddSingleton<ICacheManager, MemoryCacheManager>();
 
             services.AddAutoMapper(typeof(ConfigurationManager));
@@ -90,27 +87,20 @@ namespace Business
         {
             ConfigureServices(services);
             
-            services.AddTransient<IRemoteOfferEventModelRepository>(x =>
-                new CassRemoteOfferEventModelRepository(x.GetRequiredService<CassandraContextBase>(),
-                    CassandraTableQueries.RemoteOfferEventModels));
-            services.AddTransient<IInterstitialAdEventModelRepository>(x =>
-                new CassInterstitialAdEventModelRepository(x.GetRequiredService<CassandraContextBase>(),
-                    CassandraTableQueries.InterstitialAdEventModels));
-            services.AddTransient<IInterstielAdHistoryModelRepository>(x =>
-                new CassInterstitialAdHistoryModelRepository(x.GetRequiredService<CassandraContextBase>(),
-                    CassandraTableQueries.InterstitialAdHistoryModels));
-            services.AddTransient<IRemoteOfferHistoryModelRepository>(x =>
-                new CassRemoteOfferHistoryModelRepository(x.GetRequiredService<CassandraContextBase>(),
-                    CassandraTableQueries.RemoteOfferHistoryModels));
             services.AddTransient<IRemoteOfferModelRepository>(x =>
                 new CassRemoteOfferModelRepository(x.GetRequiredService<CassandraContextBase>(),
                     CassandraTableQueries.RemoteOfferModels));
             services.AddTransient<IInterstielAdModelRepository>(x =>
                 new CassInterstitialAdModelRepository(x.GetRequiredService<CassandraContextBase>(),
                     CassandraTableQueries.InterstitialAdModels));
-
+            services.AddTransient<IRemoteOfferProductModelRepository>(x =>
+                new CassRemoteOfferProductModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.RemoteOfferProductModels));
+            services.AddTransient<IAdvStrategyRepository>(x =>
+                new CassAdvStrategyRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.AdvStrategies));
+            
             services.AddDbContext<ProjectDbContext, DArchInMemory>(ServiceLifetime.Transient);
-
             services.AddSingleton<CassandraContextBase, CassandraContext>();
         }
 
@@ -121,28 +111,21 @@ namespace Business
         public void ConfigureStagingServices(IServiceCollection services)
         {
             ConfigureServices(services);
-
-            services.AddTransient<IRemoteOfferEventModelRepository>(x =>
-                new CassRemoteOfferEventModelRepository(x.GetRequiredService<CassandraContextBase>(),
-                    CassandraTableQueries.RemoteOfferEventModels));
-            services.AddTransient<IInterstitialAdEventModelRepository>(x =>
-                new CassInterstitialAdEventModelRepository(x.GetRequiredService<CassandraContextBase>(),
-                    CassandraTableQueries.InterstitialAdEventModels));
-            services.AddTransient<IInterstielAdHistoryModelRepository>(x =>
-                new CassInterstitialAdHistoryModelRepository(x.GetRequiredService<CassandraContextBase>(),
-                    CassandraTableQueries.InterstitialAdHistoryModels));
-            services.AddTransient<IRemoteOfferHistoryModelRepository>(x =>
-                new CassRemoteOfferHistoryModelRepository(x.GetRequiredService<CassandraContextBase>(),
-                    CassandraTableQueries.RemoteOfferHistoryModels));
+            
             services.AddTransient<IRemoteOfferModelRepository>(x =>
                 new CassRemoteOfferModelRepository(x.GetRequiredService<CassandraContextBase>(),
                     CassandraTableQueries.RemoteOfferModels));
             services.AddTransient<IInterstielAdModelRepository>(x =>
                 new CassInterstitialAdModelRepository(x.GetRequiredService<CassandraContextBase>(),
                     CassandraTableQueries.InterstitialAdModels));
-
+            services.AddTransient<IRemoteOfferProductModelRepository>(x =>
+                new CassRemoteOfferProductModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.RemoteOfferProductModels));
+            services.AddTransient<IAdvStrategyRepository>(x =>
+                new CassAdvStrategyRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.AdvStrategies));
+            
             // services.AddDbContext<ProjectDbContext>();
-
             services.AddSingleton<CassandraContextBase, CassandraContext>();
         }
 
@@ -153,28 +136,21 @@ namespace Business
         public void ConfigureProductionServices(IServiceCollection services)
         {
             ConfigureServices(services);
-
-            services.AddTransient<IRemoteOfferEventModelRepository>(x =>
-                new CassRemoteOfferEventModelRepository(x.GetRequiredService<CassandraContextBase>(),
-                    CassandraTableQueries.RemoteOfferEventModels));
-            services.AddTransient<IInterstitialAdEventModelRepository>(x =>
-                new CassInterstitialAdEventModelRepository(x.GetRequiredService<CassandraContextBase>(),
-                    CassandraTableQueries.InterstitialAdEventModels));
-            services.AddTransient<IInterstielAdHistoryModelRepository>(x =>
-                new CassInterstitialAdHistoryModelRepository(x.GetRequiredService<CassandraContextBase>(),
-                    CassandraTableQueries.InterstitialAdHistoryModels));
-            services.AddTransient<IRemoteOfferHistoryModelRepository>(x =>
-                new CassRemoteOfferHistoryModelRepository(x.GetRequiredService<CassandraContextBase>(),
-                    CassandraTableQueries.RemoteOfferHistoryModels));
+            
             services.AddTransient<IRemoteOfferModelRepository>(x =>
                 new CassRemoteOfferModelRepository(x.GetRequiredService<CassandraContextBase>(),
                     CassandraTableQueries.RemoteOfferModels));
             services.AddTransient<IInterstielAdModelRepository>(x =>
                 new CassInterstitialAdModelRepository(x.GetRequiredService<CassandraContextBase>(),
                     CassandraTableQueries.InterstitialAdModels));
-
+            services.AddTransient<IRemoteOfferProductModelRepository>(x =>
+                new CassRemoteOfferProductModelRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.RemoteOfferProductModels));
+            services.AddTransient<IAdvStrategyRepository>(x =>
+                new CassAdvStrategyRepository(x.GetRequiredService<CassandraContextBase>(),
+                    CassandraTableQueries.AdvStrategies));
+            
             // services.AddDbContext<ProjectDbContext>();
-
             services.AddSingleton<CassandraContextBase, CassandraContext>();
         }
 

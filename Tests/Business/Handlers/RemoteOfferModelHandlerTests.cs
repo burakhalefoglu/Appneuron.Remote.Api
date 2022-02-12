@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Business.Constants;
 using Business.Handlers.RemoteOfferModels.Commands;
 using Business.Handlers.RemoteOfferModels.Queries;
+using Business.Handlers.RemoteOfferProductModels.Queries;
+using Core.Utilities.MessageBrokers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -14,7 +16,7 @@ using FluentAssertions;
 using MediatR;
 using Moq;
 using NUnit.Framework;
-using static Business.Handlers.RemoteOfferModels.Queries.GetRemoteOfferModelsByProjectIdQuery;
+using static Business.Handlers.RemoteOfferModels.Queries.GetRemoteOfferModelsDtoByProjectIdQuery;
 using static Business.Handlers.RemoteOfferModels.Commands.CreateRemoteOfferModelCommand;
 using static Business.Handlers.RemoteOfferModels.Commands.UpdateRemoteOfferModelCommand;
 using static Business.Handlers.RemoteOfferModels.Commands.DeleteRemoteOfferModelCommand;
@@ -29,17 +31,21 @@ namespace Tests.Business.Handlers
         {
             _remoteOfferModelRepository = new Mock<IRemoteOfferModelRepository>();
             _mediator = new Mock<IMediator>();
+            _messageBroker = new Mock<IMessageBroker>();
+
         }
 
         private Mock<IRemoteOfferModelRepository> _remoteOfferModelRepository;
         private Mock<IMediator> _mediator;
+        private Mock<IMessageBroker> _messageBroker;
+
 
 
         [Test]
         public async Task RemoteOfferModel_GetByProjectIdQueries_Success()
         {
             //Arrange
-            var query = new GetRemoteOfferModelsByProjectIdQuery
+            var query = new GetRemoteOfferModelsDtoByProjectIdQuery
             {
                 ProjectId = 1
             };
@@ -59,7 +65,6 @@ namespace Tests.Business.Handlers
                         LastPrice = 10,
                         Name = "Test",
                         PlayerPercent = 20,
-                        ProductList = Array.Empty<ProductModel>(),
                         ProjectId = 3,
                         StartTime = DateTime.Now.Ticks,
                         ValidityPeriod = 24
@@ -76,7 +81,6 @@ namespace Tests.Business.Handlers
                         LastPrice = 10,
                         Name = "Test",
                         PlayerPercent = 20,
-                        ProductList = Array.Empty<ProductModel>(),
                         ProjectId = 23,
                         StartTime = DateTime.Now.Ticks,
                         ValidityPeriod = 24
@@ -93,15 +97,17 @@ namespace Tests.Business.Handlers
                         LastPrice = 10,
                         Name = "Test",
                         PlayerPercent = 20,
-                        ProductList = Array.Empty<ProductModel>(),
                         ProjectId = 56,
                         StartTime = DateTime.Now.Ticks,
                         ValidityPeriod = 24
                     }
                 }.AsQueryable());
 
+            _mediator.Setup(x => x.Send(It.IsAny<GetRemoteOfferProductModelsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new SuccessDataResult<IEnumerable<RemoteOfferProductModel>>(new RemoteOfferProductModel[]{}));
+
             var handler =
-                new GetRemoteOfferModelsByProjectIdQueryHandler(_remoteOfferModelRepository.Object);
+                new GetRemoteOfferModelsDtoByProjectIdQueryHandler(_remoteOfferModelRepository.Object, _mediator.Object);
 
             //Act
             var x = await handler.Handle(query, new CancellationToken());
@@ -125,7 +131,7 @@ namespace Tests.Business.Handlers
                 LastPrice = 2,
                 Name = "Test",
                 PlayerPercent = 15,
-                ProductList = Array.Empty<ProductModel>(),
+                ProductList = Array.Empty<RemoteOfferProductModel>(),
                 ProjectId = 3,
                 StartTime = DateTime.Now.Ticks
             };
@@ -137,7 +143,7 @@ namespace Tests.Business.Handlers
             _remoteOfferModelRepository.Setup(x => x.Add(It.IsAny<RemoteOfferModel>()));
 
             var handler =
-                new CreateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object);
+                new CreateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object, _messageBroker.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
 
@@ -159,7 +165,7 @@ namespace Tests.Business.Handlers
                 LastPrice = 2,
                 Name = "Test",
                 PlayerPercent = 15,
-                ProductList = Array.Empty<ProductModel>(),
+                ProductList = Array.Empty<RemoteOfferProductModel>(),
                 ProjectId = 3,
                 StartTime = DateTime.Now.Ticks
             };
@@ -172,7 +178,7 @@ namespace Tests.Business.Handlers
                 x.Add(It.IsAny<RemoteOfferModel>()));
 
             var handler =
-                new CreateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object);
+                new CreateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object, _messageBroker.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
             x.Success.Should().BeFalse();
@@ -203,7 +209,7 @@ namespace Tests.Business.Handlers
             _remoteOfferModelRepository.Setup(x => x.UpdateAsync(It.IsAny<RemoteOfferModel>()));
 
             var handler =
-                new UpdateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object);
+                new UpdateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object, _messageBroker.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
 
@@ -232,13 +238,16 @@ namespace Tests.Business.Handlers
                     x.GetAsync(It.IsAny<Expression<Func<RemoteOfferModel, bool>>>()))
                 .ReturnsAsync(new RemoteOfferModel());
 
+            _mediator.Setup(x => x.Send(It.IsAny<GetRemoteOfferProductModelsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new SuccessDataResult<IEnumerable<RemoteOfferProductModel>>(new RemoteOfferProductModel[]{}));
+            
             _remoteOfferModelRepository.Setup(x => x.UpdateAsync(It.IsAny<RemoteOfferModel>()));
 
             _mediator.Setup(x => x.Send(new object(), new CancellationToken()))
                 .ReturnsAsync(new SuccessResult(Messages.Added));
 
             var handler =
-                new UpdateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object);
+                new UpdateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object, _messageBroker.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
             x.Success.Should().BeTrue();

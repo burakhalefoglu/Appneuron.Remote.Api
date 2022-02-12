@@ -28,9 +28,10 @@ namespace WebAPI.Controllers
         [HttpGet("getByProjectId")]
         public async Task<IActionResult> GetByProjectId(long projectId)
         {
-            var result = await Mediator.Send(new GetRemoteOfferModelsByProjectIdQuery
+            var result = await Mediator.Send(new GetRemoteOfferModelsDtoByProjectIdQuery
             {
                 ProjectId = projectId
+
             });
             if (result.Success) return Ok(result);
             return BadRequest(result);

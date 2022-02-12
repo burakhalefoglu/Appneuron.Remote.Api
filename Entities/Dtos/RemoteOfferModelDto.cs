@@ -1,8 +1,9 @@
 ﻿using Core.Entities;
+using Entities.Concrete;
 
-namespace Entities.Concrete
+namespace Entities.Dtos
 {
-    public class RemoteOfferModel : IEntity
+    public class RemoteOfferModelDto: IDto
     {
         public long ProjectId { get; set; }
         public string Name { get; set; }
@@ -16,8 +17,8 @@ namespace Entities.Concrete
         public int ValidityPeriod { get; set; }
         public long StartTime { get; set; }
         public long FinishTime { get; set; }
-        
         public bool Status = true;
         public long Id { get; set; }
+        public RemoteOfferProductModel[] RemoteOfferProductModels { get; set; }
     }
 }

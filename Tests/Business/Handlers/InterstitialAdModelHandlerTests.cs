@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Business.Constants;
 using Business.Handlers.InterstitialAdModels.Commands;
 using Business.Handlers.InterstitialAdModels.Queries;
+using Core.Utilities.MessageBrokers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -29,10 +30,14 @@ namespace Tests.Business.Handlers
         {
             _interstitialAdModelRepository = new Mock<IInterstielAdModelRepository>();
             _mediator = new Mock<IMediator>();
+            _messageBroker = new Mock<IMessageBroker>();
+            
         }
 
         private Mock<IInterstielAdModelRepository> _interstitialAdModelRepository;
         private Mock<IMediator> _mediator;
+        private Mock<IMessageBroker> _messageBroker;
+        
 
         [Test]
         public async Task InterstitialAdModel_GetByIdQueries_Success()
@@ -52,7 +57,6 @@ namespace Tests.Business.Handlers
                     {
                         ProjectId = 1,
                         Version = "1",
-                        AdvStrategies = Array.Empty<AdvStrategy>(),
                         Id = 1,
                         IsAdvSettingsActive = true,
                         Name = "Test"
@@ -61,7 +65,6 @@ namespace Tests.Business.Handlers
                     {
                         ProjectId = 2,
                         Version = "3",
-                        AdvStrategies = Array.Empty<AdvStrategy>(),
                         Id = 2,
                         IsAdvSettingsActive = true,
                         Name = "Test"
@@ -70,7 +73,6 @@ namespace Tests.Business.Handlers
                     {
                         ProjectId =3,
                         Version = "2",
-                        AdvStrategies = Array.Empty<AdvStrategy>(),
                         Id = 3,
                         IsAdvSettingsActive = true,
                         Name = "Test"
@@ -108,7 +110,7 @@ namespace Tests.Business.Handlers
             _interstitialAdModelRepository.Setup(x => x.Add(It.IsAny<InterstitialAdModel>()));
 
             var handler =
-                new CreateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object);
+                new CreateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _messageBroker.Object, _mediator.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
 
@@ -130,13 +132,13 @@ namespace Tests.Business.Handlers
             };
 
 
-            _interstitialAdModelRepository.Setup(x => x.Any(It.IsAny<Expression<Func<InterstitialAdModel, bool>>>()))
-                .Returns(true);
+            _interstitialAdModelRepository.Setup(x => x.AnyAsync(It.IsAny<Expression<Func<InterstitialAdModel, bool>>>()))
+                .ReturnsAsync(true);
 
             _interstitialAdModelRepository.Setup(x => x.Add(It.IsAny<InterstitialAdModel>()));
 
             var handler =
-                new CreateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object);
+                new CreateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _messageBroker.Object, _mediator.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
             x.Success.Should().BeFalse();
@@ -160,7 +162,7 @@ namespace Tests.Business.Handlers
 
 
             var handler =
-                new UpdateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _mediator.Object);
+                new UpdateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _mediator.Object, _messageBroker.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
 
@@ -194,7 +196,7 @@ namespace Tests.Business.Handlers
                 new CancellationToken())).ReturnsAsync(new SuccessResult(Messages.Added));
 
             var handler =
-                new UpdateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _mediator.Object);
+                new UpdateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _mediator.Object, _messageBroker.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
 

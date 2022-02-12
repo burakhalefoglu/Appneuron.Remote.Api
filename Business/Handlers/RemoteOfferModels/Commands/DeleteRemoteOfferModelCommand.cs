@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Business.BusinessAspects;
 using Business.Constants;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
@@ -29,7 +30,8 @@ namespace Business.Handlers.RemoteOfferModels.Commands
 
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(ConsoleLogger))]
-public async Task<IResult> Handle(DeleteRemoteOfferModelCommand request,
+            [SecuredOperation(Priority = 1)]
+            public async Task<IResult> Handle(DeleteRemoteOfferModelCommand request,
                 CancellationToken cancellationToken)
             {
                 var isThereInterstitialAdModelRecord = await _remoteOfferModelRepository.GetAsync(u =>

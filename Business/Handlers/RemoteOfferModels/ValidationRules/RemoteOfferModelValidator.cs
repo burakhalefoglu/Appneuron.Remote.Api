@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Business.Handlers.RemoteOfferModels.ValidationRules
 {
-    public class CreateRemoteOfferModelValidator : AbstractValidator<CreateRemoteOfferModelCommand>
+    public class RemoteOfferModelValidator : AbstractValidator<CreateRemoteOfferModelCommand>
     {
-        public CreateRemoteOfferModelValidator()
+        public RemoteOfferModelValidator()
         {
             RuleFor(x => x.LastPrice).NotNull();
             RuleFor(x => x.Version).NotNull();
