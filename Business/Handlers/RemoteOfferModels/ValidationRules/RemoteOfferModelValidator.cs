@@ -12,7 +12,6 @@ namespace Business.Handlers.RemoteOfferModels.ValidationRules
             RuleFor(x => x.ValidityPeriod).NotNull();
             RuleFor(x => x.StartTime).NotNull();
             RuleFor(x => x.FinishTime).NotNull();
-            RuleFor(x => x.GiftTexture).NotEmpty();
         }
     }
 

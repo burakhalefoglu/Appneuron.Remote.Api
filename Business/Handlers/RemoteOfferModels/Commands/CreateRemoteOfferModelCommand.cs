@@ -45,7 +45,7 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
                 _mediator = mediator;
             }
 
-            //[ValidationAspect(typeof(RemoteOfferModelValidator), Priority = 1)]
+            [ValidationAspect(typeof(RemoteOfferModelValidator), Priority = 1)]
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(ConsoleLogger))]
             [SecuredOperation(Priority = 1)]
