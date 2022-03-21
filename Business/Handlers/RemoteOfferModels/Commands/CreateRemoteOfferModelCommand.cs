@@ -69,7 +69,6 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
                     LastPrice = request.LastPrice,
                     Version = request.Version,
                     IsGift = request.IsGift,
-                    GiftTexture = request.GiftTexture,
                     ValidityPeriod = request.ValidityPeriod,
                     StartTime = request.StartTime,
                     FinishTime = request.FinishTime,
@@ -77,6 +76,9 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
                     PlayerPercent = request.PlayerPercent,
                     ProjectId = request.ProjectId
                 };
+                if (!(request.GiftTexture is null))
+                    addedRemoteOfferModel.GiftTexture = request.GiftTexture;
+
                 await _remoteOfferModelRepository.AddAsync(addedRemoteOfferModel);
                 foreach (var product in request.ProductDtos)
                 {
