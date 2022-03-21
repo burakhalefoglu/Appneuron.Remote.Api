@@ -1,4 +1,7 @@
 ﻿using System;
+using Core.Utilities.IoC;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using ServiceStack.Redis;
 
 namespace Core.CrossCuttingConcerns.Caching.Redis
@@ -12,13 +15,15 @@ namespace Core.CrossCuttingConcerns.Caching.Redis
 
         public RedisCacheManager()
         {
-            _redisEndpoint = new RedisEndpoint("localhost", 6379);
+            var config = ServiceTool.ServiceProvider.GetService<IConfiguration>();
+            var redisConfig = config.GetSection("RedisConfiguration").Get<RedisConfiguration>();
+            _redisEndpoint = new RedisEndpoint(redisConfig.Host, 6379, redisConfig.Password);
         }
 
         public T Get<T>(string key)
         {
             var result = default(T);
-            RedisInvoker(x => { result = x.Get<T>(key); });
+             RedisInvoker(x => { result = x.Get<T>(key); });
             return result;
         }
 

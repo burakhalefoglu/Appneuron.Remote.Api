@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Business.BusinessAspects;
 using Business.Constants;
+using Business.Handlers.RemoteOfferProductModels.Commands;
+using Business.Handlers.RemoteOfferProductModels.Queries;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
@@ -22,10 +24,12 @@ namespace Business.Handlers.RemoteOfferModels.Commands
         public class DeleteRemoteOfferModelCommandHandler : IRequestHandler<DeleteRemoteOfferModelCommand, IResult>
         {
             private readonly IRemoteOfferModelRepository _remoteOfferModelRepository;
+            private readonly IMediator _mediator;
 
-            public DeleteRemoteOfferModelCommandHandler(IRemoteOfferModelRepository remoteOfferModelRepository)
+            public DeleteRemoteOfferModelCommandHandler(IRemoteOfferModelRepository remoteOfferModelRepository, IMediator mediator)
             {
                 _remoteOfferModelRepository = remoteOfferModelRepository;
+                _mediator = mediator;
             }
 
             [CacheRemoveAspect("Get")]
@@ -41,10 +45,30 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                     u.Status == true);
 
                 if (isThereInterstitialAdModelRecord is null)
-                    return new ErrorResult(Messages.NotFound);
-                isThereInterstitialAdModelRecord.Status = false;
-                await _remoteOfferModelRepository.UpdateAsync(isThereInterstitialAdModelRecord);
+                        return new ErrorResult(Messages.NotFound);
+                await _remoteOfferModelRepository.DeleteAsync(isThereInterstitialAdModelRecord);
+                //delete product
+                var products = (await _mediator.Send(new GetRemoteOfferProductModelsQuery
+                {
+                    Version = request.Version,
+                    ProjectId = request.ProjectId,
+                    RemoteOfferName = request.Name
+                })).Data.ToList();
+                foreach (var product in products)
+                {
+                    await _mediator.Send(new DeleteRemoteOfferProductModelCommand()
+                    {
+                        Count = product.Count,
+                        Image = product.Image,
+                        Name = product.Name,
+                        Version = product.Name,
+                        ImageName = product.ImageName,
+                        ProjectId = product.ProjectId,
+                        RemoteOfferName = product.RemoteOfferName
 
+                    }, cancellationToken);
+                }
+                
                 return new SuccessResult(Messages.Deleted);
             }
         }

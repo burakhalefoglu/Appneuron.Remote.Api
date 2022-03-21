@@ -19,6 +19,7 @@ namespace Business.Handlers.RemoteOfferProductModels.Commands
     {
         public string RemoteOfferName { get; set; }
         public string Version { get; set; }
+        public long ProjectId { get; set; }
         public string Name { get; set; }
         public byte[] Image { get; set; }
         public float Count { get; set; }
@@ -46,6 +47,7 @@ namespace Business.Handlers.RemoteOfferProductModels.Commands
                     Image = request.Image,
                     Name = request.Name,
                     Version = request.Version,
+                    ProjectId = request.ProjectId,
                     ImageName = request.ImageName,
                     RemoteOfferName = request.RemoteOfferName
                 });

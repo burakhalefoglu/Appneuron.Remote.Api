@@ -1,7 +1,7 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Business.BusinessAspects;
+﻿using Business.BusinessAspects;
 using Business.Constants;
+using Business.Handlers.AdvStrategies.Command;
+using Business.Handlers.AdvStrategies.Query;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
@@ -9,8 +9,8 @@ using Core.Utilities.Results;
 using DataAccess.Abstract;
 using MediatR;
 
-namespace Business.Handlers.InterstitialAdModels.Commands
-{
+namespace Business.Handlers.InterstitialAdModels.Commands;
+
     /// <summary>
     /// </summary>
     public class DeleteInterstitialAdModelCommand : IRequest<IResult>
@@ -22,10 +22,13 @@ namespace Business.Handlers.InterstitialAdModels.Commands
         public class DeleteInterstitialAdModelCommandHandler : IRequestHandler<DeleteInterstitialAdModelCommand, IResult>
         {
             private readonly IInterstielAdModelRepository _interstitialAdModelRepository;
+            private readonly IMediator _mediator;
 
-            public DeleteInterstitialAdModelCommandHandler(IInterstielAdModelRepository interstitialAdModelRepository)
+            public DeleteInterstitialAdModelCommandHandler(IInterstielAdModelRepository interstitialAdModelRepository,
+                IMediator mediator)
             {
                 _interstitialAdModelRepository = interstitialAdModelRepository;
+                _mediator = mediator;
             }
 
             [CacheRemoveAspect("Get")]
@@ -35,17 +38,33 @@ namespace Business.Handlers.InterstitialAdModels.Commands
                 CancellationToken cancellationToken)
             {
                 var isThereInterstitialAdModelRecord = await _interstitialAdModelRepository.GetAsync(u =>
-                    u.Name == request.Name && u.ProjectId == request.ProjectId && u.Version == request.Version && u.Status == true);
+                    u.Name == request.Name &&
+                    u.ProjectId == request.ProjectId &&
+                    u.Version == request.Version &&
+                    u.Status == true);
 
                 if (isThereInterstitialAdModelRecord is null)
                     return new ErrorResult(Messages.NotFound);
 
-                isThereInterstitialAdModelRecord.Status = false;
+                await _interstitialAdModelRepository.DeleteAsync(isThereInterstitialAdModelRecord);
                 
-                await _interstitialAdModelRepository.UpdateAsync(isThereInterstitialAdModelRecord);
-
+                var advStrategies = (await _mediator.Send(new GetAdvStrategyQuery()
+                {
+                    Name = request.Name,
+                    Version = request.Version,
+                    ProjectId = request.ProjectId
+                }, cancellationToken)).Data.ToList();
+                foreach (var advStrategy in advStrategies)
+                {
+                    await _mediator.Send(new DeleteAdvStrategyCommand
+                    {
+                        Count = advStrategy.StrategyCount,
+                        Name = advStrategy.Name,
+                        ProjectId = advStrategy.ProjectId
+                        
+                    }, cancellationToken);
+                }
                 return new SuccessResult(Messages.Deleted);
             }
         }
     }
-}

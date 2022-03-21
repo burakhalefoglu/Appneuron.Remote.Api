@@ -33,8 +33,6 @@ spec:
       labels:
         app: remote-server 
     spec:
-      nodeSelector:
-        dedicated: spot
       volumes:
         - name: appconfig
           secret:
@@ -48,11 +46,11 @@ spec:
           imagePullPolicy: Always
           resources:
             requests:
-              memory: "100M"
-              cpu: "0.02"
+              cpu: "75m"
+              memory: "250Mi"
             limits:
-              memory: "200M"
-              cpu: "0.05"
+              cpu: "75m"
+              memory: "250Mi"
           volumeMounts:
           - name: appconfig
             mountPath: /app/appsettings.json
@@ -75,27 +73,7 @@ spec:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
 
----
 
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: webapi-remote-ingress
-  namespace: service-app-dev
-spec:
-  tls:
-    - hosts:
-        - webapi.appneuron.net
-      secretName: webapi-tls
-  rules:
-    - host: webapi.appneuron.net
-      http:
-        paths:
-          - path: /remote
-            pathType: Prefix
-            backend: 
-              serviceName: remote-server-service
-              servicePort: 8000
 
 
 

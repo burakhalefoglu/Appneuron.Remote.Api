@@ -7,7 +7,8 @@ namespace Entities.Dtos
     {
         public long ProjectId { get; set; }
         public string Name { get; set; }
-        public bool IsActive { get; set; }
+        
+        public bool Status { get; set; }
         public float FirstPrice { get; set; }
         public float LastPrice { get; set; }
         public string Version { get; set; }
@@ -17,7 +18,6 @@ namespace Entities.Dtos
         public int ValidityPeriod { get; set; }
         public long StartTime { get; set; }
         public long FinishTime { get; set; }
-        public bool Status = true;
         public long Id { get; set; }
         public RemoteOfferProductModel[] RemoteOfferProductModels { get; set; }
     }

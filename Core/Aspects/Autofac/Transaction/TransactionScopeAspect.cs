@@ -7,22 +7,20 @@ namespace Core.Aspects.Autofac.Transaction
     /// <summary>
     ///     TransactionScopeAspect
     /// </summary>
-    public class TransactionScopeAspectAttribute : MethodInterception
+    public class TransactionScopeAspect : MethodInterceptionAttribute
     {
         public override void Intercept(IInvocation invocation)
         {
-            using (var transactionScope = new TransactionScope())
+            using var transactionScope = new TransactionScope();
+            try
             {
-                try
-                {
-                    invocation.Proceed();
-                    transactionScope.Complete();
-                }
-                catch (System.Exception ex)
-                {
-                    ex.ToString();
-                    throw;
-                }
+                invocation.Proceed();
+                transactionScope.Complete();
+            }
+            catch (System.Exception ex)
+            {
+                _ = ex.ToString();
+                throw;
             }
         }
     }

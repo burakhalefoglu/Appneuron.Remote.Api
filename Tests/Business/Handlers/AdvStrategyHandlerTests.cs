@@ -61,8 +61,8 @@ namespace Tests.Business.Handlers
         {
             var getAdvStrategyQuery = new GetAdvStrategyQuery
             {
-                StrategyName = "test",
-                StrategyVersion = "1"
+                Name = "test",
+                Version = "1"
             };
 
             _advStrategyRepository.Setup(x => x.GetListAsync(It.IsAny<Expression<Func<AdvStrategy,bool>>>()))

@@ -35,32 +35,21 @@ namespace Core.Extensions
             httpContext.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
             _ = e.Message;
             string message;
-            if (e.GetType() == typeof(ValidationException))
-            {
-                message = e.Message;
-                httpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
-            }
-            else if (e.GetType() == typeof(ApplicationException))
-            {
-                message = e.Message;
-                httpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
-            }
-            else if (e.GetType() == typeof(UnauthorizedAccessException))
-            {
-                message = e.Message;
-                httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            }
-            else if (e.GetType() == typeof(SecurityException))
-            {
-                message = e.Message;
-                httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
-            }
-            else
-            {
-                message = ExceptionMessage.InternalServerError;
-            }
+            message = e.Message;
 
-            await httpContext.Response.WriteAsync(message);
+            if (e.GetType() == typeof(ValidationException))
+                httpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
+            else if (e.GetType() == typeof(ApplicationException))
+                httpContext.Response.StatusCode = (int) HttpStatusCode.BadRequest;
+            else if (e.GetType() == typeof(UnauthorizedAccessException))
+                httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            else if (e.GetType() == typeof(SecurityException))
+                httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+            else
+               message = ExceptionMessage.InternalServerError;
+
+            // await httpContext.Response.WriteAsync(message);
+            await httpContext.Response.WriteAsync(e.ToString());
         }
     }
 }

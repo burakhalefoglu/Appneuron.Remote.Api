@@ -16,7 +16,7 @@ using MediatR;
 using Moq;
 using NUnit.Framework;
 using static Business.Handlers.InterstitialAdModels.Commands.CreateInterstitialAdModelCommand;
-using static Business.Handlers.InterstitialAdModels.Queries.GetInterstitialAdModelsByProjectIdQuery;
+using static Business.Handlers.InterstitialAdModels.Queries.GetInterstitialAdModelsQuery;
 using static Business.Handlers.InterstitialAdModels.Commands.UpdateInterstitialAdModelCommand;
 using static Business.Handlers.InterstitialAdModels.Commands.DeleteInterstitialAdModelCommand;
 
@@ -43,7 +43,7 @@ namespace Tests.Business.Handlers
         public async Task InterstitialAdModel_GetByIdQueries_Success()
         {
             //Arrange
-            var query = new GetInterstitialAdModelsByProjectIdQuery
+            var query = new GetInterstitialAdModelsQuery
             {
                 ProjectId = 1
             };
@@ -58,7 +58,6 @@ namespace Tests.Business.Handlers
                         ProjectId = 1,
                         Version = "1",
                         Id = 1,
-                        IsAdvSettingsActive = true,
                         Name = "Test"
                     },
                     new()
@@ -66,7 +65,6 @@ namespace Tests.Business.Handlers
                         ProjectId = 2,
                         Version = "3",
                         Id = 2,
-                        IsAdvSettingsActive = true,
                         Name = "Test"
                     },
                     new()
@@ -74,13 +72,12 @@ namespace Tests.Business.Handlers
                         ProjectId =3,
                         Version = "2",
                         Id = 3,
-                        IsAdvSettingsActive = true,
                         Name = "Test"
                     }
                 }.AsQueryable());
 
             var handler =
-                new GetInterstitialAdModelsByProjectIdQueryHandler(_interstitialAdModelRepository.Object);
+                new InterstitialAdModelsQueryHandler(_interstitialAdModelRepository.Object, _mediator.Object);
 
             //Act
             var x = await handler.Handle(query, new CancellationToken());
@@ -97,7 +94,6 @@ namespace Tests.Business.Handlers
             var command = new CreateInterstitialAdModelCommand
             {
                 AdvStrategies = Array.Empty<AdvStrategy>(),
-                IsAdvSettingsActive = true,
                 Name = "Test",
                 ProjectId = 1,
                 Version = "1"
@@ -110,7 +106,7 @@ namespace Tests.Business.Handlers
             _interstitialAdModelRepository.Setup(x => x.Add(It.IsAny<InterstitialAdModel>()));
 
             var handler =
-                new CreateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _messageBroker.Object, _mediator.Object);
+                new CreateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _mediator.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
 
@@ -125,7 +121,6 @@ namespace Tests.Business.Handlers
             var command = new CreateInterstitialAdModelCommand
             {
                 AdvStrategies = Array.Empty<AdvStrategy>(),
-                IsAdvSettingsActive = true,
                 Name = "Test",
                 ProjectId = 1,
                 Version = "1"
@@ -138,7 +133,7 @@ namespace Tests.Business.Handlers
             _interstitialAdModelRepository.Setup(x => x.Add(It.IsAny<InterstitialAdModel>()));
 
             var handler =
-                new CreateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _messageBroker.Object, _mediator.Object);
+                new CreateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _mediator.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
             x.Success.Should().BeFalse();
@@ -151,7 +146,6 @@ namespace Tests.Business.Handlers
             //Arrange
             var command = new UpdateInterstitialAdModelCommand
             {
-                IsAdvSettingsActive = false,
                 Name = "Test1",
                 ProjectId = 1,
                 Version = "1"
@@ -162,7 +156,7 @@ namespace Tests.Business.Handlers
 
 
             var handler =
-                new UpdateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _mediator.Object, _messageBroker.Object);
+                new UpdateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _mediator.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
 
@@ -176,7 +170,6 @@ namespace Tests.Business.Handlers
             //Arrange
             var command = new UpdateInterstitialAdModelCommand
             {
-                IsAdvSettingsActive = false,
                 Name = "Test1",
                 ProjectId = 1,
                 Version = "1"
@@ -196,7 +189,7 @@ namespace Tests.Business.Handlers
                 new CancellationToken())).ReturnsAsync(new SuccessResult(Messages.Added));
 
             var handler =
-                new UpdateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _mediator.Object, _messageBroker.Object);
+                new UpdateInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object, _mediator.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
 
@@ -223,7 +216,7 @@ namespace Tests.Business.Handlers
                 x.UpdateAsync(It.IsAny<InterstitialAdModel>()));
 
             var handler =
-                new DeleteInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object);
+                new DeleteInterstitialAdModelCommandHandler(_interstitialAdModelRepository.Object,_mediator.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
 

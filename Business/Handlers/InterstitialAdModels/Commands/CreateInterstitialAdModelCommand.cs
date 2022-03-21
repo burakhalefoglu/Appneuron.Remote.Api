@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Business.BusinessAspects;
 using Business.Constants;
 using Business.Handlers.AdvStrategies.Command;
-using Business.Handlers.InterstielAdModels.ValidationRules;
+using Business.Handlers.InterstitialAdModels.ValidationRules;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Validation;
@@ -25,7 +25,6 @@ namespace Business.Handlers.InterstitialAdModels.Commands
         public string Name { get; set; }
         public string Version { get; set; }
         public int PlayerPercent { get; set; }
-        public bool IsAdvSettingsActive { get; set; }
         public AdvStrategy[] AdvStrategies { get; set; }
 
 
@@ -33,15 +32,12 @@ namespace Business.Handlers.InterstitialAdModels.Commands
             CreateInterstitialAdModelCommandHandler : IRequestHandler<CreateInterstitialAdModelCommand, IResult>
         {
             private readonly IInterstielAdModelRepository _interstitialAdModelRepository;
-            private readonly IMessageBroker _messageBroker;
             private readonly IMediator _mediator;
 
-
             public CreateInterstitialAdModelCommandHandler(IInterstielAdModelRepository interstitialAdModelRepository,
-                IMessageBroker messageBroker, IMediator mediator)
+                IMediator mediator)
             {
                 _interstitialAdModelRepository = interstitialAdModelRepository;
-                _messageBroker = messageBroker;
                 _mediator = mediator;
             }
 
@@ -65,7 +61,6 @@ namespace Business.Handlers.InterstitialAdModels.Commands
                     Name = request.Name,
                     Version = request.Version,
                     PlayerPercent = request.PlayerPercent,
-                    IsAdvSettingsActive = request.IsAdvSettingsActive,
                 };
 
                 await _interstitialAdModelRepository.AddAsync(addedInterstitialAdModel);
@@ -74,21 +69,10 @@ namespace Business.Handlers.InterstitialAdModels.Commands
                 {
                     await _mediator.Send(new CreateAdvStrategyCommand
                     {
-                        Count = advStrategy.Count,
-                        Name = advStrategy.Name
+                        Count = advStrategy.StrategyCount,
+                        Name = advStrategy.Name,
                     }, cancellationToken);
                 }
-                
-                await _messageBroker.SendMessageAsync(new InterstitialAdModelDto
-                {
-                    ProjectId = request.ProjectId,
-                    Name = request.Name,
-                    Version = request.Version,
-                    PlayerPercent = request.PlayerPercent,
-                    IsAdvSettingsActive = request.IsAdvSettingsActive,
-                    AdvStrategies = request.AdvStrategies
-                    
-                });
 
                 return new SuccessResult(Messages.Added);
             }

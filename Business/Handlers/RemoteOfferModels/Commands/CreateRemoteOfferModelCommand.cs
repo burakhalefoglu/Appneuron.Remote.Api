@@ -15,14 +15,13 @@ using Entities.Concrete;
 using Entities.Dtos;
 using MediatR;
 
-namespace Business.Handlers.RemoteOfferModels.Commands
-{
-    public class CreateRemoteOfferModelCommand : IRequest<IResult>
+namespace Business.Handlers.RemoteOfferModels.Commands;
+
+public class CreateRemoteOfferModelCommand : IRequest<IResult>
     {
         public long ProjectId { get; set; }
         public RemoteOfferProductModel[] ProductList { get; set; }
         public string Name { get; set; }
-        public bool IsActive { get; set; }
         public float FirstPrice { get; set; }
         public float LastPrice { get; set; }
         public string Version { get; set; }
@@ -38,14 +37,12 @@ namespace Business.Handlers.RemoteOfferModels.Commands
         {
             private readonly IRemoteOfferModelRepository _remoteOfferModelRepository;
             private readonly IMediator _mediator;
-            private readonly IMessageBroker _messageBroker;
 
             public CreateRemoteOfferModelCommandHandler(IRemoteOfferModelRepository remoteOfferModelRepository,
-                IMediator mediator, IMessageBroker messageBroker)
+                IMediator mediator)
             {
                 _remoteOfferModelRepository = remoteOfferModelRepository;
                 _mediator = mediator;
-                _messageBroker = messageBroker;
             }
 
             [ValidationAspect(typeof(RemoteOfferModelValidator), Priority = 1)]
@@ -72,7 +69,6 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                     LastPrice = request.LastPrice,
                     Version = request.Version,
                     IsGift = request.IsGift,
-                    IsActive = request.IsActive,
                     GiftTexture = request.GiftTexture,
                     ValidityPeriod = request.ValidityPeriod,
                     StartTime = request.StartTime,
@@ -89,31 +85,13 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                         Count = product.Count,
                         Image = product.Image,
                         Name = product.Name,
+                        ProjectId = product.ProjectId,
                         Version = addedRemoteOfferModel.Version,
                         ImageName = product.ImageName,
                         RemoteOfferName = addedRemoteOfferModel.Name
                     }, cancellationToken);
                 }
-
-                var remoteOfferModelDto = new RemoteOfferModelDto
-                {
-                    Name = request.Name,
-                    Version = request.Version,
-                    FinishTime = request.FinishTime,
-                    FirstPrice = request.FirstPrice,
-                    GiftTexture = request.GiftTexture,
-                    IsActive = request.IsActive,
-                    IsGift = request.IsGift,
-                    LastPrice = request.LastPrice,
-                    PlayerPercent = request.PlayerPercent,
-                    ProjectId = request.ProjectId,
-                    StartTime = request.StartTime,
-                    ValidityPeriod = request.ValidityPeriod,
-                    RemoteOfferProductModels = request.ProductList
-                };
-                await _messageBroker.SendMessageAsync(remoteOfferModelDto);
                 return new SuccessResult(Messages.Added);
             }
         }
     }
-}

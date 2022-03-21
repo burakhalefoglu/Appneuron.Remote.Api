@@ -3,19 +3,17 @@ using Core.Utilities.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using IResult = Core.Utilities.Results.IResult;
 
 namespace WebAPI.Controllers
-{ 
-
+{
     /// <summary>
-    /// 
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class HealthChecksController : BaseApiController
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <returns></returns>
         [AllowAnonymous]

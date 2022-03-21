@@ -2,6 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using Core.Entities.ClaimModels;
 
 namespace Core.Extensions
 {
@@ -9,7 +10,7 @@ namespace Core.Extensions
     {
         public static void AddEmail(this ICollection<Claim> claims, string email)
         {
-            claims.Add(new Claim(JwtRegisteredClaimNames.Email, email));
+            claims.Add(new Claim(ClaimTypes.Email, email));
         }
 
         public static void AddName(this ICollection<Claim> claims, string name)
@@ -30,6 +31,21 @@ namespace Core.Extensions
         public static void AddRoles(this ICollection<Claim> claims, string[] roles)
         {
             roles.ToList().ForEach(role => claims.Add(new Claim(ClaimTypes.Role, role)));
+        }
+
+        public static void AddUniqueKey(this ICollection<Claim> claims, string uniqueKey)
+        {
+            claims.Add(new Claim(JwtCustomClaimNames.UniqueKey, uniqueKey));
+        }
+
+        public static void AddCustomerId(this ICollection<Claim> claims, int customerId)
+        {
+            claims.Add(new Claim(JwtCustomClaimNames.CustomerId, customerId.ToString()));
+        }
+
+        public static void AddProjectId(this ICollection<Claim> claims, string projectId)
+        {
+            claims.Add(new Claim(JwtCustomClaimNames.ProjectId, projectId));
         }
     }
 }

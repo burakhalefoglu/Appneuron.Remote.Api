@@ -11,11 +11,11 @@ namespace Core.Aspects.Autofac.Validation
     /// <summary>
     ///     ValidationAspect
     /// </summary>
-    public class ValidationAspectAttribute : MethodInterception
+    public class ValidationAspect : MethodInterceptionAttribute
     {
         private readonly Type _validatorType;
 
-        public ValidationAspectAttribute(Type validatorType)
+        public ValidationAspect(Type validatorType)
         {
             if (!typeof(IValidator).IsAssignableFrom(validatorType))
                 throw new ArgumentException(AspectMessages.WrongValidationType);

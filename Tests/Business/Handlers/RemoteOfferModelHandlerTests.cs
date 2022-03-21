@@ -16,7 +16,7 @@ using FluentAssertions;
 using MediatR;
 using Moq;
 using NUnit.Framework;
-using static Business.Handlers.RemoteOfferModels.Queries.GetRemoteOfferModelsDtoByProjectIdQuery;
+using static Business.Handlers.RemoteOfferModels.Queries.GetRemoteOfferModelsDtoQuery;
 using static Business.Handlers.RemoteOfferModels.Commands.CreateRemoteOfferModelCommand;
 using static Business.Handlers.RemoteOfferModels.Commands.UpdateRemoteOfferModelCommand;
 using static Business.Handlers.RemoteOfferModels.Commands.DeleteRemoteOfferModelCommand;
@@ -45,7 +45,7 @@ namespace Tests.Business.Handlers
         public async Task RemoteOfferModel_GetByProjectIdQueries_Success()
         {
             //Arrange
-            var query = new GetRemoteOfferModelsDtoByProjectIdQuery
+            var query = new GetRemoteOfferModelsDtoQuery
             {
                 ProjectId = 1
             };
@@ -60,7 +60,6 @@ namespace Tests.Business.Handlers
                         FirstPrice = 12,
                         GiftTexture = Array.Empty<byte>(),
                         Id = 1,
-                        IsActive = true,
                         IsGift = true,
                         LastPrice = 10,
                         Name = "Test",
@@ -76,7 +75,6 @@ namespace Tests.Business.Handlers
                         FirstPrice = 12,
                         GiftTexture = Array.Empty<byte>(),
                         Id = 4,
-                        IsActive = true,
                         IsGift = true,
                         LastPrice = 10,
                         Name = "Test",
@@ -92,7 +90,6 @@ namespace Tests.Business.Handlers
                         FirstPrice = 12,
                         GiftTexture = Array.Empty<byte>(),
                         Id = 13,
-                        IsActive = true,
                         IsGift = true,
                         LastPrice = 10,
                         Name = "Test",
@@ -107,7 +104,7 @@ namespace Tests.Business.Handlers
                 .ReturnsAsync(new SuccessDataResult<IEnumerable<RemoteOfferProductModel>>(new RemoteOfferProductModel[]{}));
 
             var handler =
-                new GetRemoteOfferModelsDtoByProjectIdQueryHandler(_remoteOfferModelRepository.Object, _mediator.Object);
+                new GetRemoteOfferModelsDtoQueryHandler(_remoteOfferModelRepository.Object, _mediator.Object);
 
             //Act
             var x = await handler.Handle(query, new CancellationToken());
@@ -126,7 +123,6 @@ namespace Tests.Business.Handlers
                 FinishTime = new DateTime().Ticks,
                 FirstPrice = 12,
                 GiftTexture = Array.Empty<byte>(),
-                IsActive = true,
                 IsGift = true,
                 LastPrice = 2,
                 Name = "Test",
@@ -143,7 +139,7 @@ namespace Tests.Business.Handlers
             _remoteOfferModelRepository.Setup(x => x.Add(It.IsAny<RemoteOfferModel>()));
 
             var handler =
-                new CreateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object, _messageBroker.Object);
+                new CreateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
 
@@ -160,7 +156,6 @@ namespace Tests.Business.Handlers
                 FinishTime = new DateTime().Ticks,
                 FirstPrice = 12,
                 GiftTexture = Array.Empty<byte>(),
-                IsActive = true,
                 IsGift = true,
                 LastPrice = 2,
                 Name = "Test",
@@ -178,7 +173,7 @@ namespace Tests.Business.Handlers
                 x.Add(It.IsAny<RemoteOfferModel>()));
 
             var handler =
-                new CreateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object, _messageBroker.Object);
+                new CreateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
             x.Success.Should().BeFalse();
@@ -191,7 +186,6 @@ namespace Tests.Business.Handlers
             //Arrange
             var command = new UpdateRemoteOfferModelCommand
             {
-                IsActive = true,
                 Name = "Test",
                 Version = "1",
                 PlayerPercent = 20,
@@ -209,7 +203,7 @@ namespace Tests.Business.Handlers
             _remoteOfferModelRepository.Setup(x => x.UpdateAsync(It.IsAny<RemoteOfferModel>()));
 
             var handler =
-                new UpdateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object, _messageBroker.Object);
+                new UpdateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
 
@@ -223,7 +217,6 @@ namespace Tests.Business.Handlers
             //Arrange
             var command = new UpdateRemoteOfferModelCommand
             {
-                IsActive = true,
                 Name = "Test",
                 Version = "1",
                 PlayerPercent = 20,
@@ -247,7 +240,7 @@ namespace Tests.Business.Handlers
                 .ReturnsAsync(new SuccessResult(Messages.Added));
 
             var handler =
-                new UpdateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object, _messageBroker.Object);
+                new UpdateRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
             x.Success.Should().BeTrue();
@@ -272,7 +265,7 @@ namespace Tests.Business.Handlers
                 x.UpdateAsync(It.IsAny<RemoteOfferModel>()));
 
             var handler =
-                new DeleteRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object);
+                new DeleteRemoteOfferModelCommandHandler(_remoteOfferModelRepository.Object, _mediator.Object);
             var x = await handler.Handle(command, new CancellationToken());
 
             x.Success.Should().BeTrue();

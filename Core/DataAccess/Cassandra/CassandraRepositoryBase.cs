@@ -1,11 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using Cassandra;
 using Cassandra.Data.Linq;
+using Cassandra.Mapping;
 using Core.DataAccess.Cassandra.Configurations;
 using Core.Entities;
+using Core.Utilities.IoC;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.DataAccess.Cassandra
 {
@@ -14,21 +15,27 @@ namespace Core.DataAccess.Cassandra
         : IRepository<T>
         where T : class, IEntity, new()
     {
+        private readonly MappingConfiguration _mappingConfiguration;
         private readonly Table<T> _table;
+        private readonly IMapper _mapper;
 
-        protected CassandraRepositoryBase(CassandraConnectionSettings cassandraConnectionSettings, string tableCreateQuery)
+        protected CassandraRepositoryBase(MappingConfiguration mappingConfiguration)
         {
+            _mappingConfiguration = mappingConfiguration;
+            var configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
+            var cassandraConnectionSettings =
+                configuration.GetSection("CassandraConnectionSettings").Get<CassandraConnectionSettings>();
             var cluster = Cluster.Builder()
                 .AddContactPoints(cassandraConnectionSettings.Host)
                 .WithCredentials(cassandraConnectionSettings.UserName, cassandraConnectionSettings.Password)
-                .WithApplicationName("AuthServer")
+                .WithApplicationName("CustomerProjectServer")
                 .WithCompression(CompressionType.Snappy)
                 .Build();
             var session = cluster.Connect();
-            session.CreateKeyspaceIfNotExists("RemoteConfigDatabase");
-            session.ChangeKeyspace("RemoteConfigDatabase");
-            session.ExecuteAsync(new SimpleStatement(tableCreateQuery)).ConfigureAwait(false);
-            _table = new Table<T>(session);
+            session.CreateKeyspaceIfNotExists(cassandraConnectionSettings.Keyspace);
+            _table = new Table<T>(session, mappingConfiguration);
+            _table.CreateIfNotExists();
+            _mapper = new Mapper(session, mappingConfiguration);
         }
 
         public IQueryable<T> GetList(Expression<Func<T, bool>> predicate = null)
@@ -80,8 +87,7 @@ namespace Core.DataAccess.Cassandra
 
         public async Task<T> GetAsync(Expression<Func<T, bool>> predicate)
         {
-            return await Task.Run(() => _table.Where(predicate)
-                .FirstOrDefault().Execute());
+            return (await Task.Run(() => _table.Where(predicate).FirstOrDefault().Execute()))!;
         }
 
         public bool Any(Expression<Func<T, bool>> predicate = null)
@@ -107,49 +113,47 @@ namespace Core.DataAccess.Cassandra
 
         public void Add(T entity)
         {
-            var id = _table.AsQueryable().OrderByDescending(x => x.Id).First().Id;
+            var filter = _table.Execute().MaxBy(e => e.Id);
+            var id = filter?.Id ?? 0;
             entity.Id = id + 1;
-            _table.Insert(entity);
+            _table.Insert(entity).Execute();
         }
 
         public async Task AddAsync(T entity)
         {
             await Task.Run(() =>
             {
-                var id = _table.AsQueryable().OrderByDescending(x => x.Id).First().Id;
+                var filter = _table.Execute().MaxBy(e => e.Id);
+                var id = filter?.Id ?? 0;
                 entity.Id = id + 1;
-                _table.Insert(entity);
+                _table.Insert(entity).Execute();
             });
         }
 
-        public void Update(T record)
+        public async Task UpdateAsync(T entity)
         {
-            _table.Where(u => u.Id == record.Id)
-                .Select(u => record)
-                .Update()
-                .Execute();
+            await _mapper.DeleteAsync(entity);
+            await _mapper.InsertAsync(entity);
         }
 
-        public async Task UpdateAsync(T record)
+        public void Update(T entity)
         {
-            await Task.Run(() =>
-            {
-                _table.Where(u => u.Id == record.Id)
-                    .Select(u => record)
-                    .Update()
-                    .Execute();
-            });
+            _mapper.Delete(entity);
+            _mapper.Insert(entity);
         }
 
-        public async Task UpdateAsync(T record, Expression<Func<T, bool>> predicate)
+        public void Delete(T entity)
         {
-            await Task.Run(() =>
-            {
-                _table.Where(predicate)
-                    .Select(u => record)
-                    .Update()
-                    .Execute();
-            });
+            _mapper.Delete(entity);
+            entity.Status = false;
+            _mapper.Insert(entity);
+        }
+
+        public async Task DeleteAsync(T entity)
+        {
+            await _mapper.DeleteAsync(entity);
+            entity.Status = false;
+            await _mapper.InsertAsync(entity);
         }
     }
 }

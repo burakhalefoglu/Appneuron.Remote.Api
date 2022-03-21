@@ -17,6 +17,7 @@ namespace Business.Handlers.RemoteOfferProductModels.Queries
     {
         public string RemoteOfferName { get; set; }
         public string Version { get; set; }
+        public long ProjectId { get; set; }
 
         public class GetRemoteOfferProductModelsQueryHandler : IRequestHandler<
             GetRemoteOfferProductModelsQuery,
@@ -39,7 +40,10 @@ namespace Business.Handlers.RemoteOfferProductModels.Queries
                 GetRemoteOfferProductModelsQuery request, CancellationToken cancellationToken)
             {
                 var result = await _remoteOfferProductModelRepository
-                    .GetListAsync(r => r.RemoteOfferName == request.RemoteOfferName && r.Version == request.Version && r.Status == true);
+                    .GetListAsync(r => r.RemoteOfferName == request.RemoteOfferName &&
+                                       r.Version == request.Version &&
+                                       r.ProjectId == request.ProjectId &&
+                                       r.Status == true);
                 
                 return new SuccessDataResult<IEnumerable<RemoteOfferProductModel>>(result);
             }

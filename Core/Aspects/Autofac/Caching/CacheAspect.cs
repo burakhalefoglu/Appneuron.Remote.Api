@@ -10,7 +10,7 @@ namespace Core.Aspects.Autofac.Caching
     /// <summary>
     ///     CacheAspect
     /// </summary>
-    public class CacheAspect : MethodInterception
+    public class CacheAspect : MethodInterceptionAttribute
     {
         private readonly ICacheManager _cacheManager;
         private readonly int _duration;

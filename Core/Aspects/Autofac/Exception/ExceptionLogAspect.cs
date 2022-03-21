@@ -16,7 +16,7 @@ namespace Core.Aspects.Autofac.Exception
     /// <summary>
     ///     ExceptionLogAspect
     /// </summary>
-    public class ExceptionLogAspect : MethodInterception
+    public class ExceptionLogAspect : MethodInterceptionAttribute
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly LoggerServiceBase _loggerServiceBase;
@@ -39,7 +39,12 @@ namespace Core.Aspects.Autofac.Exception
                     string.Join(Environment.NewLine, (e as AggregateException).InnerExceptions.Select(x => x.Message));
             else
                 logDetailWithException.ExceptionMessage = e.Message;
-            _loggerServiceBase.Error(JsonConvert.SerializeObject(logDetailWithException));
+            _loggerServiceBase.Error(JsonConvert.SerializeObject(logDetailWithException,
+                Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                }));
         }
 
         private LogDetailWithException GetLogDetail(IInvocation invocation)

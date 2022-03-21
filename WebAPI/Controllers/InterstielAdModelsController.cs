@@ -6,6 +6,7 @@ using Core.Utilities.Results;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using IResult = Core.Utilities.Results.IResult;
 
 namespace WebAPI.Controllers
 {
@@ -25,12 +26,15 @@ namespace WebAPI.Controllers
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<IEnumerable<InterstitialAdModel>>))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
-        [HttpGet("getByProjectId")]
-        public async Task<IActionResult> GetByProjectId(long projectId)
+        [HttpGet]
+        public async Task<IActionResult> Get(long projectId, string name, string version)
         {
-            var result = await Mediator.Send(new GetInterstitialAdModelsByProjectIdQuery
+            var result = await Mediator.Send(new GetInterstitialAdModelsQuery
             {
-                ProjectId = projectId
+                ProjectId = projectId,
+                Name = name,
+                Version = version
+                
             });
             if (result.Success) return Ok(result);
             return BadRequest(result);

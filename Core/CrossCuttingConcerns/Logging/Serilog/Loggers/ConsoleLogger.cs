@@ -1,5 +1,4 @@
-using Serilog;
-using Serilog.Sinks.FastConsole;
+﻿using Serilog;
 
 namespace Core.CrossCuttingConcerns.Logging.Serilog.Loggers
 {
@@ -7,11 +6,10 @@ namespace Core.CrossCuttingConcerns.Logging.Serilog.Loggers
     {
         public ConsoleLogger()
         {
-
-            _ = new LoggerConfiguration()
-                .WriteTo.FastConsole(
-                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}")
+            var seriLogConfig = new LoggerConfiguration()
+                .WriteTo.Console(outputTemplate:"[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
                 .CreateLogger();
+            Logger = seriLogConfig;
         }
     }
 }

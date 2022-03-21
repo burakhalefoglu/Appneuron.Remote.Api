@@ -1,7 +1,9 @@
-﻿namespace Core.Utilities.Mail
+﻿using System.Threading.Tasks;
+
+namespace Core.Utilities.Mail
 {
     public interface IMailService
     {
-        void Send(EmailMessage emailMessage);
+        Task Send(EmailMessage emailMessage);
     }
 }
