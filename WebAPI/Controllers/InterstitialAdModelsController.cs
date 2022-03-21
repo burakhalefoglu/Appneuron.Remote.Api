@@ -8,7 +8,7 @@ using IResult = Core.Utilities.Results.IResult;
 namespace WebAPI.Controllers
 {
     /// <summary>
-    ///     InterstielAdModels If controller methods will not be Authorize, [AllowAnonymous] is used.
+    ///     InterstitialAdModels If controller methods will not be Authorize, [AllowAnonymous] is used.
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
