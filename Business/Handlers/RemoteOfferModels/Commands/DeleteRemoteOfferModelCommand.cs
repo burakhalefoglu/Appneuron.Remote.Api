@@ -46,7 +46,7 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                         return new ErrorResult(Messages.NotFound);
                 isThereInterstitialAdModelRecord.IsActive = false;
                 
-                await _remoteOfferModelRepository.UpdateAsync(isThereInterstitialAdModelRecord);
+                await _remoteOfferModelRepository.DeleteAsync(isThereInterstitialAdModelRecord);
                 var products = (await _mediator.Send(new GetRemoteOfferProductModelsQuery
                 {
                     Version = request.Version,
