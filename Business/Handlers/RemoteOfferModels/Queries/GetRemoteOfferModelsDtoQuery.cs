@@ -50,7 +50,7 @@ namespace Business.Handlers.RemoteOfferModels.Queries
                                        r.Status == true);
                 var remoteOfferModelDtos = new List<RemoteOfferModelDto>();
 
-                if (!result.Any()) return new SuccessDataResult<IEnumerable<RemoteOfferModelDto>>(remoteOfferModelDtos);
+                if (!result.Any()) return new SuccessDataResult<IEnumerable<RemoteOfferModelDto>>((IEnumerable<RemoteOfferModelDto>) null);
                 foreach (var remoteOfferModel in result)
                 {
                     var resultProductModels = await _mediator.Send(new GetRemoteOfferProductModelsQuery
