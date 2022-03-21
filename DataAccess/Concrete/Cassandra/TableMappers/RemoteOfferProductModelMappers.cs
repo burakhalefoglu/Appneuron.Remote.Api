@@ -24,7 +24,7 @@ public class RemoteOfferProductModelMappers : Mappings
             .Column(u => u.Name, cm => cm.WithName("name").WithDbType(typeof(string)))
             .Column(u => u.Version, cm => cm.WithName("version").WithDbType(typeof(string)))
             .Column(u => u.RemoteOfferName, cm => cm.WithName("remote_offer_name").WithDbType(typeof(string)))
-            .Column(u => u.Count, cm => cm.WithName("count").WithDbType(typeof(string)))
+            .Column(u => u.Count, cm => cm.WithName("count").WithDbType(typeof(float)))
             .Column(u => u.Image, cm => cm.WithName("image").WithDbType(typeof(byte[])))
             .Column(u => u.ImageName, cm => cm.WithName("image_name").WithDbType(typeof(string)))
             .Column(u => u.Status, cm => cm.WithName("status").WithDbType(typeof(bool)))
