@@ -100,7 +100,7 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
             var token = request.Headers["Authorization"];
             // ask project management server!
             var httpRequestMessage = new HttpRequestMessage(
-                HttpMethod.Get,
+                HttpMethod.Get, "http://" +
                 _projectManagementService.Host + ":" + _projectManagementService.Port +
                 "/api/CustomerProjects/isValid?projectId=" + projectIdModel.ProjectId)
             {
