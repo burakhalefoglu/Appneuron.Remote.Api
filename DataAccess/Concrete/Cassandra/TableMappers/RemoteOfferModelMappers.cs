@@ -17,7 +17,7 @@ public class RemoteOfferModelMappers : Mappings
         For<RemoteOfferModel>()
             .TableName("remote_offer_models")
             .KeyspaceName(cassandraConnectionSettings.Keyspace)
-            .PartitionKey("name", "project_id", "version", "terminated")
+            .PartitionKey("name", "project_id", "version", "status")
             .ClusteringKey(new Tuple<string, SortOrder>("created_at", SortOrder.Descending))
             .Column(u => u.Id, cm => cm.WithName("id").WithDbType(typeof(long)))
             .Column(u => u.ProjectId, cm => cm.WithName("project_id").WithDbType(typeof(long)))
@@ -32,7 +32,7 @@ public class RemoteOfferModelMappers : Mappings
             .Column(u => u.StartTime, cm => cm.WithName("start_time").WithDbType(typeof(long)))
             .Column(u => u.FinishTime, cm => cm.WithName("finish_time").WithDbType(typeof(long)))
             .Column(u => u.Status, cm => cm.WithName("status").WithDbType(typeof(bool)))
-            .Column(u => u.Terminated, cm => cm.WithName("terminated").WithDbType(typeof(bool)))
+            .Column(u => u.IsActive, cm => cm.WithName("is_active").WithDbType(typeof(bool)))
             .Column(u => u.CreatedAt, cm => cm.WithName("created_at").WithDbType(typeof(DateTimeOffset)));
     }
 }

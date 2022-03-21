@@ -8,6 +8,7 @@ public class RemoteOfferModel : IEntity
         {
             CreatedAt = DateTimeOffset.Now;
             Status = true;
+            IsActive = false;
         }
 
         public long Id { get; set; }
@@ -23,6 +24,6 @@ public class RemoteOfferModel : IEntity
         public long StartTime { get; set; }
         public long FinishTime { get; set; }
         public bool Status { get; set; }
-        public bool Terminated { get; set; }
+        public bool IsActive { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
     }

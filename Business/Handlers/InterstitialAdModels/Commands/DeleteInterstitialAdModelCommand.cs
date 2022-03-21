@@ -41,12 +41,12 @@ namespace Business.Handlers.InterstitialAdModels.Commands;
                     u.Name == request.Name &&
                     u.ProjectId == request.ProjectId &&
                     u.Version == request.Version &&
-                    u.Terminated == false);
+                    u.Status == true);
 
                 if (isThereInterstitialAdModelRecord is null)
                     return new ErrorResult(Messages.NotFound);
                 
-                isThereInterstitialAdModelRecord.Terminated = true;
+                isThereInterstitialAdModelRecord.IsActive = false;
                 await _interstitialAdModelRepository.DeleteAsync(isThereInterstitialAdModelRecord);
                 
                 var advStrategies = (await _mediator.Send(new GetAdvStrategyQuery

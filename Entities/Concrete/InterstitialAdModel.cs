@@ -8,7 +8,7 @@ namespace Entities.Concrete
         {
             CreatedAt = DateTimeOffset.Now;
             Status = true;
-            Terminated = false;
+            IsActive = false;
         }
         
         public string Name { get; set; }
@@ -17,7 +17,7 @@ namespace Entities.Concrete
         public int PlayerPercent { get; set; }
         public long Id { get; set; }
         public bool Status { get; set; }
-        public bool Terminated { get; set; }
+        public bool IsActive { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
 
     }

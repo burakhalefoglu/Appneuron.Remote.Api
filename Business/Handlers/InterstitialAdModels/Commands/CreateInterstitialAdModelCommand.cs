@@ -50,7 +50,7 @@ namespace Business.Handlers.InterstitialAdModels.Commands
             {
                 var isThereInterstitialAdModelRecord = await _interstitialAdModelRepository.AnyAsync(u =>
                     u.Name == request.Name && u.ProjectId == request.ProjectId && u.Version == request.Version &&
-                    u.Terminated == false);
+                    u.Status == true);
 
                 if (isThereInterstitialAdModelRecord)
                     return new ErrorResult(Messages.AlreadyExist);

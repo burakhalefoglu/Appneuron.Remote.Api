@@ -42,13 +42,13 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                     u.Name == request.Name &&
                     u.ProjectId == request.ProjectId &&
                     u.Version == request.Version &&
-                    u.Terminated == false);
+                    u.Status == true);
 
                 if (isThereInterstitialAdModelRecord is null)
                         return new ErrorResult(Messages.NotFound);
-                isThereInterstitialAdModelRecord.Terminated = true;
+                isThereInterstitialAdModelRecord.IsActive = false;
                 
-                await _remoteOfferModelRepository.DeleteAsync(isThereInterstitialAdModelRecord);
+                await _remoteOfferModelRepository.UpdateAsync(isThereInterstitialAdModelRecord);
                 var products = (await _mediator.Send(new GetRemoteOfferProductModelsQuery
                 {
                     Version = request.Version,

@@ -25,7 +25,7 @@ namespace Business.Handlers.RemoteOfferModels.Commands
         public string Name { get; set; }
         public string Version { get; set; }
         public int PlayerPercent { get; set; }
-        public bool Status { get; set; }
+        public bool IsActive { get; set; }
 
         public class UpdateRemoteOfferModelCommandHandler : IRequestHandler<UpdateRemoteOfferModelCommand, IResult>
         {
@@ -52,13 +52,13 @@ namespace Business.Handlers.RemoteOfferModels.Commands
                     _remoteOfferModelRepository.GetAsync(r =>r.ProjectId == request.ProjectId &&
                                                              r.Name == request.Name &&
                                                              r.Version == request.Version &&
-                                                             r.Terminated == false);
+                                                             r.Status == true);
                 if (resultData is null) return new ErrorResult(Messages.NoContent);
 
                 resultData.PlayerPercent = request.PlayerPercent;
-                resultData.Status = request.Status;
+                resultData.IsActive = request.IsActive;
                 
-                if (resultData.Status)
+                if (resultData.IsActive)
                 {
                     resultData.StartTime = DateTime.Now.Ticks;
                     resultData.FinishTime = DateTime.Now.AddHours(resultData.ValidityPeriod).Ticks;

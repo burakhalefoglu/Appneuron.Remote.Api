@@ -47,7 +47,7 @@ namespace Business.Handlers.RemoteOfferModels.Queries
                     .GetListAsync(r => r.ProjectId == request.ProjectId &&
                                        r.Name == request.Name &&
                                        r.Version == request.Version &&
-                                       r.Terminated == false);
+                                       r.Status == true);
                 var remoteOfferModelDtos = new List<RemoteOfferModelDto>();
 
                 if (!result.Any()) return new SuccessDataResult<IEnumerable<RemoteOfferModelDto>>(remoteOfferModelDtos);

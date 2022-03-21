@@ -58,7 +58,7 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
                         .AnyAsync(u => u.ProjectId == request.ProjectId &&
                                        u.Name == request.Name &&
                                        u.Version == request.Version &&
-                                       u.Terminated == false);
+                                       u.Status == true);
 
                 if (isThereRemoteOfferModelRecord)
                     return new ErrorResult(Messages.NameAlreadyExist);

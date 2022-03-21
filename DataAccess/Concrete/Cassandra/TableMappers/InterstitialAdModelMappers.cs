@@ -18,7 +18,7 @@ public class InterstitialAdModelMappers: Mappings
         For<InterstitialAdModel>()
             .TableName("interstitial_ad_models")
             .KeyspaceName(cassandraConnectionSettings.Keyspace)
-            .PartitionKey("name", "project_id", "version", "terminated")
+            .PartitionKey("name", "project_id", "version", "status")
             .ClusteringKey(new Tuple<string, SortOrder>("created_at", SortOrder.Descending))
             .Column(u => u.Id, cm => cm.WithName("id").WithDbType(typeof(long)))
             .Column(u => u.ProjectId, cm => cm.WithName("project_id").WithDbType(typeof(long)))
@@ -26,8 +26,7 @@ public class InterstitialAdModelMappers: Mappings
             .Column(u => u.Version, cm => cm.WithName("version").WithDbType(typeof(string)))
             .Column(u => u.PlayerPercent, cm => cm.WithName("player_percent").WithDbType(typeof(int)))
             .Column(u => u.Status, cm => cm.WithName("status").WithDbType(typeof(bool)))
-            .Column(u => u.Terminated, cm => cm.WithName("terminated").WithDbType(typeof(bool)))
+            .Column(u => u.IsActive, cm => cm.WithName("is_active").WithDbType(typeof(bool)))
             .Column(u => u.CreatedAt, cm => cm.WithName("created_at").WithDbType(typeof(DateTimeOffset)));
-
     }
 }
