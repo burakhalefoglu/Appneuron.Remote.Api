@@ -12,6 +12,7 @@ using Core.Utilities.MessageBrokers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.Dtos;
 using FluentAssertions;
 using MediatR;
 using Moq;
@@ -127,7 +128,7 @@ namespace Tests.Business.Handlers
                 LastPrice = 2,
                 Name = "Test",
                 PlayerPercent = 15,
-                ProductList = Array.Empty<RemoteOfferProductModel>(),
+                ProductDtos = Array.Empty<RemoteOfferProductModelDto>(),
                 ProjectId = 3,
                 StartTime = DateTime.Now.Ticks
             };
@@ -160,7 +161,7 @@ namespace Tests.Business.Handlers
                 LastPrice = 2,
                 Name = "Test",
                 PlayerPercent = 15,
-                ProductList = Array.Empty<RemoteOfferProductModel>(),
+                ProductDtos = Array.Empty<RemoteOfferProductModelDto>(),
                 ProjectId = 3,
                 StartTime = DateTime.Now.Ticks
             };

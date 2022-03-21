@@ -20,7 +20,7 @@ namespace Business.Handlers.RemoteOfferModels.Commands;
 public class CreateRemoteOfferModelCommand : IRequest<IResult>
     {
         public long ProjectId { get; set; }
-        public RemoteOfferProductModel[] ProductList { get; set; }
+        public RemoteOfferProductModelDto[] ProductDtos { get; set; }
         public string Name { get; set; }
         public float FirstPrice { get; set; }
         public float LastPrice { get; set; }
@@ -58,7 +58,7 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
                         .AnyAsync(u => u.ProjectId == request.ProjectId &&
                                        u.Name == request.Name &&
                                        u.Version == request.Version &&
-                                       u.Status == true);
+                                       u.Terminated == false);
 
                 if (isThereRemoteOfferModelRecord)
                     return new ErrorResult(Messages.NameAlreadyExist);
@@ -78,17 +78,17 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
                     ProjectId = request.ProjectId
                 };
                 await _remoteOfferModelRepository.AddAsync(addedRemoteOfferModel);
-                foreach (var product in request.ProductList)
+                foreach (var product in request.ProductDtos)
                 {
                     await _mediator.Send(new CreateRemoteOfferProductModelCommand
                     {
                         Count = product.Count,
                         Image = product.Image,
                         Name = product.Name,
-                        ProjectId = product.ProjectId,
-                        Version = addedRemoteOfferModel.Version,
                         ImageName = product.ImageName,
-                        RemoteOfferName = addedRemoteOfferModel.Name
+                        ProjectId = addedRemoteOfferModel.ProjectId,
+                        Version = addedRemoteOfferModel.Version,
+                        RemoteOfferName = addedRemoteOfferModel.Name,
                     }, cancellationToken);
                 }
                 return new SuccessResult(Messages.Added);

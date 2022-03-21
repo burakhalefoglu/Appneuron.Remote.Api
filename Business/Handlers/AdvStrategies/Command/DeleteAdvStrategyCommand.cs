@@ -36,9 +36,9 @@ public class DeleteAdvStrategyCommand : IRequest<IResult>
         {
             await _advStrategyRepository.DeleteAsync(new AdvStrategy
             {
-                StrategyCount = request.Count,
+                StrategyValue = request.Count,
                 Name = request.Name,
-                ProjectId = request.ProjectId
+                ProjectId = request.ProjectId,
             });
 
             return new SuccessResult(Messages.Deleted);

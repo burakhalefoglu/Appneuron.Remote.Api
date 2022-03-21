@@ -41,14 +41,14 @@ namespace Business.Handlers.InterstitialAdModels.Commands;
                     u.Name == request.Name &&
                     u.ProjectId == request.ProjectId &&
                     u.Version == request.Version &&
-                    u.Status == true);
+                    u.Terminated == false);
 
                 if (isThereInterstitialAdModelRecord is null)
                     return new ErrorResult(Messages.NotFound);
-
+                isThereInterstitialAdModelRecord.Terminated = true;
                 await _interstitialAdModelRepository.DeleteAsync(isThereInterstitialAdModelRecord);
                 
-                var advStrategies = (await _mediator.Send(new GetAdvStrategyQuery()
+                var advStrategies = (await _mediator.Send(new GetAdvStrategyQuery
                 {
                     Name = request.Name,
                     Version = request.Version,
@@ -58,10 +58,10 @@ namespace Business.Handlers.InterstitialAdModels.Commands;
                 {
                     await _mediator.Send(new DeleteAdvStrategyCommand
                     {
-                        Count = advStrategy.StrategyCount,
+                        Count = advStrategy.StrategyValue,
                         Name = advStrategy.Name,
                         ProjectId = advStrategy.ProjectId
-                        
+
                     }, cancellationToken);
                 }
                 return new SuccessResult(Messages.Deleted);

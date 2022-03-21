@@ -17,7 +17,7 @@ public class RemoteOfferModelMappers : Mappings
         For<RemoteOfferModel>()
             .TableName("remote_offer_models")
             .KeyspaceName(cassandraConnectionSettings.Keyspace)
-            .PartitionKey("name", "project_id", "version", "status")
+            .PartitionKey("name", "project_id", "version", "terminated")
             .ClusteringKey(new Tuple<string, SortOrder>("created_at", SortOrder.Descending))
             .Column(u => u.Id, cm => cm.WithName("id").WithDbType(typeof(long)))
             .Column(u => u.ProjectId, cm => cm.WithName("project_id").WithDbType(typeof(long)))

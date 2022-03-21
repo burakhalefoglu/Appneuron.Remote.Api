@@ -11,7 +11,7 @@ namespace Entities.Concrete
         }
         
         public string Name { get; set; }
-        public float StrategyCount { get; set; }
+        public float StrategyValue { get; set; }
         public string Version { get; set; }
         public long ProjectId { get; set; }
         public string StrategyName { get; set; }

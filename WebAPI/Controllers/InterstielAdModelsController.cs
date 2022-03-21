@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Business.Handlers.InterstitialAdModels.Commands;
+﻿using Business.Handlers.InterstitialAdModels.Commands;
 using Business.Handlers.InterstitialAdModels.Queries;
 using Core.Utilities.Results;
 using Entities.Concrete;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using IResult = Core.Utilities.Results.IResult;
 
@@ -15,13 +12,13 @@ namespace WebAPI.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class InterstielAdModelsController : BaseApiController
+    public class InterstitialAdModelsController : BaseApiController
     {
         /// <summary>
-        ///     List InterstielAdModels
+        ///     List InterstitialAdModel
         /// </summary>
-        /// <remarks>InterstielAdModels</remarks>
-        /// <return>List InterstielAdModels</return>
+        /// <remarks>InterstitialAdModels</remarks>
+        /// <return>List InterstitialAdModels</return>
         /// <response code="200"></response>
         [Produces("application/json", "text/plain")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<IEnumerable<InterstitialAdModel>>))]
@@ -74,7 +71,7 @@ namespace WebAPI.Controllers
         }
 
         /// <summary>
-        ///     Delete InterstielAdModel.
+        ///     Delete InterstitialAdModel.
         /// </summary>
         /// <param name="deleteInterstitialAdModel"></param>
         /// <returns></returns>

@@ -25,6 +25,8 @@ namespace Business.Handlers.InterstitialAdModels.Commands
         public string Version { get; set; }
         public int PlayerPercent { get; set; }
 
+        public bool Status { get; set; }
+
         public class
             UpdateInterstitialAdModelCommandHandler : IRequestHandler<UpdateInterstitialAdModelCommand, IResult>
         {
@@ -46,19 +48,16 @@ namespace Business.Handlers.InterstitialAdModels.Commands
             public async Task<IResult> Handle(UpdateInterstitialAdModelCommand request,
                 CancellationToken cancellationToken)
             {
-                var isValid = await _interstitialAdModelRepository.AnyAsync(i =>
-                    i.ProjectId == request.ProjectId && i.Name == request.Name &&
-                    i.Version == request.Version && i.Status == true);
-                if (!isValid) return new ErrorResult(Messages.NoContent);
-
                 var resultData = await _interstitialAdModelRepository.GetAsync(u =>
                     u.Name == request.Name &&
                     u.ProjectId == request.ProjectId &&
                     u.Version == request.Version &&
-                    u.Status == true);
+                    u.Terminated == false);
+                if (resultData is null) return new ErrorResult(Messages.NoContent);
 
                 resultData.PlayerPercent = request.PlayerPercent;
-
+                resultData.Status = request.Status;
+                
                 await _interstitialAdModelRepository.UpdateAsync(resultData);
                 return new SuccessResult(Messages.Updated);
             }

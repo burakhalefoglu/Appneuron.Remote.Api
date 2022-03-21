@@ -19,6 +19,8 @@ namespace Business.Handlers.AdvStrategies.Command
         public string Name { get; set; }
         public float Count { get; set; }
         public long ProjectId { get; set; }
+        public string StrategyName { get; set; }
+        public string Version { get; set; }
 
         public class CreateAdvStrategyCommandHandler : IRequestHandler<CreateAdvStrategyCommand, IResult>
         {
@@ -38,9 +40,11 @@ namespace Business.Handlers.AdvStrategies.Command
             {
                 await _advStrategyRepository.AddAsync(new AdvStrategy
                 {
-                    StrategyCount = request.Count,
+                    StrategyValue = request.Count,
                     Name = request.Name,
-                    ProjectId = request.ProjectId
+                    ProjectId = request.ProjectId,
+                    Version = request.Version,
+                    StrategyName = request.StrategyName
                 });
 
                 return new SuccessResult(Messages.Added);

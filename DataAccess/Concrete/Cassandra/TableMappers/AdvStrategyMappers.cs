@@ -23,7 +23,7 @@ public class AdvStrategyMappers: Mappings
             .Column(u => u.Version, cm => cm.WithName("version").WithDbType(typeof(string)))
             .Column(u => u.ProjectId, cm => cm.WithName("project_id").WithDbType(typeof(long)))
             .Column(u => u.Name, cm => cm.WithName("name").WithDbType(typeof(string)))
-            .Column(u => u.StrategyCount, cm => cm.WithName("strategy_count").WithDbType(typeof(float)))
+            .Column(u => u.StrategyValue, cm => cm.WithName("strategy_value").WithDbType(typeof(float)))
             .Column(u => u.StrategyName, cm => cm.WithName("strategy_name").WithDbType(typeof(string)))
             .Column(u => u.Status, cm => cm.WithName("status").WithDbType(typeof(bool)))
             .Column(u => u.CreatedAt, cm => cm.WithName("created_at").WithDbType(typeof(DateTimeOffset)));

@@ -11,6 +11,7 @@ using Core.Utilities.MessageBrokers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.Dtos;
 using FluentAssertions;
 using MediatR;
 using Moq;
@@ -93,7 +94,7 @@ namespace Tests.Business.Handlers
             //Arrange
             var command = new CreateInterstitialAdModelCommand
             {
-                AdvStrategies = Array.Empty<AdvStrategy>(),
+                AdvStrategyDtos = Array.Empty<AdvStrategyDto>(),
                 Name = "Test",
                 ProjectId = 1,
                 Version = "1"
@@ -120,7 +121,7 @@ namespace Tests.Business.Handlers
             //Arrange
             var command = new CreateInterstitialAdModelCommand
             {
-                AdvStrategies = Array.Empty<AdvStrategy>(),
+                AdvStrategyDtos = Array.Empty<AdvStrategyDto>(),
                 Name = "Test",
                 ProjectId = 1,
                 Version = "1"

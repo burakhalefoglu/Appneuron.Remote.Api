@@ -9,8 +9,9 @@ namespace Business.Handlers.InterstitialAdModels.ValidationRules
         {
             RuleFor(x => x.Version).NotNull();
             RuleFor(x => x.PlayerPercent).NotNull();
-            RuleFor(x => x.AdvStrategies).NotNull();
+            RuleFor(x => x.Name).NotNull();
             RuleFor(x => x.ProjectId).NotNull();
+            RuleFor(x => x.AdvStrategyDtos).NotNull();
         }
     }
 
@@ -21,6 +22,8 @@ namespace Business.Handlers.InterstitialAdModels.ValidationRules
             RuleFor(x => x.Version).NotNull();
             RuleFor(x => x.PlayerPercent).NotNull();
             RuleFor(x => x.ProjectId).NotNull();
+            RuleFor(x => x.Status).NotNull();
+            
         }
     }
 }

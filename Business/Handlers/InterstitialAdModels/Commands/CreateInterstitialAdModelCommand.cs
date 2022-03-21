@@ -25,7 +25,7 @@ namespace Business.Handlers.InterstitialAdModels.Commands
         public string Name { get; set; }
         public string Version { get; set; }
         public int PlayerPercent { get; set; }
-        public AdvStrategy[] AdvStrategies { get; set; }
+        public AdvStrategyDto[] AdvStrategyDtos { get; set; }
 
 
         public class
@@ -50,7 +50,7 @@ namespace Business.Handlers.InterstitialAdModels.Commands
             {
                 var isThereInterstitialAdModelRecord = await _interstitialAdModelRepository.AnyAsync(u =>
                     u.Name == request.Name && u.ProjectId == request.ProjectId && u.Version == request.Version &&
-                    u.Status == true);
+                    u.Terminated == false);
 
                 if (isThereInterstitialAdModelRecord)
                     return new ErrorResult(Messages.AlreadyExist);
@@ -65,12 +65,16 @@ namespace Business.Handlers.InterstitialAdModels.Commands
 
                 await _interstitialAdModelRepository.AddAsync(addedInterstitialAdModel);
 
-                foreach (var advStrategy in request.AdvStrategies)
+                foreach (var advStrategy in request.AdvStrategyDtos)
                 {
                     await _mediator.Send(new CreateAdvStrategyCommand
                     {
-                        Count = advStrategy.StrategyCount,
+                        Count = advStrategy.StrategyValue,
                         Name = advStrategy.Name,
+                        ProjectId = request.ProjectId,
+                        StrategyName = request.Name,
+                        Version = request.Version
+                        
                     }, cancellationToken);
                 }
 

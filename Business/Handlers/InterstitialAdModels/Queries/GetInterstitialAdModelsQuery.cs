@@ -43,7 +43,7 @@ namespace Business.Handlers.InterstitialAdModels.Queries
                     .GetListAsync(u =>       u.Name == request.Name &&
                                                            u.ProjectId == request.ProjectId &&
                                                            u.Version == request.Version &&
-                                                           u.Status == true);
+                                                           u.Terminated == false);
                 foreach (var ınterstitialAdModel in result)
                 {
                     var resultAdvStrategies = await _mediator.Send(new GetAdvStrategyQuery()

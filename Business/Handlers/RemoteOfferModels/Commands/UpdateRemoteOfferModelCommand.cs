@@ -25,6 +25,7 @@ namespace Business.Handlers.RemoteOfferModels.Commands
         public string Name { get; set; }
         public string Version { get; set; }
         public int PlayerPercent { get; set; }
+        public bool Status { get; set; }
 
         public class UpdateRemoteOfferModelCommandHandler : IRequestHandler<UpdateRemoteOfferModelCommand, IResult>
         {
@@ -47,19 +48,16 @@ namespace Business.Handlers.RemoteOfferModels.Commands
             public async Task<IResult> Handle(UpdateRemoteOfferModelCommand request,
                 CancellationToken cancellationToken)
             {
-                var isValid = await _remoteOfferModelRepository.AnyAsync(r => r.ProjectId == request.ProjectId &&
-                                                                   r.Name == request.Name &&
-                                                                   r.Version == request.Version &&
-                                                                   r.Status == true);
-                if (!isValid) return new ErrorResult(Messages.NoContent);
-
                 var resultData = await 
-                    _remoteOfferModelRepository.GetAsync(r =>
-                    r.ProjectId == request.ProjectId &&
-                    r.Name == request.Name &&
-                    r.Version == request.Version);
+                    _remoteOfferModelRepository.GetAsync(r =>r.ProjectId == request.ProjectId &&
+                                                             r.Name == request.Name &&
+                                                             r.Version == request.Version &&
+                                                             r.Terminated == false);
+                if (resultData is null) return new ErrorResult(Messages.NoContent);
 
                 resultData.PlayerPercent = request.PlayerPercent;
+                resultData.Status = request.Status;
+                
                 if (resultData.Status)
                 {
                     resultData.StartTime = DateTime.Now.Ticks;

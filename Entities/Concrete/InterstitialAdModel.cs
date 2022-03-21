@@ -8,6 +8,7 @@ namespace Entities.Concrete
         {
             CreatedAt = DateTimeOffset.Now;
             Status = true;
+            Terminated = false;
         }
         
         public string Name { get; set; }
