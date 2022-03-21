@@ -49,7 +49,8 @@ namespace Business.Handlers.InterstitialAdModels.Queries
                     var resultAdvStrategies = await _mediator.Send(new GetAdvStrategyQuery()
                     {
                         Version = ınterstitialAdModel.Version,
-                        ProjectId = ınterstitialAdModel.ProjectId
+                        ProjectId = ınterstitialAdModel.ProjectId,
+                        Name = ınterstitialAdModel.Name
                     }, cancellationToken);
                     var interstitialAdModelDto = new InterstitialAdModelDto
                     {
