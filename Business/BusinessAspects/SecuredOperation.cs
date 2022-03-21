@@ -63,67 +63,67 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
         var projectIdModel =
             JsonConvert.DeserializeObject<ProjectIdDto>(JsonConvert.SerializeObject(invocation.Arguments[0]));
 
-        // if (request.Query["ProjectId"].ToString().Length > 0)
-        // {
-        //     var ProjectId = Convert.ToInt64(request.Query["ProjectId"]);
-        //     var token = request.Headers["Authorization"];
-        //     // ask project management server!
-        //     var httpRequestMessage = new HttpRequestMessage(
-        //         HttpMethod.Get,
-        //         _projectManagementService.Host + ":" + _projectManagementService.Port +
-        //         "/api/CustomerProjects/isValid?projectId=" + ProjectId)
-        //     {
-        //         Headers =
-        //         {
-        //             {HeaderNames.Accept, "application/json"},
-        //             {HeaderNames.Authorization, token.ToString()}
-        //         }
-        //     };
-        //
-        //     var httpClient = _httpClientFactory.CreateClient();
-        //     var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-        //     using var contentStream =
-        //         await httpResponseMessage.Content.ReadAsStreamAsync();
-        //
-        //     var response = await System.Text.Json.JsonSerializer.DeserializeAsync
-        //         <SuccessDataResult<bool>>(contentStream);
-        //
-        //     if (response is null || !response.Success)
-        //         throw new SecurityException(Messages.Unknown);
-        //
-        //     if (response is {Data: false})
-        //         throw new SecurityException(Messages.AuthorizationsDenied);
-        // }
-        //
-        // if (projectIdModel.ProjectId == 0) return;
-        // {
-        //     var token = request.Headers["Authorization"];
-        //     // ask project management server!
-        //     var httpRequestMessage = new HttpRequestMessage(
-        //         HttpMethod.Get, "http://" +
-        //         _projectManagementService.Host + ":" + _projectManagementService.Port +
-        //         "/api/CustomerProjects/isValid?projectId=" + projectIdModel.ProjectId)
-        //     {
-        //         Headers =
-        //         {
-        //             {HeaderNames.Accept, "application/json"},
-        //             {HeaderNames.Authorization, token.ToString()}
-        //         }
-        //     };
-        //
-        //     var httpClient = _httpClientFactory.CreateClient();
-        //     var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-        //     using var contentStream =
-        //         await httpResponseMessage.Content.ReadAsStreamAsync();
-        //
-        //     var response = await System.Text.Json.JsonSerializer.DeserializeAsync
-        //         <SuccessDataResult<bool>>(contentStream);
-        //
-        //     if (response is null || !response.Success)
-        //         throw new SecurityException(Messages.Unknown);
-        //
-        //     if (response is {Data: false})
-        //         throw new SecurityException(Messages.AuthorizationsDenied);
-        // }
+        if (request.Query["ProjectId"].ToString().Length > 0)
+        {
+            var ProjectId = Convert.ToInt64(request.Query["ProjectId"]);
+            var token = request.Headers["Authorization"];
+            // ask project management server!
+            var httpRequestMessage = new HttpRequestMessage(
+                HttpMethod.Get,
+                _projectManagementService.Host + ":" + _projectManagementService.Port +
+                "/api/CustomerProjects/isValid?projectId=" + ProjectId)
+            {
+                Headers =
+                {
+                    {HeaderNames.Accept, "application/json"},
+                    {HeaderNames.Authorization, token.ToString()}
+                }
+            };
+        
+            var httpClient = _httpClientFactory.CreateClient();
+            var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+            using var contentStream =
+                await httpResponseMessage.Content.ReadAsStreamAsync();
+        
+            var response = await System.Text.Json.JsonSerializer.DeserializeAsync
+                <SuccessDataResult<bool>>(contentStream);
+        
+            if (response is null || !response.Success)
+                throw new SecurityException(Messages.Unknown);
+        
+            if (response is {Data: false})
+                throw new SecurityException(Messages.AuthorizationsDenied);
+        }
+        
+        if (projectIdModel.ProjectId == 0) return;
+        {
+            var token = request.Headers["Authorization"];
+            // ask project management server!
+            var httpRequestMessage = new HttpRequestMessage(
+                HttpMethod.Get, "http://" +
+                _projectManagementService.Host + ":" + _projectManagementService.Port +
+                "/api/CustomerProjects/isValid?projectId=" + projectIdModel.ProjectId)
+            {
+                Headers =
+                {
+                    {HeaderNames.Accept, "application/json"},
+                    {HeaderNames.Authorization, token.ToString()}
+                }
+            };
+            
+            var httpClient = _httpClientFactory.CreateClient();
+            var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
+            using var contentStream =
+                await httpResponseMessage.Content.ReadAsStreamAsync();
+        
+            var response = await System.Text.Json.JsonSerializer.DeserializeAsync
+                <SuccessDataResult<bool>>(contentStream);
+        
+            if (response is null || !response.Success)
+                throw new SecurityException(Messages.Unknown);
+        
+            if (response is {Data: false})
+                throw new SecurityException(Messages.AuthorizationsDenied);
+        }
     }
 }
