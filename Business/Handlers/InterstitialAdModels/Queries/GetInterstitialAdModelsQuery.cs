@@ -32,7 +32,7 @@ namespace Business.Handlers.InterstitialAdModels.Queries
             }
 
             [PerformanceAspect(5)]
-            [CacheAspect(10)]
+            // [CacheAspect(10)]
             [LogAspect(typeof(ConsoleLogger))]
             [SecuredOperation(Priority = 1)]
             public async Task<IDataResult<IEnumerable<InterstitialAdModelDto>>> Handle(

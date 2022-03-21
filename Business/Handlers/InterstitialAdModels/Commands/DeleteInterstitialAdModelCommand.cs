@@ -45,6 +45,7 @@ namespace Business.Handlers.InterstitialAdModels.Commands;
 
                 if (isThereInterstitialAdModelRecord is null)
                     return new ErrorResult(Messages.NotFound);
+                
                 isThereInterstitialAdModelRecord.Terminated = true;
                 await _interstitialAdModelRepository.DeleteAsync(isThereInterstitialAdModelRecord);
                 
