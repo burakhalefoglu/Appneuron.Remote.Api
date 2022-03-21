@@ -46,6 +46,7 @@ namespace Business.Handlers.RemoteOfferModels.Queries
                 var result = await _remoteOfferModelRepository
                     .GetListAsync(r => r.ProjectId == request.ProjectId &&
                                        r.Name == request.Name &&
+                                       r.Version == request.Version &&
                                        r.Status == true);
                 var remoteOfferModelDtos = new List<RemoteOfferModelDto>();
                 foreach (var remoteOfferModel in result)
