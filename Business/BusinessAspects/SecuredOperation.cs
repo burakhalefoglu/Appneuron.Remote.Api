@@ -67,18 +67,18 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
         if (request.Query["ProjectId"].ToString().Length > 0)
         {
             var projectId = Convert.ToInt64(request.Query["ProjectId"]);
-            Debug.WriteLine(projectId.ToString());
+            Console.WriteLine(projectId);
             var token = request.Headers["Authorization"];
-            Debug.WriteLine(token);
+            Console.WriteLine(token);
             await ValidateProjectId(projectId, token);
         }
         
         if (projectIdModel.ProjectId == 0) return;
         {
             var token = request.Headers["Authorization"];
-            Debug.WriteLine(token);
+            Console.WriteLine(token);
             var projectId = projectIdModel.ProjectId;
-            Debug.WriteLine(projectIdModel);
+            Console.WriteLine(projectIdModel);
             await ValidateProjectId(projectId, token);
         }
     }
@@ -93,6 +93,7 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
         client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         var res = await client.SendAsync(msg);
+        Console.WriteLine(res);
         var content = await res.Content.ReadAsStringAsync();
         var response = JsonConvert.DeserializeObject<SuccessDataResult<bool>>(content);
 
