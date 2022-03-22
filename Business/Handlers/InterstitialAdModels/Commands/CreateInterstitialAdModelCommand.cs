@@ -15,9 +15,8 @@ using Entities.Concrete;
 using Entities.Dtos;
 using MediatR;
 
-namespace Business.Handlers.InterstitialAdModels.Commands
-{
-    /// <summary>
+namespace Business.Handlers.InterstitialAdModels.Commands;
+/// <summary>
     /// </summary>
     public class CreateInterstitialsAdModelCommand : IRequest<IResult>
     {
@@ -82,4 +81,3 @@ namespace Business.Handlers.InterstitialAdModels.Commands
             }
         }
     }
-}

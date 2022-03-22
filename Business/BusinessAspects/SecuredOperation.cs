@@ -1,5 +1,6 @@
 ﻿using System.Security;
 using Business.Constants;
+using Business.Helpers;
 using Castle.DynamicProxy;
 using Core.Utilities.Interceptors;
 using Core.Utilities.IoC;
@@ -8,9 +9,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Business.BusinessAspects
-{
-    /// <summary>
+namespace Business.BusinessAspects;
+
+/// <summary>
     ///     This Aspect control the user's roles in HttpContext by inject the IHttpContextAccessor.
     ///     It is checked by writing as [SecuredOperation] on the handler.
     ///     If a valid authorization cannot be found in aspect, it throws an exception.
@@ -29,7 +30,7 @@ namespace Business.BusinessAspects
 
         public IConfiguration Configuration { get; }
 
-        protected override void OnBefore(IInvocation invocation)
+        protected override async void OnBefore(IInvocation invocation)
         {
             var userId = _httpContextAccessor.HttpContext?.User.Claims
                 .FirstOrDefault(x => x.Type.EndsWith("nameidentifier"))?.Value;
@@ -44,12 +45,14 @@ namespace Business.BusinessAspects
                 var itemDecryptValue = SecurityKeyHelper.DecryptString(_operationClaimCrypto, item.Value);
                 ocNameList.Add(itemDecryptValue);
             }
-
+            // var httpUrl = "http://" + _projectManagementService.Host + ":" + _projectManagementService.Port +
+            //               "/api/CustomerProjects/isValid?projectId=" + projectId;
+            
             var operationName = invocation.TargetType.ReflectedType.Name;
-            if (ocNameList.Contains(operationName))
+            if (ocNameList.Contains(operationName) && await ProjectIdValidation.ValidateProjectId("google.com", 1, ""))
                 return;
 
             throw new SecurityException(Messages.AuthorizationsDenied);
         }
     }
-}
+    
