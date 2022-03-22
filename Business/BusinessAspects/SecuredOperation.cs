@@ -78,7 +78,7 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
             var token = request.Headers["Authorization"];
             Console.WriteLine(token);
             var projectId = projectIdModel.ProjectId;
-            Console.WriteLine(projectIdModel);
+            Console.WriteLine(projectIdModel.ProjectId);
             await ValidateProjectId(projectId, token);
         }
     }
@@ -90,7 +90,7 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
         
         using var client = new HttpClient();
         var msg = new HttpRequestMessage(HttpMethod.Get, httpUrl);
-        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+        client.DefaultRequestHeaders.Add("Authorization", token.ToString());
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         var res = await client.SendAsync(msg);
         Console.WriteLine(res);
