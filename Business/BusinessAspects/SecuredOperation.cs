@@ -72,9 +72,9 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
         {
             projectId = projectIdModel.ProjectId;
         }
-        if (await ValidateProjectId(projectId, token))
-            return;
-        throw new UnauthorizedAccessException(Messages.AuthorizationsDenied);
+        // if (await ValidateProjectId(projectId, token))
+        //     return;
+        throw new SecurityException(Messages.AuthorizationsDenied);
     }
 
     private async Task<bool> ValidateProjectId(long projectId, StringValues token)
