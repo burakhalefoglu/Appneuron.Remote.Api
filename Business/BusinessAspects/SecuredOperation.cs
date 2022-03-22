@@ -61,26 +61,20 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
 
         var projectIdModel =
             JsonConvert.DeserializeObject<ProjectIdDto>(JsonConvert.SerializeObject(invocation.Arguments[0]));
-
+        
+        string token = request.Headers["Authorization"];
+        Int64 projectId = 0;
         if (request.Query["ProjectId"].ToString().Length > 0)
         {
-            var projectId = Convert.ToInt64(request.Query["ProjectId"]);
-            var token = request.Headers["Authorization"];
-            if (!await ValidateProjectId(projectId, token))
-            {
-                throw new SecurityException(Messages.AuthorizationsDenied);
-            }
+            projectId = Convert.ToInt64(request.Query["ProjectId"]);
         }
-        
-        if (projectIdModel.ProjectId == 0) return;
+        else if (projectIdModel.ProjectId != 0)
         {
-            var token = request.Headers["Authorization"];
-            var projectId = projectIdModel.ProjectId;
-            if (!await ValidateProjectId(projectId, token))
-            {
-                throw new SecurityException(Messages.AuthorizationsDenied);
-            }
+            projectId = projectIdModel.ProjectId;
         }
+        if (await ValidateProjectId(projectId, token))
+            return;
+        throw new SecurityException(Messages.AuthorizationsDenied);
     }
 
     private async Task<bool> ValidateProjectId(long projectId, StringValues token)
