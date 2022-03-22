@@ -63,7 +63,7 @@ public class GetRemoteOfferModelsDtoQuery : IRequest<IDataResult<IEnumerable<Rem
                     ProjectId = remoteOfferModel.ProjectId,
                     StartTime = remoteOfferModel.StartTime,
                     ValidityPeriod = remoteOfferModel.ValidityPeriod,
-                    Status = remoteOfferModel.Status,
+                    IsActive = remoteOfferModel.IsActive,
                     RemoteOfferProductModels = resultProductModels.Data.ToArray()
                 };
                 remoteOfferModelDtos.Add(remoteOfferModelDto);

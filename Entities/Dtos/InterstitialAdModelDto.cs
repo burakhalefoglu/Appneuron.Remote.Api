@@ -11,5 +11,5 @@ public class InterstitialAdModelDto : IDto
     public int PlayerPercent { get; set; }
     public AdvStrategy[] AdvStrategies { get; set; }
     public long Id { get; set; }
-    public bool Status { get; set; }
+    public bool IsActive { get; set; }
 }

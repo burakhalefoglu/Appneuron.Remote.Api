@@ -53,10 +53,10 @@ public class GetInterstitialAdModelsQuery : IRequest<IDataResult<IEnumerable<Int
                 {
                     Id = ınterstitialAdModel.Id,
                     Name = ınterstitialAdModel.Name,
-                    Status = ınterstitialAdModel.Status,
                     Version = ınterstitialAdModel.Version,
                     PlayerPercent = ınterstitialAdModel.PlayerPercent,
                     ProjectId = ınterstitialAdModel.ProjectId,
+                    IsActive = ınterstitialAdModel.IsActive,
                     AdvStrategies = resultAdvStrategies.Data.ToArray()
                 };
                 interstitialAdModelDtos.Add(interstitialAdModelDto);
