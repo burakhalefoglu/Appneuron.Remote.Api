@@ -1,13 +1,7 @@
 ﻿using AutoMapper;
 
+namespace Business.Helpers;
 
-namespace Business.Helpers
+public class AutoMapperHelper : Profile
 {
-    public class AutoMapperHelper : Profile
-    {
-        public AutoMapperHelper()
-        {
-        }
-    }
 }
-

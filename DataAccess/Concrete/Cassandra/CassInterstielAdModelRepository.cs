@@ -5,9 +5,11 @@ using DataAccess.Concrete.Cassandra.TableMappers;
 using Entities.Concrete;
 
 namespace DataAccess.Concrete.Cassandra;
-public class CassInterstitialAdModelRepository  : CassandraRepositoryBase<InterstitialAdModel>, IInterstielAdModelRepository
+
+public class CassInterstitialAdModelRepository : CassandraRepositoryBase<InterstitialAdModel>,
+    IInterstielAdModelRepository
+{
+    public CassInterstitialAdModelRepository() : base(MappingConfiguration.Global.Define<InterstitialAdModelMappers>())
     {
-        public CassInterstitialAdModelRepository() : base(MappingConfiguration.Global.Define<InterstitialAdModelMappers>())
-        {
-        }
     }
+}

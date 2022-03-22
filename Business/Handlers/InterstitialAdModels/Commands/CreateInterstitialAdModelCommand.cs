@@ -57,13 +57,12 @@ public class CreateInterstitialAdModelCommand : IRequest<IResult>
                 ProjectId = request.ProjectId,
                 Name = request.Name,
                 Version = request.Version,
-                PlayerPercent = request.PlayerPercent,
+                PlayerPercent = request.PlayerPercent
             };
 
             await _interstitialAdModelRepository.AddAsync(addedInterstitialAdModel);
 
             foreach (var advStrategy in request.AdvStrategyDtos)
-            {
                 await _mediator.Send(new CreateAdvStrategyCommand
                 {
                     Count = advStrategy.StrategyValue,
@@ -72,7 +71,6 @@ public class CreateInterstitialAdModelCommand : IRequest<IResult>
                     StrategyName = request.Name,
                     Version = request.Version
                 }, cancellationToken);
-            }
 
             return new SuccessResult(Messages.Added);
         }

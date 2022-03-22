@@ -1,5 +1,4 @@
 ﻿using System.Security;
-using System.Threading.Channels;
 using Business.Constants;
 using Business.Helpers;
 using Business.Services;
@@ -57,23 +56,16 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
             JsonConvert.DeserializeObject<ProjectIdDto>(JsonConvert.SerializeObject(invocation.Arguments[0]));
 
         string token = _httpContextAccessor.HttpContext?.Request.Headers["Authorization"];
-        Int64 projectId = 0;
+        long projectId = 0;
         if (_httpContextAccessor.HttpContext?.Request.Query["ProjectId"].ToString().Length > 0)
-        {
             projectId = Convert.ToInt64(_httpContextAccessor.HttpContext?.Request.Query["ProjectId"]);
-        }
-        else if (projectIdModel.ProjectId != 0)
-        {
-            projectId = projectIdModel.ProjectId;
-        }
+        else if (projectIdModel.ProjectId != 0) projectId = projectIdModel.ProjectId;
 
         var httpUrl = "http://" + _projectManagementService.Host + ":" + _projectManagementService.Port +
                       "/api/CustomerProjects/isValid?projectId=" + projectId;
 
         var operationName = invocation.TargetType.ReflectedType.Name;
         if (!ocNameList.Contains(operationName) || !ProjectIdValidation.ValidateProjectId(httpUrl, token))
-        {
             throw new SecurityException(Messages.AuthorizationsDenied);
-        }
     }
 }

@@ -38,7 +38,7 @@ public class DeleteAdvStrategyCommand : IRequest<IResult>
             {
                 StrategyValue = request.Count,
                 Name = request.Name,
-                ProjectId = request.ProjectId,
+                ProjectId = request.ProjectId
             });
 
             return new SuccessResult(Messages.Deleted);

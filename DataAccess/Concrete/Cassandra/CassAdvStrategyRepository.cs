@@ -6,9 +6,9 @@ using Entities.Concrete;
 
 namespace DataAccess.Concrete.Cassandra;
 
-    public class CassAdvStrategyRepository : CassandraRepositoryBase<AdvStrategy>, IAdvStrategyRepository
+public class CassAdvStrategyRepository : CassandraRepositoryBase<AdvStrategy>, IAdvStrategyRepository
+{
+    public CassAdvStrategyRepository() : base(MappingConfiguration.Global.Define<AdvStrategyMappers>())
     {
-        public CassAdvStrategyRepository() : base(MappingConfiguration.Global.Define<AdvStrategyMappers>())
-        {
-        }
     }
+}

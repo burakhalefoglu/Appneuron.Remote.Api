@@ -12,7 +12,7 @@ using MediatR;
 
 namespace Business.Handlers.RemoteOfferProductModels.Commands;
 
-public class DeleteRemoteOfferProductModelCommand: IRequest<IResult>
+public class DeleteRemoteOfferProductModelCommand : IRequest<IResult>
 {
     public string RemoteOfferName { get; set; }
     public string Version { get; set; }
@@ -22,11 +22,13 @@ public class DeleteRemoteOfferProductModelCommand: IRequest<IResult>
     public float Count { get; set; }
     public string ImageName { get; set; }
 
-    public class DeleteRemoteOfferProductModelCommandHandler : IRequestHandler<DeleteRemoteOfferProductModelCommand, IResult>
+    public class
+        DeleteRemoteOfferProductModelCommandHandler : IRequestHandler<DeleteRemoteOfferProductModelCommand, IResult>
     {
         private readonly IRemoteOfferProductModelRepository _remoteOfferProductModelRepository;
-            
-        public DeleteRemoteOfferProductModelCommandHandler(IRemoteOfferProductModelRepository remoteOfferProductModelRepository)
+
+        public DeleteRemoteOfferProductModelCommandHandler(
+            IRemoteOfferProductModelRepository remoteOfferProductModelRepository)
         {
             _remoteOfferProductModelRepository = remoteOfferProductModelRepository;
         }
@@ -48,7 +50,7 @@ public class DeleteRemoteOfferProductModelCommand: IRequest<IResult>
                 ImageName = request.ImageName,
                 RemoteOfferName = request.RemoteOfferName
             });
-                
+
             return new SuccessResult(Messages.Deleted);
         }
     }

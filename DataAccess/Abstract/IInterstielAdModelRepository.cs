@@ -1,9 +1,8 @@
 ﻿using Core.DataAccess;
 using Entities.Concrete;
 
-namespace DataAccess.Abstract
+namespace DataAccess.Abstract;
+
+public interface IInterstielAdModelRepository : IRepository<InterstitialAdModel>
 {
-    public interface IInterstielAdModelRepository : IRepository<InterstitialAdModel>
-    {
-    }
 }

@@ -7,12 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DataAccess.Concrete.Cassandra.TableMappers;
 
-public class InterstitialAdModelMappers: Mappings
+public class InterstitialAdModelMappers : Mappings
 {
     public InterstitialAdModelMappers()
     {
         var configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
-        var cassandraConnectionSettings = 
+        var cassandraConnectionSettings =
             configuration.GetSection("CassandraConnectionSettings").Get<CassandraConnectionSettings>();
         For<InterstitialAdModel>()
             .TableName("interstitial_ad_models")

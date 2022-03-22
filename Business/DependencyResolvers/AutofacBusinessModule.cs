@@ -7,25 +7,25 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.Cassandra;
 using Module = Autofac.Module;
 
-namespace Business.DependencyResolvers
+namespace Business.DependencyResolvers;
+
+public class AutofacBusinessModule : Module
 {
-    public class AutofacBusinessModule : Module
+    protected override void Load(ContainerBuilder builder)
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<CassLogRepository>().As<ILogRepository>().SingleInstance();
-            builder.RegisterType<CassAdvStrategyRepository>().As<IAdvStrategyRepository>().SingleInstance();
-            builder.RegisterType<CassInterstitialAdModelRepository>().As<IInterstielAdModelRepository>().SingleInstance();
-            builder.RegisterType<CassRemoteOfferModelRepository>().As<IRemoteOfferModelRepository>().SingleInstance();
-            builder.RegisterType<CassRemoteOfferProductModelRepository>().As<IRemoteOfferProductModelRepository>().SingleInstance();
+        builder.RegisterType<CassLogRepository>().As<ILogRepository>().SingleInstance();
+        builder.RegisterType<CassAdvStrategyRepository>().As<IAdvStrategyRepository>().SingleInstance();
+        builder.RegisterType<CassInterstitialAdModelRepository>().As<IInterstielAdModelRepository>().SingleInstance();
+        builder.RegisterType<CassRemoteOfferModelRepository>().As<IRemoteOfferModelRepository>().SingleInstance();
+        builder.RegisterType<CassRemoteOfferProductModelRepository>().As<IRemoteOfferProductModelRepository>()
+            .SingleInstance();
 
-            var assembly = Assembly.GetExecutingAssembly();
+        var assembly = Assembly.GetExecutingAssembly();
 
-            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
-                .EnableInterfaceInterceptors(new ProxyGenerationOptions
-                {
-                    Selector = new AspectInterceptorSelector()
-                }).SingleInstance().InstancePerDependency();
-        }
+        builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces()
+            .EnableInterfaceInterceptors(new ProxyGenerationOptions
+            {
+                Selector = new AspectInterceptorSelector()
+            }).SingleInstance().InstancePerDependency();
     }
 }

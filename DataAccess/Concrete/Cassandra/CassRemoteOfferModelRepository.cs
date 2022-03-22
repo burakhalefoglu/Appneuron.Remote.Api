@@ -5,9 +5,10 @@ using DataAccess.Concrete.Cassandra.TableMappers;
 using Entities.Concrete;
 
 namespace DataAccess.Concrete.Cassandra;
+
 public class CassRemoteOfferModelRepository : CassandraRepositoryBase<RemoteOfferModel>, IRemoteOfferModelRepository
+{
+    public CassRemoteOfferModelRepository() : base(MappingConfiguration.Global.Define<RemoteOfferModelMappers>())
     {
-        public CassRemoteOfferModelRepository() : base(MappingConfiguration.Global.Define<RemoteOfferModelMappers>())
-        {
-        }
     }
+}

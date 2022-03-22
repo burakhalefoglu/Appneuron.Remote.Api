@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Business.BusinessAspects;
+﻿using Business.BusinessAspects;
 using Business.Constants;
 using Business.Handlers.RemoteOfferModels.ValidationRules;
 using Business.Handlers.RemoteOfferProductModels.Commands;
@@ -33,8 +32,8 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
 
     public class CreateRemoteOfferModelCommandHandler : IRequestHandler<CreateRemoteOfferModelCommand, IResult>
     {
-        private readonly IRemoteOfferModelRepository _remoteOfferModelRepository;
         private readonly IMediator _mediator;
+        private readonly IRemoteOfferModelRepository _remoteOfferModelRepository;
 
         public CreateRemoteOfferModelCommandHandler(IRemoteOfferModelRepository remoteOfferModelRepository,
             IMediator mediator)
@@ -78,7 +77,6 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
 
             await _remoteOfferModelRepository.AddAsync(addedRemoteOfferModel);
             foreach (var product in request.ProductDtos)
-            {
                 await _mediator.Send(new CreateRemoteOfferProductModelCommand
                 {
                     Count = product.Count,
@@ -87,9 +85,8 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
                     ImageName = product.ImageName,
                     ProjectId = addedRemoteOfferModel.ProjectId,
                     Version = addedRemoteOfferModel.Version,
-                    RemoteOfferName = addedRemoteOfferModel.Name,
+                    RemoteOfferName = addedRemoteOfferModel.Name
                 }, cancellationToken);
-            }
 
             return new SuccessResult(Messages.Added);
         }

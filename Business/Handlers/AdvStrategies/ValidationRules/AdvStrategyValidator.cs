@@ -1,14 +1,13 @@
 ﻿using Business.Handlers.AdvStrategies.Command;
 using FluentValidation;
 
-namespace Business.Handlers.AdvStrategies.ValidationRules
+namespace Business.Handlers.AdvStrategies.ValidationRules;
+
+public class AdvStrategyValidator : AbstractValidator<CreateAdvStrategyCommand>
 {
-    public class AdvStrategyValidator : AbstractValidator<CreateAdvStrategyCommand>
+    public AdvStrategyValidator()
     {
-        public AdvStrategyValidator()
-        {
-            RuleFor(x => x.Count).NotNull();
-            RuleFor(x => x.Name).NotNull();
-        }
+        RuleFor(x => x.Count).NotNull();
+        RuleFor(x => x.Name).NotNull();
     }
 }

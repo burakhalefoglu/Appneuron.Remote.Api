@@ -7,12 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DataAccess.Concrete.Cassandra.TableMappers;
 
-public class AdvStrategyMappers: Mappings
+public class AdvStrategyMappers : Mappings
 {
     public AdvStrategyMappers()
     {
         var configuration = ServiceTool.ServiceProvider.GetService<IConfiguration>();
-        var cassandraConnectionSettings = 
+        var cassandraConnectionSettings =
             configuration.GetSection("CassandraConnectionSettings").Get<CassandraConnectionSettings>();
         For<AdvStrategy>()
             .TableName("adv_strategy_models")
@@ -27,6 +27,5 @@ public class AdvStrategyMappers: Mappings
             .Column(u => u.StrategyName, cm => cm.WithName("strategy_name").WithDbType(typeof(string)))
             .Column(u => u.Status, cm => cm.WithName("status").WithDbType(typeof(bool)))
             .Column(u => u.CreatedAt, cm => cm.WithName("created_at").WithDbType(typeof(DateTimeOffset)));
-
     }
 }

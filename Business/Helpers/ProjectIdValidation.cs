@@ -20,7 +20,7 @@ public static class ProjectIdValidation
     }
 }
 
-class response
+internal class response
 {
     public bool data { get; set; }
     public string message { get; set; }
