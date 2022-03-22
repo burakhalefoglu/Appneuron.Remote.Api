@@ -1,4 +1,5 @@
 ﻿using System.Security;
+using System.Threading.Channels;
 using Business.Constants;
 using Business.Helpers;
 using Business.Services;
@@ -70,10 +71,11 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
                       "/api/CustomerProjects/isValid?projectId=" + projectId;
 
         var operationName = invocation.TargetType.ReflectedType.Name;
-        // ocNameList.Contains(operationName) &&
-        if (ProjectIdValidation.ValidateProjectId(httpUrl, token))
-            return;
-
-        throw new SecurityException(Messages.AuthorizationsDenied);
+        Console.WriteLine(!ocNameList.Contains(operationName));
+        Console.WriteLine(!ProjectIdValidation.ValidateProjectId(httpUrl, token));
+        if (!ocNameList.Contains(operationName) || !ProjectIdValidation.ValidateProjectId(httpUrl, token))
+        {
+            throw new SecurityException(Messages.AuthorizationsDenied);
+        }
     }
 }

@@ -13,68 +13,68 @@ using Entities.Dtos;
 using MediatR;
 
 namespace Business.Handlers.InterstitialAdModels.Commands;
+
 /// <summary>
-    /// </summary>
-    public class CreateInterstitialAdModelCommand : IRequest<IResult>
+/// </summary>
+public class CreateInterstitialAdModelCommand : IRequest<IResult>
+{
+    public long ProjectId { get; set; }
+    public string Name { get; set; }
+    public string Version { get; set; }
+    public int PlayerPercent { get; set; }
+    public AdvStrategyDto[] AdvStrategyDtos { get; set; }
+
+
+    public class
+        CreateInterstitialAdModelCommandHandler : IRequestHandler<CreateInterstitialAdModelCommand, IResult>
     {
-        public long ProjectId { get; set; }
-        public string Name { get; set; }
-        public string Version { get; set; }
-        public int PlayerPercent { get; set; }
-        public AdvStrategyDto[] AdvStrategyDtos { get; set; }
+        private readonly IInterstielAdModelRepository _interstitialAdModelRepository;
+        private readonly IMediator _mediator;
 
-
-        public class
-            CreateInterstitialAdModelCommandHandler : IRequestHandler<CreateInterstitialAdModelCommand, IResult>
+        public CreateInterstitialAdModelCommandHandler(IInterstielAdModelRepository interstitialAdModelRepository,
+            IMediator mediator)
         {
-            private readonly IInterstielAdModelRepository _interstitialAdModelRepository;
-            private readonly IMediator _mediator;
+            _interstitialAdModelRepository = interstitialAdModelRepository;
+            _mediator = mediator;
+        }
 
-            public CreateInterstitialAdModelCommandHandler(IInterstielAdModelRepository interstitialAdModelRepository,
-                IMediator mediator)
+        [ValidationAspect(typeof(CreateInterstielAdModelValidator), Priority = 2)]
+        [CacheRemoveAspect("Get")]
+        [LogAspect(typeof(ConsoleLogger))]
+        [SecuredOperation(Priority = 1)]
+        public async Task<IResult> Handle(CreateInterstitialAdModelCommand request,
+            CancellationToken cancellationToken)
+        {
+            var isThereInterstitialAdModelRecord = await _interstitialAdModelRepository.AnyAsync(u =>
+                u.Name == request.Name && u.ProjectId == request.ProjectId && u.Version == request.Version &&
+                u.Status == true);
+
+            if (isThereInterstitialAdModelRecord)
+                return new ErrorResult(Messages.AlreadyExist);
+
+            var addedInterstitialAdModel = new InterstitialAdModel
             {
-                _interstitialAdModelRepository = interstitialAdModelRepository;
-                _mediator = mediator;
-            }
+                ProjectId = request.ProjectId,
+                Name = request.Name,
+                Version = request.Version,
+                PlayerPercent = request.PlayerPercent,
+            };
 
-            [ValidationAspect(typeof(CreateInterstielAdModelValidator), Priority = 2)]
-            [CacheRemoveAspect("Get")]
-            [LogAspect(typeof(ConsoleLogger))]
-            [SecuredOperation(Priority = 1)]
-            public async Task<IResult> Handle(CreateInterstitialAdModelCommand request,
-                CancellationToken cancellationToken)
+            await _interstitialAdModelRepository.AddAsync(addedInterstitialAdModel);
+
+            foreach (var advStrategy in request.AdvStrategyDtos)
             {
-                var isThereInterstitialAdModelRecord = await _interstitialAdModelRepository.AnyAsync(u =>
-                    u.Name == request.Name && u.ProjectId == request.ProjectId && u.Version == request.Version &&
-                    u.Status == true);
-
-                if (isThereInterstitialAdModelRecord)
-                    return new ErrorResult(Messages.AlreadyExist);
-
-                var addedInterstitialAdModel = new InterstitialAdModel
+                await _mediator.Send(new CreateAdvStrategyCommand
                 {
+                    Count = advStrategy.StrategyValue,
+                    Name = advStrategy.Name,
                     ProjectId = request.ProjectId,
-                    Name = request.Name,
-                    Version = request.Version,
-                    PlayerPercent = request.PlayerPercent,
-                };
-
-                await _interstitialAdModelRepository.AddAsync(addedInterstitialAdModel);
-
-                foreach (var advStrategy in request.AdvStrategyDtos)
-                {
-                    await _mediator.Send(new CreateAdvStrategyCommand
-                    {
-                        Count = advStrategy.StrategyValue,
-                        Name = advStrategy.Name,
-                        ProjectId = request.ProjectId,
-                        StrategyName = request.Name,
-                        Version = request.Version
-                        
-                    }, cancellationToken);
-                }
-
-                return new SuccessResult(Messages.Added);
+                    StrategyName = request.Name,
+                    Version = request.Version
+                }, cancellationToken);
             }
+
+            return new SuccessResult(Messages.Added);
         }
     }
+}
