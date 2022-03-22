@@ -71,8 +71,7 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
                       "/api/CustomerProjects/isValid?projectId=" + projectId;
 
         var operationName = invocation.TargetType.ReflectedType.Name;
-        Console.WriteLine(!ocNameList.Contains(operationName));
-        Console.WriteLine(!ProjectIdValidation.ValidateProjectId(httpUrl, token));
+        Console.WriteLine("ocNameList.Contains: " + ocNameList.Contains(operationName));
         if (!ocNameList.Contains(operationName) || !ProjectIdValidation.ValidateProjectId(httpUrl, token))
         {
             throw new SecurityException(Messages.AuthorizationsDenied);
