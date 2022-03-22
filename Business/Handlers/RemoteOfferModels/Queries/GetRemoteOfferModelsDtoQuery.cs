@@ -14,9 +14,7 @@ namespace Business.Handlers.RemoteOfferModels.Queries;
 public class GetRemoteOfferModelsDtoQuery : IRequest<IDataResult<IEnumerable<RemoteOfferModelDto>>>
 {
     public long ProjectId { get; set; }
-    public string Name { get; set; }
-    public string Version { get; set; }
-
+    
     public class GetRemoteOfferModelsDtoQueryHandler : IRequestHandler<
         GetRemoteOfferModelsDtoQuery,
         IDataResult<IEnumerable<RemoteOfferModelDto>>>
@@ -38,11 +36,9 @@ public class GetRemoteOfferModelsDtoQuery : IRequest<IDataResult<IEnumerable<Rem
         public async Task<IDataResult<IEnumerable<RemoteOfferModelDto>>> Handle(
             GetRemoteOfferModelsDtoQuery request, CancellationToken cancellationToken)
         {
-            var result = await _remoteOfferModelRepository
-                .GetListAsync(r => r.ProjectId == request.ProjectId &&
-                                   r.Name == request.Name &&
-                                   r.Version == request.Version &&
-                                   r.Status == true);
+            var result = _remoteOfferModelRepository
+                .GetListAsync().Result.Where(r => r.ProjectId == request.ProjectId &&
+                                                  r.Status == true);
             var remoteOfferModelDtos = new List<RemoteOfferModelDto>();
             foreach (var remoteOfferModel in result)
             {

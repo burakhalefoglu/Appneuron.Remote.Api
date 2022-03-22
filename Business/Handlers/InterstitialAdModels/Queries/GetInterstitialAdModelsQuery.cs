@@ -21,7 +21,6 @@ public class GetInterstitialAdModelsQuery : IRequest<IDataResult<IEnumerable<Int
         private readonly IInterstielAdModelRepository _interstitialAdModelRepository;
         private readonly IMediator _mediator;
 
-
         public InterstitialAdModelsQueryHandler(
             IInterstielAdModelRepository interstitialAdModelRepository, IMediator mediator)
         {

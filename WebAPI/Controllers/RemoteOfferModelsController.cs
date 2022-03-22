@@ -24,13 +24,11 @@ public class RemoteOfferModelsController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<IEnumerable<RemoteOfferModel>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
     [HttpGet]
-    public async Task<IActionResult> Get(long projectId, string name, string version)
+    public async Task<IActionResult> Get(long projectId)
     {
         var result = await Mediator.Send(new GetRemoteOfferModelsDtoQuery
         {
             ProjectId = projectId,
-            Name = name,
-            Version = version
         });
         if (result.Success) return Ok(result);
         return BadRequest(result);
