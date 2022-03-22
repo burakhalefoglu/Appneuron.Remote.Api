@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Business.Handlers.InterstitialAdModels.ValidationRules
 {
-    public class CreateInterstielAdModelValidator : AbstractValidator<CreateInterstitialsAdModelCommand>
+    public class CreateInterstielAdModelValidator : AbstractValidator<CreateInterstitialAdModelCommand>
     {
         public CreateInterstielAdModelValidator()
         {

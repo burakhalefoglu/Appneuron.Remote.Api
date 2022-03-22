@@ -47,7 +47,7 @@ namespace WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IResult))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] CreateInterstitialsAdModelCommand createInterstitialAdModel)
+        public async Task<IActionResult> Add([FromBody] CreateInterstitialAdModelCommand createInterstitialAdModel)
         {
             var result = await Mediator.Send(createInterstitialAdModel);
             if (result.Success) return Ok(result);

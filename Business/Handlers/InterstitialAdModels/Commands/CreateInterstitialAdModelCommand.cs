@@ -15,7 +15,7 @@ using MediatR;
 namespace Business.Handlers.InterstitialAdModels.Commands;
 /// <summary>
     /// </summary>
-    public class CreateInterstitialsAdModelCommand : IRequest<IResult>
+    public class CreateInterstitialAdModelCommand : IRequest<IResult>
     {
         public long ProjectId { get; set; }
         public string Name { get; set; }
@@ -25,7 +25,7 @@ namespace Business.Handlers.InterstitialAdModels.Commands;
 
 
         public class
-            CreateInterstitialAdModelCommandHandler : IRequestHandler<CreateInterstitialsAdModelCommand, IResult>
+            CreateInterstitialAdModelCommandHandler : IRequestHandler<CreateInterstitialAdModelCommand, IResult>
         {
             private readonly IInterstielAdModelRepository _interstitialAdModelRepository;
             private readonly IMediator _mediator;
@@ -41,7 +41,7 @@ namespace Business.Handlers.InterstitialAdModels.Commands;
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(ConsoleLogger))]
             [SecuredOperation(Priority = 1)]
-            public async Task<IResult> Handle(CreateInterstitialsAdModelCommand request,
+            public async Task<IResult> Handle(CreateInterstitialAdModelCommand request,
                 CancellationToken cancellationToken)
             {
                 var isThereInterstitialAdModelRecord = await _interstitialAdModelRepository.AnyAsync(u =>
