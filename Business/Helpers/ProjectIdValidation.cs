@@ -20,8 +20,8 @@ public static class ProjectIdValidation
         var response1 = JsonConvert.DeserializeObject<response>(JSON.stringify(content));
         var response2 = JsonConvert.DeserializeObject<SuccessDataResult<bool>>(JSON.stringify(content));
         Console.WriteLine("content" + content);
-        Console.WriteLine("response" + JsonConvert.SerializeObject(response1));
-        Console.WriteLine("response" + JsonConvert.SerializeObject(response2));
+        Console.WriteLine("response1" + JsonConvert.SerializeObject(response1));
+        Console.WriteLine("response2" + JsonConvert.SerializeObject(response2));
         Console.WriteLine("response.Data" + response1.data);
         return response1.data;
     }
