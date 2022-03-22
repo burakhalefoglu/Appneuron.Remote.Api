@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Security;
 using Business.Constants;
 using Business.Services;
@@ -13,7 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Primitives;
-using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
 namespace Business.BusinessAspects;
@@ -68,18 +66,24 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
         {
             var projectId = Convert.ToInt64(request.Query["ProjectId"]);
             var token = request.Headers["Authorization"];
-            await ValidateProjectId(projectId, token);
+            if (!await ValidateProjectId(projectId, token))
+            {
+                throw new SecurityException(Messages.AuthorizationsDenied);
+            }
         }
         
         if (projectIdModel.ProjectId == 0) return;
         {
             var token = request.Headers["Authorization"];
             var projectId = projectIdModel.ProjectId;
-            await ValidateProjectId(projectId, token);
+            if (!await ValidateProjectId(projectId, token))
+            {
+                throw new SecurityException(Messages.AuthorizationsDenied);
+            }
         }
     }
 
-    private async Task ValidateProjectId(long projectId, StringValues token)
+    private async Task<bool> ValidateProjectId(long projectId, StringValues token)
     {
         var httpUrl = "http://" + _projectManagementService.Host + ":" + _projectManagementService.Port +
                       "/api/CustomerProjects/isValid?projectId=" + projectId;
@@ -91,11 +95,7 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
         var res = await client.SendAsync(msg);
         var content = await res.Content.ReadAsStringAsync();
         var response = JsonConvert.DeserializeObject<SuccessDataResult<bool>>(content);
-        Console.WriteLine(res);
-        Console.WriteLine(content);
-        Console.WriteLine(response);
-        if (!response.Data)
-            throw new SecurityException(Messages.AuthorizationsDenied);
+        return response.Data;
     }
 }
 
