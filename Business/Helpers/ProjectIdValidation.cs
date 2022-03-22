@@ -7,15 +7,16 @@ namespace Business.Helpers;
 
 public static class ProjectIdValidation
 {
-    public static async Task<bool> ValidateProjectId(string httpUrl, long projectId, StringValues token)
+    public static bool ValidateProjectId(string httpUrl, StringValues token)
     {
         using var client = new HttpClient();
         var msg = new HttpRequestMessage(HttpMethod.Get, httpUrl);
         client.DefaultRequestHeaders.Add("Authorization", token.ToString());
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        var res = await client.SendAsync(msg);
-        var content = await res.Content.ReadAsStringAsync();
+        var res = client.Send(msg);
+        using var reader = new StreamReader(res.Content.ReadAsStream());
+        var content = reader.ReadToEnd();
         var response = JsonConvert.DeserializeObject<SuccessDataResult<bool>>(content);
-        return true;  //response.Data;
+        return response.Data;
     }
 }

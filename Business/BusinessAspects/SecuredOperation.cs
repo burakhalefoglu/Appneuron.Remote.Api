@@ -19,7 +19,7 @@ namespace Business.BusinessAspects;
 ///     It is checked by writing as [SecuredOperation] on the handler.
 ///     If a valid authorization cannot be found in aspect, it throws an exception.
 /// </summary>
-public class SecuredOperationAttribute : MethodInterceptionAsyncAttribute
+public class SecuredOperationAttribute : MethodInterceptionAttribute
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly string _operationClaimCrypto;
@@ -36,7 +36,7 @@ public class SecuredOperationAttribute : MethodInterceptionAsyncAttribute
 
     public IConfiguration Configuration { get; }
 
-    protected override async Task OnBefore(IInvocation invocation)
+    protected override void OnBefore(IInvocation invocation)
     {
         var userId = _httpContextAccessor.HttpContext?.User.Claims
             .FirstOrDefault(x => x.Type.EndsWith("nameidentifier"))?.Value;
@@ -71,7 +71,7 @@ public class SecuredOperationAttribute : MethodInterceptionAsyncAttribute
 
         var operationName = invocation.TargetType.ReflectedType.Name;
         if (ocNameList.Contains(operationName) &&
-            await ProjectIdValidation.ValidateProjectId(httpUrl, projectId, token))
+            ProjectIdValidation.ValidateProjectId(httpUrl, token))
             return;
 
         throw new SecurityException(Messages.AuthorizationsDenied);
