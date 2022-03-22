@@ -1,4 +1,5 @@
-﻿using System.Security;
+﻿using System.Net.Http.Headers;
+using System.Security;
 using Business.Constants;
 using Business.Services;
 using Castle.DynamicProxy;
@@ -10,6 +11,7 @@ using Entities.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
@@ -65,65 +67,33 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
 
         if (request.Query["ProjectId"].ToString().Length > 0)
         {
-            var ProjectId = Convert.ToInt64(request.Query["ProjectId"]);
+            var projectId = Convert.ToInt64(request.Query["ProjectId"]);
             var token = request.Headers["Authorization"];
-            // ask project management server!
-            var httpRequestMessage = new HttpRequestMessage(
-                HttpMethod.Get,
-                _projectManagementService.Host + ":" + _projectManagementService.Port +
-                "/api/CustomerProjects/isValid?projectId=" + ProjectId)
-            {
-                Headers =
-                {
-                    {HeaderNames.Accept, "application/json"},
-                    {HeaderNames.Authorization, token.ToString()}
-                }
-            };
-        
-            var httpClient = _httpClientFactory.CreateClient();
-            var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-            using var contentStream =
-                await httpResponseMessage.Content.ReadAsStreamAsync();
-        
-            var response = await System.Text.Json.JsonSerializer.DeserializeAsync
-                <SuccessDataResult<bool>>(contentStream);
-        
-            if (response is null || !response.Success)
-                throw new SecurityException(Messages.Unknown);
-        
-            if (response is {Data: false})
-                throw new SecurityException(Messages.AuthorizationsDenied);
+            await ValidateProjectId(projectId, token);
         }
         
         if (projectIdModel.ProjectId == 0) return;
         {
             var token = request.Headers["Authorization"];
-            // ask project management server!
-            var httpRequestMessage = new HttpRequestMessage(
-                HttpMethod.Get, "http://" +
-                _projectManagementService.Host + ":" + _projectManagementService.Port +
-                "/api/CustomerProjects/isValid?projectId=" + projectIdModel.ProjectId)
-            {
-                Headers =
-                {
-                    {HeaderNames.Accept, "application/json"},
-                    {HeaderNames.Authorization, token.ToString()}
-                }
-            };
-            
-            var httpClient = _httpClientFactory.CreateClient();
-            var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
-            using var contentStream =
-                await httpResponseMessage.Content.ReadAsStreamAsync();
-        
-            var response = await System.Text.Json.JsonSerializer.DeserializeAsync
-                <SuccessDataResult<bool>>(contentStream);
-        
-            if (response is null || !response.Success)
-                throw new SecurityException(Messages.Unknown);
-        
-            if (response is {Data: false})
-                throw new SecurityException(Messages.AuthorizationsDenied);
+            var projectId = projectIdModel.ProjectId;
+            await ValidateProjectId(projectId, token);
         }
+    }
+
+    private async Task ValidateProjectId(long projectId, StringValues token)
+    {
+        var httpUrl = "http://" + _projectManagementService.Host + ":" + _projectManagementService.Port +
+                      "/api/CustomerProjects/isValid?projectId=" + projectId;
+        
+        using var client = new HttpClient();
+        var msg = new HttpRequestMessage(HttpMethod.Get, httpUrl);
+        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        var res = await client.SendAsync(msg);
+        var content = await res.Content.ReadAsStringAsync();
+        var response = JsonConvert.DeserializeObject<SuccessDataResult<bool>>(content);
+
+        if (!response.Data)
+            throw new SecurityException(Messages.AuthorizationsDenied);
     }
 }
