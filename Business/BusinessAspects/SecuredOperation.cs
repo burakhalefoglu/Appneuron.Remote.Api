@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Diagnostics;
+using System.Net.Http.Headers;
 using System.Security;
 using Business.Constants;
 using Business.Services;
@@ -26,7 +27,6 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly string _operationClaimCrypto;
-    private readonly IHttpClientFactory _httpClientFactory;
     private readonly ProjectManagementService _projectManagementService;
 
     public SecuredOperationAttribute()
@@ -36,7 +36,6 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
         _operationClaimCrypto = Configuration.GetSection("OperationClaimCrypto").Get<string>();
         _projectManagementService = Configuration
             .GetSection("ProjectManagementService").Get<ProjectManagementService>();
-        _httpClientFactory = ServiceTool.ServiceProvider.GetService<IHttpClientFactory>();
     }
 
     public IConfiguration Configuration { get; }
@@ -68,14 +67,18 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
         if (request.Query["ProjectId"].ToString().Length > 0)
         {
             var projectId = Convert.ToInt64(request.Query["ProjectId"]);
+            Debug.WriteLine(projectId.ToString());
             var token = request.Headers["Authorization"];
+            Debug.WriteLine(token);
             await ValidateProjectId(projectId, token);
         }
         
         if (projectIdModel.ProjectId == 0) return;
         {
             var token = request.Headers["Authorization"];
+            Debug.WriteLine(token);
             var projectId = projectIdModel.ProjectId;
+            Debug.WriteLine(projectIdModel);
             await ValidateProjectId(projectId, token);
         }
     }
@@ -97,3 +100,4 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
             throw new SecurityException(Messages.AuthorizationsDenied);
     }
 }
+
