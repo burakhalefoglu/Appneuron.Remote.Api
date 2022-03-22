@@ -18,7 +18,7 @@ public static class ProjectIdValidation
         var content = reader.ReadToEnd();
         var response = JsonConvert.DeserializeObject<SuccessDataResult<bool>>(content);
         Console.WriteLine("content" + content);
-        Console.WriteLine("response" + response);
+        Console.WriteLine("response" + JsonConvert.SerializeObject(response));
         Console.WriteLine("response.Data" + response.Data);
         return response.Data;
     }
