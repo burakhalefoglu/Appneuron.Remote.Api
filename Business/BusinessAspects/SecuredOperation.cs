@@ -40,7 +40,9 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
 
     protected override async void OnBefore(IInvocation invocation)
     {
-        var request = _httpContextAccessor.HttpContext?.Request;
+        try
+        { 
+            var request = _httpContextAccessor.HttpContext?.Request;
         var userId = _httpContextAccessor.HttpContext?.User.Claims
             .FirstOrDefault(x => x.Type.EndsWith("nameidentifier"))?.Value;
 
@@ -72,9 +74,14 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
         {
             projectId = projectIdModel.ProjectId;
         }
-        // if (await ValidateProjectId(projectId, token))
-        //     return;
+        if (await ValidateProjectId(projectId, token))
+            return;
         throw new SecurityException(Messages.AuthorizationsDenied);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 
     private async Task<bool> ValidateProjectId(long projectId, StringValues token)
