@@ -19,7 +19,7 @@ namespace Business.Handlers.InterstitialAdModels.Commands
 {
     /// <summary>
     /// </summary>
-    public class CreateInterstitialAdModelCommand : IRequest<IResult>
+    public class CreateInterstitialsAdModelCommand : IRequest<IResult>
     {
         public long ProjectId { get; set; }
         public string Name { get; set; }
@@ -29,7 +29,7 @@ namespace Business.Handlers.InterstitialAdModels.Commands
 
 
         public class
-            CreateInterstitialAdModelCommandHandler : IRequestHandler<CreateInterstitialAdModelCommand, IResult>
+            CreateInterstitialAdModelCommandHandler : IRequestHandler<CreateInterstitialsAdModelCommand, IResult>
         {
             private readonly IInterstielAdModelRepository _interstitialAdModelRepository;
             private readonly IMediator _mediator;
@@ -41,11 +41,11 @@ namespace Business.Handlers.InterstitialAdModels.Commands
                 _mediator = mediator;
             }
 
-            [ValidationAspect(typeof(CreateInterstielAdModelValidator), Priority = 1)]
+            [ValidationAspect(typeof(CreateInterstielAdModelValidator), Priority = 2)]
             [CacheRemoveAspect("Get")]
             [LogAspect(typeof(ConsoleLogger))]
             [SecuredOperation(Priority = 1)]
-            public async Task<IResult> Handle(CreateInterstitialAdModelCommand request,
+            public async Task<IResult> Handle(CreateInterstitialsAdModelCommand request,
                 CancellationToken cancellationToken)
             {
                 var isThereInterstitialAdModelRecord = await _interstitialAdModelRepository.AnyAsync(u =>

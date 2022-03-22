@@ -16,7 +16,7 @@ using FluentAssertions;
 using MediatR;
 using Moq;
 using NUnit.Framework;
-using static Business.Handlers.InterstitialAdModels.Commands.CreateInterstitialAdModelCommand;
+using static Business.Handlers.InterstitialAdModels.Commands.CreateInterstitialsAdModelCommand;
 using static Business.Handlers.InterstitialAdModels.Queries.GetInterstitialAdModelsQuery;
 using static Business.Handlers.InterstitialAdModels.Commands.UpdateInterstitialAdModelCommand;
 using static Business.Handlers.InterstitialAdModels.Commands.DeleteInterstitialAdModelCommand;
@@ -92,7 +92,7 @@ namespace Tests.Business.Handlers
         public async Task InterstitialAdModel_CreateCommand_Success()
         {
             //Arrange
-            var command = new CreateInterstitialAdModelCommand
+            var command = new CreateInterstitialsAdModelCommand
             {
                 AdvStrategyDtos = Array.Empty<AdvStrategyDto>(),
                 Name = "Test",
@@ -119,7 +119,7 @@ namespace Tests.Business.Handlers
         public async Task InterstitialAdModel_CreateCommand_NameAlreadyExist()
         {
             //Arrange
-            var command = new CreateInterstitialAdModelCommand
+            var command = new CreateInterstitialsAdModelCommand
             {
                 AdvStrategyDtos = Array.Empty<AdvStrategyDto>(),
                 Name = "Test",
