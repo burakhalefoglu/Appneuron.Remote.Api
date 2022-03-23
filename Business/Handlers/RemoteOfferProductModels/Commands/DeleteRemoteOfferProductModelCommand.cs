@@ -14,13 +14,9 @@ namespace Business.Handlers.RemoteOfferProductModels.Commands;
 
 public class DeleteRemoteOfferProductModelCommand : IRequest<IResult>
 {
-    public string RemoteOfferName { get; set; }
-    public string Version { get; set; }
-    public long ProjectId { get; set; }
-    public string Name { get; set; }
-    public byte[] Image { get; set; }
-    public float Count { get; set; }
-    public string ImageName { get; set; }
+
+    public long Id { get; set; }
+    public long StrategyId { get; set; }
 
     public class
         DeleteRemoteOfferProductModelCommandHandler : IRequestHandler<DeleteRemoteOfferProductModelCommand, IResult>
@@ -42,13 +38,8 @@ public class DeleteRemoteOfferProductModelCommand : IRequest<IResult>
         {
             await _remoteOfferProductModelRepository.DeleteAsync(new RemoteOfferProductModel
             {
-                Count = request.Count,
-                Image = request.Image,
-                Name = request.Name,
-                Version = request.Version,
-                ProjectId = request.ProjectId,
-                ImageName = request.ImageName,
-                RemoteOfferName = request.RemoteOfferName
+                Id = request.Id,
+                StrategyId = request.StrategyId
             });
 
             return new SuccessResult(Messages.Deleted);

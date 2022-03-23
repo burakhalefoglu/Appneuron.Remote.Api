@@ -50,20 +50,13 @@ public class DeleteRemoteOfferModelCommand : IRequest<IResult>
             await _remoteOfferModelRepository.DeleteAsync(isThereInterstitialAdModelRecord);
             var products = (await _mediator.Send(new GetRemoteOfferProductModelsQuery
             {
-                Version = request.Version,
-                ProjectId = request.ProjectId,
-                RemoteOfferName = request.Name
+              StrategyId = isThereInterstitialAdModelRecord.Id
             })).Data.ToList();
             foreach (var product in products)
                 await _mediator.Send(new DeleteRemoteOfferProductModelCommand
                 {
-                    Count = product.Count,
-                    Image = product.Image,
-                    Name = product.Name,
-                    Version = product.Name,
-                    ImageName = product.ImageName,
-                    ProjectId = product.ProjectId,
-                    RemoteOfferName = product.RemoteOfferName
+                 Id = product.Id,
+                 StrategyId = product.StrategyId
                 }, cancellationToken);
 
             return new SuccessResult(Messages.Deleted);

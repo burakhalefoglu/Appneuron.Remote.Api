@@ -14,9 +14,8 @@ namespace Business.Handlers.AdvStrategies.Command;
 
 public class DeleteAdvStrategyCommand : IRequest<IResult>
 {
-    public string Name { get; set; }
-    public float Count { get; set; }
-    public long ProjectId { get; set; }
+    public long StrategyId { get; set; }
+    public long Id { get; set; }
 
     public class DeleteAdvStrategyCommandHandler : IRequestHandler<DeleteAdvStrategyCommand, IResult>
     {
@@ -36,9 +35,9 @@ public class DeleteAdvStrategyCommand : IRequest<IResult>
         {
             await _advStrategyRepository.DeleteAsync(new AdvStrategy
             {
-                StrategyValue = request.Count,
-                Name = request.Name,
-                ProjectId = request.ProjectId
+                Id = request.Id,
+                StrategyId = request.StrategyId,
+                Status = true
             });
 
             return new SuccessResult(Messages.Deleted);

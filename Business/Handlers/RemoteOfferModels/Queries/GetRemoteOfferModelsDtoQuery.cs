@@ -44,9 +44,7 @@ public class GetRemoteOfferModelsDtoQuery : IRequest<IDataResult<IEnumerable<Rem
             {
                 var resultProductModels = await _mediator.Send(new GetRemoteOfferProductModelsQuery
                 {
-                    Version = remoteOfferModel.Version,
-                    RemoteOfferName = remoteOfferModel.Name,
-                    ProjectId = remoteOfferModel.ProjectId
+                 StrategyId = remoteOfferModel.Id
                 }, cancellationToken);
 
                 var remoteOfferModelDto = new RemoteOfferModelDto

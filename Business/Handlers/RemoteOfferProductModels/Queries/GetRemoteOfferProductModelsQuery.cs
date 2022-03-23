@@ -12,9 +12,7 @@ namespace Business.Handlers.RemoteOfferProductModels.Queries;
 
 public class GetRemoteOfferProductModelsQuery : IRequest<IDataResult<IEnumerable<RemoteOfferProductModel>>>
 {
-    public string RemoteOfferName { get; set; }
-    public string Version { get; set; }
-    public long ProjectId { get; set; }
+    public long StrategyId { get; set; }
 
     public class GetRemoteOfferProductModelsQueryHandler : IRequestHandler<
         GetRemoteOfferProductModelsQuery,
@@ -35,11 +33,9 @@ public class GetRemoteOfferProductModelsQuery : IRequest<IDataResult<IEnumerable
         public async Task<IDataResult<IEnumerable<RemoteOfferProductModel>>> Handle(
             GetRemoteOfferProductModelsQuery request, CancellationToken cancellationToken)
         {
-            var result = await _remoteOfferProductModelRepository
-                .GetListAsync(r => r.RemoteOfferName == request.RemoteOfferName &&
-                                   r.Version == request.Version &&
-                                   r.ProjectId == request.ProjectId &&
-                                   r.Status == true);
+            var result = _remoteOfferProductModelRepository
+                .GetListAsync().Result.Where(r => r.StrategyId == request.StrategyId &&
+                                                  r.Status == true);
 
             return new SuccessDataResult<IEnumerable<RemoteOfferProductModel>>(result);
         }

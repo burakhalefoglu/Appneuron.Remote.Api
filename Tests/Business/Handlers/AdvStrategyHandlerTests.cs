@@ -61,8 +61,7 @@ public class AdvStrategyHandlerTests
     {
         var getAdvStrategyQuery = new GetAdvStrategyQuery
         {
-            Name = "test",
-            Version = "1"
+           StrategyId = 1
         };
 
         _advStrategyRepository.Setup(x => x.GetListAsync(It.IsAny<Expression<Func<AdvStrategy, bool>>>()))

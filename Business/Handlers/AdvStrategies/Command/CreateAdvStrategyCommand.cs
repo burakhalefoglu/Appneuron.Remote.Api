@@ -16,9 +16,7 @@ public class CreateAdvStrategyCommand : IRequest<IResult>
 {
     public string Name { get; set; }
     public float Count { get; set; }
-    public long ProjectId { get; set; }
-    public string StrategyName { get; set; }
-    public string Version { get; set; }
+    public long StrategyId { get; set; }
 
     public class CreateAdvStrategyCommandHandler : IRequestHandler<CreateAdvStrategyCommand, IResult>
     {
@@ -40,9 +38,7 @@ public class CreateAdvStrategyCommand : IRequest<IResult>
             {
                 StrategyValue = request.Count,
                 Name = request.Name,
-                ProjectId = request.ProjectId,
-                Version = request.Version,
-                StrategyName = request.StrategyName
+                StrategyId = request.StrategyId
             });
 
             return new SuccessResult(Messages.Added);

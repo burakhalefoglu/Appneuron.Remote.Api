@@ -51,16 +51,13 @@ public class DeleteInterstitialAdModelCommand : IRequest<IResult>
 
             var advStrategies = (await _mediator.Send(new GetAdvStrategyQuery
             {
-                Name = request.Name,
-                Version = request.Version,
-                ProjectId = request.ProjectId
+             StrategyId = isThereInterstitialAdModelRecord.Id
             }, cancellationToken)).Data.ToList();
             foreach (var advStrategy in advStrategies)
                 await _mediator.Send(new DeleteAdvStrategyCommand
                 {
-                    Count = advStrategy.StrategyValue,
-                    Name = advStrategy.Name,
-                    ProjectId = advStrategy.ProjectId
+                    Id = advStrategy.Id,
+                    StrategyId = advStrategy.StrategyId
                 }, cancellationToken);
             return new SuccessResult(Messages.Deleted);
         }

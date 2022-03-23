@@ -10,10 +10,8 @@ public class RemoteOfferProductModel : IEntity
         Status = true;
     }
 
-    public string RemoteOfferName { get; set; }
-    public string Version { get; set; }
+    public long StrategyId { get; set; }
     public string Name { get; set; }
-    public long ProjectId { get; set; }
     public byte[] Image { get; set; }
     public float Count { get; set; }
     public string ImageName { get; set; }

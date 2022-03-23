@@ -41,9 +41,7 @@ public class RemoteOfferProductHandlerTests
         {
             Count = 1,
             Name = "test",
-            Version = "1",
             ImageName = "test Image",
-            RemoteOfferName = "test remote offer name"
         };
 
         _remoteOfferModelRepository.Setup(x => x.AddAsync(It.IsAny<RemoteOfferProductModel>()));
@@ -63,8 +61,7 @@ public class RemoteOfferProductHandlerTests
     {
         var getAdvStrategyQuery = new GetRemoteOfferProductModelsQuery
         {
-            Version = "1.2",
-            RemoteOfferName = "test offer"
+            StrategyId = 1
         };
 
         _remoteOfferModelRepository

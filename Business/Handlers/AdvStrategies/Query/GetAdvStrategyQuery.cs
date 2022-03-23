@@ -12,9 +12,7 @@ namespace Business.Handlers.AdvStrategies.Query;
 
 public class GetAdvStrategyQuery : IRequest<IDataResult<IEnumerable<AdvStrategy>>>
 {
-    public string Name { get; set; }
-    public long ProjectId { get; set; }
-    public string Version { get; set; }
+    public long StrategyId { get; set; }
 
     public class GetAdvStrategyQueryHandler : IRequestHandler<
         GetAdvStrategyQuery,
@@ -34,11 +32,9 @@ public class GetAdvStrategyQuery : IRequest<IDataResult<IEnumerable<AdvStrategy>
         public async Task<IDataResult<IEnumerable<AdvStrategy>>> Handle(
             GetAdvStrategyQuery request, CancellationToken cancellationToken)
         {
-            var result = await _advStrategyRepository
-                .GetListAsync(r => r.StrategyName == request.Name &&
-                                   r.Version == request.Version &&
-                                   r.ProjectId == request.ProjectId &&
-                                   r.Status == true);
+            var result = _advStrategyRepository
+                .GetListAsync().Result.Where(r => r.StrategyId == request.StrategyId &&
+                                                  r.Status == true);
 
             return new SuccessDataResult<IEnumerable<AdvStrategy>>(result);
         }

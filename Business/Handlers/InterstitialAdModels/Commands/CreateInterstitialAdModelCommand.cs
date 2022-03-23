@@ -62,14 +62,18 @@ public class CreateInterstitialAdModelCommand : IRequest<IResult>
 
             await _interstitialAdModelRepository.AddAsync(addedInterstitialAdModel);
 
+            var interstitialAdModel = await _interstitialAdModelRepository.GetAsync(x =>
+                x.Name == addedInterstitialAdModel.Name &&
+                x.Status &&
+                x.ProjectId == addedInterstitialAdModel.ProjectId &&
+                x.Version == addedInterstitialAdModel.Version);
+
             foreach (var advStrategy in request.AdvStrategyDtos)
                 await _mediator.Send(new CreateAdvStrategyCommand
                 {
                     Count = advStrategy.StrategyValue,
                     Name = advStrategy.Name,
-                    ProjectId = request.ProjectId,
-                    StrategyName = request.Name,
-                    Version = request.Version
+                    StrategyId = interstitialAdModel.Id
                 }, cancellationToken);
 
             return new SuccessResult(Messages.Added);

@@ -8,7 +8,6 @@ public class RemoteOfferProductModelValidator : AbstractValidator<CreateRemoteOf
     public RemoteOfferProductModelValidator()
     {
         RuleFor(x => x.Count).NotNull();
-        RuleFor(x => x.Version).NotNull();
         RuleFor(x => x.Image).NotNull();
         RuleFor(x => x.ImageName).NotNull();
     }

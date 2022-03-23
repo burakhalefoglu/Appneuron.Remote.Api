@@ -76,6 +76,13 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
                 addedRemoteOfferModel.GiftTexture = request.GiftTexture;
 
             await _remoteOfferModelRepository.AddAsync(addedRemoteOfferModel);
+            
+            var remoteOfferModel = await _remoteOfferModelRepository.GetAsync(x=>
+                x.Name == addedRemoteOfferModel.Name &&
+                x.ProjectId == addedRemoteOfferModel.ProjectId &&
+                x.Version == addedRemoteOfferModel.Version &&
+                x.Status);
+            
             foreach (var product in request.ProductDtos)
                 await _mediator.Send(new CreateRemoteOfferProductModelCommand
                 {
@@ -83,9 +90,7 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
                     Image = product.Image,
                     Name = product.Name,
                     ImageName = product.ImageName,
-                    ProjectId = addedRemoteOfferModel.ProjectId,
-                    Version = addedRemoteOfferModel.Version,
-                    RemoteOfferName = addedRemoteOfferModel.Name
+                    StrategyId = remoteOfferModel.Id
                 }, cancellationToken);
 
             return new SuccessResult(Messages.Added);

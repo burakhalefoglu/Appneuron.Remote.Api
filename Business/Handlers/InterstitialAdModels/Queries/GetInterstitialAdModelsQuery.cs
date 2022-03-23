@@ -45,9 +45,7 @@ public class GetInterstitialAdModelsQuery : IRequest<IDataResult<IEnumerable<Int
             {
                 var resultAdvStrategies = await _mediator.Send(new GetAdvStrategyQuery
                 {
-                    Version = ınterstitialAdModel.Version,
-                    ProjectId = ınterstitialAdModel.ProjectId,
-                    Name = ınterstitialAdModel.Name
+                    StrategyId = ınterstitialAdModel.Id
                 }, cancellationToken);
                 var interstitialAdModelDto = new InterstitialAdModelDto
                 {
