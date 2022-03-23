@@ -1,4 +1,5 @@
-﻿using Business.BusinessAspects;
+﻿using System.Text;
+using Business.BusinessAspects;
 using Business.Handlers.RemoteOfferProductModels.Queries;
 using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
@@ -54,7 +55,7 @@ public class GetRemoteOfferModelsDtoQuery : IRequest<IDataResult<IEnumerable<Rem
                     Version = remoteOfferModel.Version,
                     FinishTime = remoteOfferModel.FinishTime,
                     FirstPrice = remoteOfferModel.FirstPrice,
-                    GiftTexture = remoteOfferModel.GiftTexture,
+                    GiftTexture = Encoding.Default.GetString(remoteOfferModel.GiftTexture),
                     IsGift = remoteOfferModel.IsGift,
                     LastPrice = remoteOfferModel.LastPrice,
                     PlayerPercent = remoteOfferModel.PlayerPercent,
@@ -62,11 +63,18 @@ public class GetRemoteOfferModelsDtoQuery : IRequest<IDataResult<IEnumerable<Rem
                     StartTime = remoteOfferModel.StartTime,
                     ValidityPeriod = remoteOfferModel.ValidityPeriod,
                     IsActive = remoteOfferModel.IsActive,
-                    RemoteOfferProductModels = resultProductModels.Data.ToArray()
                 };
+                foreach (var remoteOfferProductModel in resultProductModels.Data.ToArray())
+                {
+                    var remoteOfferProductDto = new RemoteOfferProductModelDto();
+                    remoteOfferProductDto.Count = remoteOfferProductModel.Count;
+                    remoteOfferProductDto.Image = Encoding.Default.GetString(remoteOfferProductModel.Image);
+                    remoteOfferProductDto.Name = remoteOfferProductModel.Name;
+                    remoteOfferProductDto.ImageName = remoteOfferProductModel.ImageName;
+                    remoteOfferModelDto.RemoteOfferProductModels.Append(remoteOfferProductDto);
+                }
                 remoteOfferModelDtos.Add(remoteOfferModelDto);
             }
-
             return new SuccessDataResult<IEnumerable<RemoteOfferModelDto>>(remoteOfferModelDtos);
         }
     }

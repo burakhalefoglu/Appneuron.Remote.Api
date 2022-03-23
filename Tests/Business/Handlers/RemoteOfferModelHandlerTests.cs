@@ -122,7 +122,7 @@ public class RemoteOfferModelHandlerTests
         {
             FinishTime = new DateTime().Ticks,
             FirstPrice = 12,
-            GiftTexture = Array.Empty<byte>(),
+            GiftTexture = "",
             IsGift = true,
             LastPrice = 2,
             Name = "Test",
@@ -155,7 +155,7 @@ public class RemoteOfferModelHandlerTests
         {
             FinishTime = new DateTime().Ticks,
             FirstPrice = 12,
-            GiftTexture = Array.Empty<byte>(),
+            GiftTexture = "",
             IsGift = true,
             LastPrice = 2,
             Name = "Test",

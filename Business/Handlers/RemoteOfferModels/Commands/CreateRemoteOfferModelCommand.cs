@@ -24,7 +24,7 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
     public string Version { get; set; }
     public int PlayerPercent { get; set; }
     public bool IsGift { get; set; }
-    public byte[] GiftTexture { get; set; }
+    public string GiftTexture { get; set; }
     public int ValidityPeriod { get; set; }
     public long StartTime { get; set; }
     public long FinishTime { get; set; }
@@ -73,7 +73,7 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
                 ProjectId = request.ProjectId
             };
             if (!(request.GiftTexture.Length > 0))
-                addedRemoteOfferModel.GiftTexture = request.GiftTexture;
+                addedRemoteOfferModel.GiftTexture = Convert.FromBase64String(request.GiftTexture);
 
             await _remoteOfferModelRepository.AddAsync(addedRemoteOfferModel);
             
@@ -87,7 +87,7 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
                 await _mediator.Send(new CreateRemoteOfferProductModelCommand
                 {
                     Count = product.Count,
-                    Image = product.Image,
+                    Image = Convert.FromBase64String(product.Image),
                     Name = product.Name,
                     ImageName = product.ImageName,
                     StrategyId = remoteOfferModel.Id
