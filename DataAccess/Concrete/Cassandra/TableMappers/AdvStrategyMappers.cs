@@ -17,7 +17,7 @@ public class AdvStrategyMappers : Mappings
         For<AdvStrategy>()
             .TableName("adv_strategy_models")
             .KeyspaceName(cassandraConnectionSettings.Keyspace)
-            .PartitionKey("name", "project_id", "version", "status")
+            .PartitionKey("strategy_name", "project_id", "version", "status")
             .ClusteringKey(new Tuple<string, SortOrder>("created_at", SortOrder.Descending))
             .Column(u => u.Id, cm => cm.WithName("id").WithDbType(typeof(long)))
             .Column(u => u.Version, cm => cm.WithName("version").WithDbType(typeof(string)))

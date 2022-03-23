@@ -35,7 +35,7 @@ public class GetAdvStrategyQuery : IRequest<IDataResult<IEnumerable<AdvStrategy>
             GetAdvStrategyQuery request, CancellationToken cancellationToken)
         {
             var result = await _advStrategyRepository
-                .GetListAsync(r => r.Name == request.Name &&
+                .GetListAsync(r => r.StrategyName == request.Name &&
                                    r.Version == request.Version &&
                                    r.ProjectId == request.ProjectId &&
                                    r.Status == true);
