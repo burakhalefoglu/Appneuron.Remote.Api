@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Avro.Util;
 using Business.Constants;
 using Business.Handlers.RemoteOfferModels.Commands;
 using Business.Handlers.RemoteOfferModels.Queries;
@@ -41,12 +42,12 @@ public class RemoteOfferModelHandlerTests
 
 
     [Test]
-    public async Task RemoteOfferModel_GetByProjectIdQueries_Success()
+    public async Task RemoteOfferModel_GetQueries_Success()
     {
         //Arrange
         var query = new GetRemoteOfferModelsDtoQuery
         {
-            ProjectId = 1
+            ProjectId = 13
         };
 
         _remoteOfferModelRepository.Setup(x => x.GetListAsync(It.IsAny<Expression<Func<RemoteOfferModel, bool>>>()))
@@ -54,54 +55,51 @@ public class RemoteOfferModelHandlerTests
             {
                 new()
                 {
-                    Version = "1",
+                    Version = "2",
                     FinishTime = DateTime.Now.Ticks,
                     FirstPrice = 12,
-                    GiftTexture = Array.Empty<byte>(),
+                    GiftTexture = new byte[7]{12,22,34,23,65,111,44},
                     Id = 1,
                     IsGift = true,
                     LastPrice = 10,
                     Name = "Test",
                     PlayerPercent = 20,
-                    ProjectId = 3,
+                    ProjectId = 13,
                     StartTime = DateTime.Now.Ticks,
-                    ValidityPeriod = 24
-                },
-                new()
-                {
-                    Version = "4",
-                    FinishTime = DateTime.Now.Ticks,
-                    FirstPrice = 12,
-                    GiftTexture = Array.Empty<byte>(),
-                    Id = 4,
-                    IsGift = true,
-                    LastPrice = 10,
-                    Name = "Test",
-                    PlayerPercent = 20,
-                    ProjectId = 23,
-                    StartTime = DateTime.Now.Ticks,
-                    ValidityPeriod = 24
-                },
-                new()
-                {
-                    Version = "2",
-                    FinishTime = DateTime.Now.Ticks,
-                    FirstPrice = 12,
-                    GiftTexture = Array.Empty<byte>(),
-                    Id = 13,
-                    IsGift = true,
-                    LastPrice = 10,
-                    Name = "Test",
-                    PlayerPercent = 20,
-                    ProjectId = 56,
-                    StartTime = DateTime.Now.Ticks,
-                    ValidityPeriod = 24
+                    ValidityPeriod = 24,
+                    Status = true,
+                    CreatedAt = DateTime.Now,
+                    IsActive = false
                 }
             }.AsQueryable());
 
         _mediator.Setup(x => x.Send(It.IsAny<GetRemoteOfferProductModelsQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(
-                new SuccessDataResult<IEnumerable<RemoteOfferProductModel>>(new RemoteOfferProductModel[] { }));
+                new SuccessDataResult<IEnumerable<RemoteOfferProductModel>>(new RemoteOfferProductModel[]
+                {
+                    new()
+                    {
+                        Count = 1,
+                        Id = 1,
+                        Image = new byte[7]{12,22,34,23,65,111,44},
+                        Name = "test",
+                        Status = true,
+                        CreatedAt = DateTime.Now,
+                        ImageName = "test",
+                        StrategyId = 13
+                    },
+                    new()
+                    {
+                        Count = 1,
+                        Id = 2,
+                        Image = new byte[7]{12,22,34,23,65,111,44},
+                        Name = "test",
+                        Status = true,
+                        CreatedAt = DateTime.Now,
+                        ImageName = "test",
+                        StrategyId = 13
+                    }
+                }));
 
         var handler =
             new GetRemoteOfferModelsDtoQueryHandler(_remoteOfferModelRepository.Object, _mediator.Object);
@@ -111,7 +109,7 @@ public class RemoteOfferModelHandlerTests
 
         //Asset
         x.Success.Should().BeTrue();
-        x.Data.ToList().Count.Should().BeGreaterThan(1);
+        x.Data.ToArray()[0].RemoteOfferProductModels.Count.Should().BeGreaterThan(1);
     }
 
     [Test]

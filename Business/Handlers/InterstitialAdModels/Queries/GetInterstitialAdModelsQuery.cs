@@ -55,7 +55,7 @@ public class GetInterstitialAdModelsQuery : IRequest<IDataResult<IEnumerable<Int
                     PlayerPercent = ınterstitialAdModel.PlayerPercent,
                     ProjectId = ınterstitialAdModel.ProjectId,
                     IsActive = ınterstitialAdModel.IsActive,
-                    AdvStrategies = resultAdvStrategies.Data.ToArray()
+                    AdvStrategies = resultAdvStrategies.Data.ToList()
                 };
                 interstitialAdModelDtos.Add(interstitialAdModelDto);
             }

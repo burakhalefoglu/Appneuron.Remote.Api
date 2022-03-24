@@ -64,14 +64,14 @@ public class GetRemoteOfferModelsDtoQuery : IRequest<IDataResult<IEnumerable<Rem
                     ValidityPeriod = remoteOfferModel.ValidityPeriod,
                     IsActive = remoteOfferModel.IsActive,
                 };
-                foreach (var remoteOfferProductModel in resultProductModels.Data.ToArray())
+                foreach (var remoteOfferProductModel in resultProductModels.Data)
                 {
                     var remoteOfferProductDto = new RemoteOfferProductModelDto();
                     remoteOfferProductDto.Count = remoteOfferProductModel.Count;
                     remoteOfferProductDto.Image = Encoding.Default.GetString(remoteOfferProductModel.Image);
                     remoteOfferProductDto.Name = remoteOfferProductModel.Name;
                     remoteOfferProductDto.ImageName = remoteOfferProductModel.ImageName;
-                    remoteOfferModelDto.RemoteOfferProductModels.Append(remoteOfferProductDto);
+                    remoteOfferModelDto.RemoteOfferProductModels.Add(remoteOfferProductDto);
                 }
                 remoteOfferModelDtos.Add(remoteOfferModelDto);
             }

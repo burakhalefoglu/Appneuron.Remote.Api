@@ -5,6 +5,10 @@ namespace Entities.Dtos;
 
 public class RemoteOfferModelDto : IDto
 {
+    public RemoteOfferModelDto()
+    {
+        RemoteOfferProductModels = new List<RemoteOfferProductModelDto>();
+    }
     public long ProjectId { get; set; }
     public string Name { get; set; }
     public float FirstPrice { get; set; }
@@ -18,5 +22,5 @@ public class RemoteOfferModelDto : IDto
     public long FinishTime { get; set; }
     public bool IsActive { get; set; }
     public long Id { get; set; }
-    public RemoteOfferProductModelDto[] RemoteOfferProductModels { get; set; }
+    public List<RemoteOfferProductModelDto> RemoteOfferProductModels { get; set; }
 }
