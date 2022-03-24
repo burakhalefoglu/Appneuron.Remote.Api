@@ -20,6 +20,7 @@ public class InterstitialAdModelsController : BaseApiController
     /// <remarks>InterstitialAdModels</remarks>
     /// <return>List InterstitialAdModels</return>
     /// <response code="200"></response>
+    [DisableRequestSizeLimit]
     [Produces("application/json", "text/plain")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDataResult<IEnumerable<InterstitialAdModel>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
@@ -40,6 +41,7 @@ public class InterstitialAdModelsController : BaseApiController
     /// </summary>
     /// <param name="createInterstitialAdModel"></param>
     /// <returns></returns>
+    [DisableRequestSizeLimit]
     [Produces("application/json", "text/plain")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IResult))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(IResult))]
