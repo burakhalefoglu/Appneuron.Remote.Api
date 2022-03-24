@@ -68,13 +68,7 @@ spec:
                 value: Awesome
             initialDelaySeconds: 60
             periodSeconds: 5
-          securityContext:
-            allowedHostPaths:
-            - pathPrefix: "/tmp"
-              readOnly: false 
-            privileged: false
-            readOnlyRootFilesystem: false
-            allowPrivilegeEscalation: false
+
 
 
 
