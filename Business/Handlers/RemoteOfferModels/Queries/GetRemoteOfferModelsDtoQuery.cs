@@ -68,7 +68,7 @@ public class GetRemoteOfferModelsDtoQuery : IRequest<IDataResult<IEnumerable<Rem
                 {
                     var remoteOfferProductDto = new RemoteOfferProductModelDto();
                     remoteOfferProductDto.Count = remoteOfferProductModel.Count;
-                    remoteOfferProductDto.Image = Encoding.UTF8.GetString(remoteOfferProductModel.Image);
+                    remoteOfferProductDto.Image =  Encoding.UTF8.GetString(remoteOfferProductModel.Image);
                     remoteOfferProductDto.Name = remoteOfferProductModel.Name;
                     remoteOfferProductDto.ImageName = remoteOfferProductModel.ImageName;
                     remoteOfferModelDto.RemoteOfferProductModels.Add(remoteOfferProductDto);

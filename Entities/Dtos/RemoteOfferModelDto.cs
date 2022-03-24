@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Http;
 
 namespace Entities.Dtos;
 
@@ -16,7 +17,7 @@ public class RemoteOfferModelDto : IDto
     public string Version { get; set; }
     public int PlayerPercent { get; set; }
     public bool IsGift { get; set; }
-    public string GiftTexture { get; set; }
+    public string  GiftTexture { get; set; }
     public int ValidityPeriod { get; set; }
     public long StartTime { get; set; }
     public long FinishTime { get; set; }
