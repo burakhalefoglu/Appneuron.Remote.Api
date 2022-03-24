@@ -1,4 +1,5 @@
-﻿using Business.BusinessAspects;
+﻿using System.Text;
+using Business.BusinessAspects;
 using Business.Constants;
 using Business.Handlers.RemoteOfferModels.ValidationRules;
 using Business.Handlers.RemoteOfferProductModels.Commands;
@@ -73,7 +74,7 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
                 ProjectId = request.ProjectId
             };
             if (!(request.GiftTexture.Length > 0))
-                addedRemoteOfferModel.GiftTexture = Convert.FromBase64String(request.GiftTexture);
+                addedRemoteOfferModel.GiftTexture =  Encoding.UTF8.GetBytes(request.GiftTexture);
 
             await _remoteOfferModelRepository.AddAsync(addedRemoteOfferModel);
             
@@ -87,7 +88,7 @@ public class CreateRemoteOfferModelCommand : IRequest<IResult>
                 await _mediator.Send(new CreateRemoteOfferProductModelCommand
                 {
                     Count = product.Count,
-                    Image = Convert.FromBase64String(product.Image),
+                    Image = Encoding.UTF8.GetBytes(product.Image),
                     Name = product.Name,
                     ImageName = product.ImageName,
                     StrategyId = remoteOfferModel.Id
