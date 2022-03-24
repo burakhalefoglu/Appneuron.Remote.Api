@@ -69,8 +69,11 @@ spec:
             initialDelaySeconds: 60
             periodSeconds: 5
           securityContext:
+            allowedHostPaths:
+            - pathPrefix: "/tmp"
+              readOnly: false 
             privileged: false
-            readOnlyRootFilesystem: true
+            readOnlyRootFilesystem: false
             allowPrivilegeEscalation: false
 
 
