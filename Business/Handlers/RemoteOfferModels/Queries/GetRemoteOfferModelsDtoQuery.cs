@@ -55,7 +55,7 @@ public class GetRemoteOfferModelsDtoQuery : IRequest<IDataResult<IEnumerable<Rem
                     Version = remoteOfferModel.Version,
                     FinishTime = remoteOfferModel.FinishTime,
                     FirstPrice = remoteOfferModel.FirstPrice,
-                    GiftTexture = Encoding.UTF8.GetString(remoteOfferModel.GiftTexture),
+                    GiftTexture = Convert.ToBase64String(remoteOfferModel.GiftTexture),
                     IsGift = remoteOfferModel.IsGift,
                     LastPrice = remoteOfferModel.LastPrice,
                     PlayerPercent = remoteOfferModel.PlayerPercent,
@@ -68,7 +68,7 @@ public class GetRemoteOfferModelsDtoQuery : IRequest<IDataResult<IEnumerable<Rem
                 {
                     var remoteOfferProductDto = new RemoteOfferProductModelDto();
                     remoteOfferProductDto.Count = remoteOfferProductModel.Count;
-                    remoteOfferProductDto.Image =  Encoding.UTF8.GetString(remoteOfferProductModel.Image);
+                    remoteOfferProductDto.Image = Convert.ToBase64String(remoteOfferProductModel.Image);
                     remoteOfferProductDto.Name = remoteOfferProductModel.Name;
                     remoteOfferProductDto.ImageName = remoteOfferProductModel.ImageName;
                     remoteOfferModelDto.RemoteOfferProductModels.Add(remoteOfferProductDto);
