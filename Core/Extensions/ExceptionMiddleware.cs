@@ -45,6 +45,6 @@ public class ExceptionMiddleware
             httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
         else
             message = ExceptionMessage.InternalServerError;
-        await httpContext.Response.WriteAsync(message);
+        await httpContext.Response.WriteAsync(e.Message);
     }
 }
