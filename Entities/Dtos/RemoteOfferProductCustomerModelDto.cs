@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿namespace Entities.Dtos;
 
-namespace Entities.Dtos;
-
-public class RemoteOfferProductModelDto
+public class RemoteOfferProductCustomerModelDto
 {
     public string Name { get; set; }
     public string  Image { get; set; }

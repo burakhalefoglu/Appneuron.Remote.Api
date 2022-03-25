@@ -18,7 +18,7 @@ namespace Business.Handlers.RemoteOfferModels.Commands;
 public class CreateRemoteOfferModelCommand : IRequest<IResult>
 {
     public long ProjectId { get; set; }
-    public RemoteOfferProductModelDto[] ProductDtos { get; set; }
+    public RemoteOfferProductCustomerModelDto[] ProductDtos { get; set; }
     public string Name { get; set; }
     public float FirstPrice { get; set; }
     public float LastPrice { get; set; }

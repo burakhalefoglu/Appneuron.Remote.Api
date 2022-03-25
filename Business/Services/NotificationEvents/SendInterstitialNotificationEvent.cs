@@ -4,63 +4,74 @@ using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Logging;
 using Core.Aspects.Autofac.Performance;
 using Core.CrossCuttingConcerns.Logging.Serilog.Loggers;
+using Core.Utilities.MessageBrokers;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Dtos;
 using MediatR;
 
-namespace Business.Handlers.InterstitialAdModels.Queries;
+namespace Business.Services.NotificationEvents;
 
-public class GetInterstitialAdModelsQuery : IRequest<IDataResult<IEnumerable<InterstitialAdCustomerModelDto>>>
+public class SendInterstitialNotificationEvent : IRequest<IResult>
 {
     public long ProjectId { get; set; }
 
-    public class InterstitialAdModelsQueryHandler : IRequestHandler<
-        GetInterstitialAdModelsQuery, IDataResult<IEnumerable<InterstitialAdCustomerModelDto>>>
+    public class SendInterstitialNotificationEventHandler : IRequestHandler<
+        SendInterstitialNotificationEvent, IResult>
     {
         private readonly IInterstielAdModelRepository _interstitialAdModelRepository;
         private readonly IMediator _mediator;
+        private readonly IMessageBroker _messageBroker;
 
-        public InterstitialAdModelsQueryHandler(
-            IInterstielAdModelRepository interstitialAdModelRepository, IMediator mediator)
+        public SendInterstitialNotificationEventHandler(
+            IInterstielAdModelRepository interstitialAdModelRepository, IMediator mediator,
+            IMessageBroker messageBroker)
         {
             _interstitialAdModelRepository = interstitialAdModelRepository;
             _mediator = mediator;
+            _messageBroker = messageBroker;
         }
 
         [PerformanceAspect(5)]
         [CacheAspect(10)]
         [LogAspect(typeof(ConsoleLogger))]
         [SecuredOperation(Priority = 1)]
-        public async Task<IDataResult<IEnumerable<InterstitialAdCustomerModelDto>>> Handle(
-            GetInterstitialAdModelsQuery request, CancellationToken cancellationToken)
+        public async Task<IResult> Handle(
+            SendInterstitialNotificationEvent request, CancellationToken cancellationToken)
         {
-            var interstitialAdModelDtos = new List<InterstitialAdCustomerModelDto>();
+            var interstitialAdModelDtos = new List<InterstitialAdClientModelDto>();
             var result = _interstitialAdModelRepository
                 .GetListAsync().Result.Where(u =>
                     u.ProjectId == request.ProjectId &&
-                    u.Status == true);
-            
+                    u.Status == true &&
+                    u.IsActive);
+
             foreach (var ınterstitialAdModel in result)
             {
                 var resultAdvStrategies = await _mediator.Send(new GetAdvStrategyQuery
                 {
                     StrategyId = ınterstitialAdModel.Id
                 }, cancellationToken);
-                var interstitialAdModelDto = new InterstitialAdCustomerModelDto
+                var interstitialAdModelDto = new InterstitialAdClientModelDto
                 {
-                    Id = ınterstitialAdModel.Id,
-                    Name = ınterstitialAdModel.Name,
-                    Version = ınterstitialAdModel.Version,
                     PlayerPercent = ınterstitialAdModel.PlayerPercent,
                     ProjectId = ınterstitialAdModel.ProjectId,
-                    IsActive = ınterstitialAdModel.IsActive,
-                    AdvStrategies = resultAdvStrategies.Data.ToList()
                 };
+                foreach (var advStrategy in resultAdvStrategies.Data)
+                {
+                    var advStrategyClientDto = new AdvStrategyClientDto
+                    {
+                        Name = advStrategy.Name,
+                        StrategyValue = advStrategy.StrategyValue
+                    };
+                    interstitialAdModelDto.AdvStrategyClientDto.Add(advStrategyClientDto);
+                }
+
                 interstitialAdModelDtos.Add(interstitialAdModelDto);
             }
 
-            return new SuccessDataResult<IEnumerable<InterstitialAdCustomerModelDto>>(interstitialAdModelDtos);
+            await _messageBroker.SendMessageAsync(interstitialAdModelDtos);
+            return new SuccessResult();
         }
     }
 }

@@ -3,9 +3,9 @@ using Entities.Concrete;
 
 namespace Entities.Dtos;
 
-public class InterstitialAdModelDto : IDto
+public class InterstitialAdCustomerModelDto : IDto
 {
-    public InterstitialAdModelDto()
+    public InterstitialAdCustomerModelDto()
     {
         AdvStrategies = new List<AdvStrategy>();
     }

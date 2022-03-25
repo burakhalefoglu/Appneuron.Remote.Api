@@ -125,7 +125,7 @@ public class RemoteOfferModelHandlerTests
             LastPrice = 2,
             Name = "Test",
             PlayerPercent = 15,
-            ProductDtos = Array.Empty<RemoteOfferProductModelDto>(),
+            ProductDtos = Array.Empty<RemoteOfferProductCustomerModelDto>(),
             ProjectId = 3,
             StartTime = DateTime.Now.Ticks
         };
@@ -158,7 +158,7 @@ public class RemoteOfferModelHandlerTests
             LastPrice = 2,
             Name = "Test",
             PlayerPercent = 15,
-            ProductDtos = Array.Empty<RemoteOfferProductModelDto>(),
+            ProductDtos = Array.Empty<RemoteOfferProductCustomerModelDto>(),
             ProjectId = 3,
             StartTime = DateTime.Now.Ticks
         };

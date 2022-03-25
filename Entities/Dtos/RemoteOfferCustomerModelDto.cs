@@ -1,14 +1,12 @@
 ﻿using Core.Entities;
-using Entities.Concrete;
-using Microsoft.AspNetCore.Http;
 
 namespace Entities.Dtos;
 
-public class RemoteOfferModelDto : IDto
+public class RemoteOfferCustomerModelDto : IDto
 {
-    public RemoteOfferModelDto()
+    public RemoteOfferCustomerModelDto()
     {
-        RemoteOfferProductModels = new List<RemoteOfferProductModelDto>();
+        RemoteOfferProductModels = new List<RemoteOfferProductCustomerModelDto>();
     }
     public long ProjectId { get; set; }
     public string Name { get; set; }
@@ -23,5 +21,5 @@ public class RemoteOfferModelDto : IDto
     public long FinishTime { get; set; }
     public bool IsActive { get; set; }
     public long Id { get; set; }
-    public List<RemoteOfferProductModelDto> RemoteOfferProductModels { get; set; }
+    public List<RemoteOfferProductCustomerModelDto> RemoteOfferProductModels { get; set; }
 }

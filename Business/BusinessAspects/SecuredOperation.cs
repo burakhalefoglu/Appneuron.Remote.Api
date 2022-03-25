@@ -23,7 +23,7 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly string _operationClaimCrypto;
-    private readonly ProjectManagementService _projectManagementService;
+    private readonly ProjectManagementApiModel _projectManagementService;
 
     public SecuredOperationAttribute()
     {
@@ -31,7 +31,7 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
         _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
         _operationClaimCrypto = Configuration.GetSection("OperationClaimCrypto").Get<string>();
         _projectManagementService = Configuration
-            .GetSection("ProjectManagementService").Get<ProjectManagementService>();
+            .GetSection("ProjectManagementService").Get<ProjectManagementApiModel>();
     }
 
     public IConfiguration Configuration { get; }
