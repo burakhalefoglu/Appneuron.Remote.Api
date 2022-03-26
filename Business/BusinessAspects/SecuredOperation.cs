@@ -38,15 +38,6 @@ public class SecuredOperationAttribute : MethodInterceptionAttribute
 
     protected override void OnBefore(IInvocation invocation)
     {
-        var headers = _httpContextAccessor.HttpContext.Request.Headers;
-        var ip = headers.First(x => x.Key == "ip").Value;
-        var tokenİp =
-            _httpContextAccessor.HttpContext?.User
-                .Claims
-                .FirstOrDefault(x => x.Type.EndsWith("serialnumber"))?.Value;
-        if (ip != tokenİp)
-            throw new UnauthorizedAccessException(Messages.UnauthorizedAccess);
-
         var userId = _httpContextAccessor.HttpContext?.User.Claims
             .FirstOrDefault(x => x.Type.EndsWith("nameidentifier"))?.Value;
 
